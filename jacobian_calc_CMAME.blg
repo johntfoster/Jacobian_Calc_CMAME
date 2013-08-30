@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2012/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: jacobian_calc_CMAME.aux
+The style file: elsarticle-num.bst
+Database file #1: all.bib
+You've used 7 entries,
+            2937 wiz_defined-function locations,
+            717 strings with 6307 characters,
+and the built_in function-call counts, 1810 in all, are:
+= -- 175
+> -- 51
+< -- 6
++ -- 21
+- -- 14
+* -- 94
+:= -- 261
+add.period$ -- 8
+call.type$ -- 7
+change.case$ -- 8
+chr.to.int$ -- 6
+cite$ -- 7
+duplicate$ -- 63
+empty$ -- 210
+format.name$ -- 19
+if$ -- 484
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 5
+newline$ -- 30
+num.names$ -- 7
+pop$ -- 51
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 135
+stack$ -- 0
+substring$ -- 36
+swap$ -- 13
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 10
+width$ -- 8
+write$ -- 69
