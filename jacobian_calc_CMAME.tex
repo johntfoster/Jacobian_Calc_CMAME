@@ -465,74 +465,109 @@ role of a tangent-stiffness matrix or Jacobian in that solution method \cite[cha
 \subsection{The Comparative Study}
 
 \subsubsection{Justification: Goals, Assumptions, and Metrics} 
-
 A goal of the study was to rank complex-step against forward-difference and central difference on
 the basis of accuracy. AD was ommited from the comparison because it served as the standard of
 accuracy for the other methods in the absence of appropriate analaytical forms for the Jacobian
-associated with the nonlinear system used solved in the study. The assumption that AD is accurate
+associated with the nonlinear system solved in the study. The assumption that AD is accurate
 enough to serve as a standard is supported by AD's implementation as a computerized chain rule as
 explained in \ref{ADsubsection}. For a concrete comparison of each of the methods including AD to a
 known analytical Jacobian, refer to the corresponding author's website, specifically the C++
 source-code example \emph{BeamAndSpringSystem}. 
 
-Because it makes no sense to compare tangent-stiffness matrices from different load steps, or from
-different iterations, it was necessary to solve one load step and conclude each iteration within
-that load step by updating guesses only from the the results of the AD method, and to subsequently
-feed all four methods the same updated guess the following iteration. This decision precluded a
-comparison of convergence rate, since if the methods were allowed to solve a problem at their
-invidual pace, differences in accuracy would produce differences in guess updates and therefor the
-number and nature of iterations perfomed. Different guesses from iterations started with different
-previous guesses could not be data for a valid comparison of tangent-stiffness accuracy between
-methods.  However a separate convergence rate comparison study could be done given some
-modifications to the materials for the study described in this paper, and of course, the resources
-to perform that study.  Instead, in this study, speed of iteration was measured because it could be
-so done at the same time as Accuracy was being measured given a single tangent-stiffness
-calculation, which was attractive due to limited resources.  Additionally, having each of the
-methods physically operate in the same process, single or parallel, allowed the comparison of
-tangent-stiffness matrices as loaded from random access memory rather than from the hard-disk,
-giving the benefit of vastly greater speed and the benefit of simplicty compared to some other
-solution speculatively involving dynamic file management on files which for one of the components of
-the study would be on the order of $1XE11$ bytes, for which "vastly" is not hyperbole.
+Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps,
+or from different iterations, it was necessary to solve one load step and conclude each iteration
+within that load step by updating displacement guess only from the the results of the AD method, and
+to subsequently feed all four methods the same updated guess the following iteration. This decision
+precluded a comparison of convergence rate, since if the methods were allowed to solve a problem at
+their individual pace, differences in accuracy would produce differences in guess updates and
+therefor the number and nature of iterations perfomed. Different guesses from iterations started
+with different previous guesses could not be data for a valid comparison of tangent-stiffness
+accuracy between methods.  However a separate convergence rate comparison study could be done given
+some modifications to the materials for the study described in this paper, and of course, the
+resources to perform that study.   Additionally, having each of the methods physically operate in
+the same process, single or parallel, allowed the comparison of tangent-stiffness matrices as loaded
+from random access memory rather than from the hard-disk.  Loading from RAM gives the benefit of
+vastly greater speed and the simpler programming compared to some other solution speculatively
+involving dynamic file management on files which for one of the components of the study would be on
+the order of $1XE10$ bytes for which "vastly" is not hyperbole. However, the price of running the
+methods together in the same process and avoiding the use of the hard-disk was that at least two
+tangent-stiffness matrices had to be stored in RAM during simulation, which meant that special
+high-memory compute nodes were needed for the $1E6$ peridynamic element problem series.
 
-The other goal was to rank the four methods, that is including AD, on the basis of speed. It was
+The other goal was to rank the four methods, that is including AD, on the basis of speed. Instead of
+convergence rate being measured, speed of iteration was measured because it could be so done at the
+same time as accuracy was being measured given a single tangent-stiffness calculation.  It was
 assumed that the order that each method was evaluated was unimportant, that evaluating each method
 sucessively within each solver iteration did not affect their performance individually and that
 speed of computation did not change with time. These assumptions allowed the test program to run the
 same problem with each of the methods at effectively the same time and generate an equal volume of
 data from each method. It was also assumed that the Jacobian matrix calculation time for each of the
 methods did not vary based on what values the independent variables held, as they do from iteration
-to iteration as the guessed equilibrium solution is updated. This assumption allowed calculation
+to iteration as the guessed equilibrium solution is updated.  This assumption allowed calculation
 time measurements to be averaged over all iterations within a solution attempt. The purpose of
 averaging calculation time measurements was to informally address the extraneous variables of
-evaluation order and computer system load due to other user's prcocesses or processes not associated
-with the study. 
+evaluation order and computer system load due to other user's processes or processes not associated
+with the study. It begs the question that if it is assumed that the value of independent variables
+had no effect on iteration speed, than why couldn't each of the method have been run independently
+so that convergence data were recorded, so long as system being solved was the same? The answer is
+that this would have made accuracy comparisons invalid if measured concurrently with convergence
+rate, while it would cost additional time and resources if convergence rate were measured in
+serparate runs. Instead, while not part of the study, the example programs available on the
+corresponding author's website allow the reader to make a comparison of the methods for themselves
+on the basis of accuracy and convergence rate for two example nonlinear systems. In the examples,
+notice how convergence rate decreases when the step size selected for forward-difference or
+complex-step is set to larger numbers such that accuracy relative to AD is decreased. While likely
+not the best possible implementations of these methods, they each were coded with the same skill
+level such that a comparison of their relative strengths is reasonable from the standpoint of
+intuition.
 
-The goals of collecting accuracy and speed measurements were achieved by developing and implementing
-metrics within the simulation program used in the study. The metric used to measure the accuracy of
-a tangent-stiffness matrix was the Frobenius norm of the element-wise difference between the
-tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix
-produced by the AD based method, given that both methods were set upon the same problem. The lower
-the value of this metric, the closer the other method's Jacobian was to the AD Jacobian, and
-therefore the more accurate the method was. The expression for the accuracy metric:\\ $D =
-\sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) - J_{M}(i,j))^2}$\\ Where $D$ is distance, n is
-the number of degrees of freedom, $J_{AD}$ is the Jacobian matrix produced by the AD based method, M
-stands for other \emph{M}ethod, and the root of the summed squared element-wise differences between
-the matrices is taken.  The metric used to compare the speed of the methods was the time in seconds
-taken to resume execution in the calling method after instructing the implementation of the method
-being evaluated to run. Another basis of comparison, but not quite a metric, called computational
-efficiency and used in the study is based on the ratio of calculation time to number of Jacobian matrix
-elements.
-
-
-
-
-
+Once the selection of what to measure, why to measured it, and if it could be measured was
+determined, the task was to find a way to take measurements that satisfied our goals. The goals of collecting accuracy and
+speed measurements were achieved by developing and implementing metrics within the simulation
+program used in the study. The metric used to measure the accuracy of a tangent-stiffness matrix was
+the Frobenius norm of the element-wise difference between the tangent-stiffness matrix produced by
+the method being evaluated and the tangent-stiffness matrix produced by the AD based method, given
+that both methods were set upon the same problem. The lower the value of this metric, the closer the
+other method's Jacobian was to the AD Jacobian, and therefore the more accurate the method was. The
+expression for the accuracy metric:\\ $D = \sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) -
+J_{M}(i,j))^2}$\\ Where $D$ is distance, n is the number of degrees of freedom, $J_{AD}$ is the
+Jacobian matrix produced by the AD based method, M stands for other \emph{M}ethod, and the root of
+the summed squared element-wise differences between the matrices is taken.  The metric used to
+compare the speed of the methods was the time in seconds taken to resume execution in the calling
+method after instructing the implementation of the method being evaluated to run and complete itself. Another basis of
+comparison used in the study, but not quite a metric, called computational efficiency is based
+on the ratio of calculation time to number of Jacobian matrix elements.
 
 \subsubsection{Materials: Computers, Other Software}
+Mesh generation for the test problems run in the study was done using the software package $Cubit$
+developed at REFERENCE. 
 
 \subsubsection{Methods: Reduction of Data}
 
 \section{Results and Discussion}
+
+\begin{center}
+    \begin{tabular}{c c c c }
+    \hline
+    \multicolumn{4}{c}{Averaged Results, Entire Test Matrix} \\ \hline
+    Cores & Jacobian Els. & Calc. Time (s) & Accuracy Diff. (MPa)\\ 
+    \multicolumn{2}{c}{} & CS, CD, FD, AD & CS, CD, FD \\ \hline 
+	1 & 1.99E6  & 3.5, 2.7, 1.7, 1.6 & 1.92E-10, 1.21E-4, .137 \\ \hline
+	1 & 4.25E6  & 6.2, 4.9, 3.2, 2.9 & 2.28E-10, 9.94E-4, .148 \\ \hline
+	1 & 7.79E6  & 11.2, 8.9, 5.7, 5.2 & 2.38E-10, 1.59E-4, .145\\ \hline
+	1 & 1.54E7  & 26.7, 21.0, 13.4, 12.2 & 2.33E-10, 4.61E-4, .12 \\ \hline
+	1 & 2.00E7  & 28.1, 22.2, 14.4, 13.1 & 2.76E-10, 1.05E-3, .145 \\ \hline
+	1 & 3.14E7  & 47.6, 37.7, 24.2, 21.9 & 2.64E-10, 1.65E-3, .133 \\ \hline
+	1 & 4.01E7  & 55.6, 44.1, 28.4, 25.9 & 3.03E-10, 1.92E-3, .148 \\ \hline
+	1 & 8.39E7  & 138.9, 109.6, 70.2, 64.0 & 3.63E-10, 1.64E-3, .123 \\ \hline
+	1 & 1.65E8  & 277.3, 218.1, 139.4, 126.5 & 3.26E-10, 2.18E-3, .128 \\ \hline
+	32 & 1.67E10  & 336.1, 277.7, 200.6, 233.1 & 6.21E-10, 1.52E-2, .176 \\ \hline
+	64 & 1.67E10  & 169.9, 140.7, 102.0, 119.7 & 6.20E-10, 1.50E-2, .177 \\ \hline
+	96 & 1.67E10  & 114.7, 95.0, 69.1, 79.7 & 6.18E-10, 1.50E-2, .177 \\ \hline
+	128 & 1.67E10  & 86.4, 71.8, 52.4, 58.8 & 6.16E-10, 1.47E-2, .177 \\ \hline
+    \end{tabular}
+\end{center}
+
 \subsection{Speed Data}
 \subsection{Accuracy Data}
 \subsection{Efficiency Data}
@@ -542,29 +577,6 @@ elements.
 \subsection{Thoughts on \emph{Perdigm}}
 \subsection{Final Thoughts on Complex-Step}
 
-\section{Unfinished table}
-
-\begin{center}
-    \begin{tabular}{  p{1cm}  p{1cm}  p{1cm}  p{1cm}  p{2cm}  p{3cm} p{2cm} }
-    \hline
-    \multicolumn{7}{c}{Full Test Matrix} \\ \hline
-    Cores & Target & Rows & horizon (m) & Nonzero Rows & Calc. Time (s) & Accuracy Diff. (MPa)\\ 
-    \multicolumn{5}{c}{} & CS, CD, FD, AD & CS, CD, FD \\ \hline 
-	1 & 1E3 & 3000 & .3 & 1994454  & 3.5, 2.7, 1.7, 1.6 & 1.92E-10, 1.21E-4, .137 \\ \hline
-	1 & 2E3 & 5400 & .24 & 4252230  & 6.2, 4.9, 3.2, 2.9 & 2.28E-10, 9.94E-4, .148 \\ \hline
-	1 & 3E3 & 8526 & .21 & 7792128  & 11.2, 8.9, 5.7, 5.2 & 2.38E-10, 1.59E-4, .145\\ \hline
-	1 & 4E3 & 12288 & .19 & 15389352  & 26.7, 21.0, 13.4, 12.2 & 2.33E-10, 4.61E-4, .12 \\ \hline
-	1 & 6E3 & 18468 & .16 & 20027466  & 28.1, 22.2, 14.4, 13.1 & 2.76E-10, 1.05E-3, .145 \\ \hline
-	1 & 8E3 & 24000 & .15 & 31388724  & 47.6, 37.7, 24.2, 21.9 & 2.64E-10, 1.65E-3, .133 \\ \hline
-	1 & 1.2E4 & 33396 & .131 & 40060026  & 55.6, 44.1, 28.4, 25.9 & 3.03E-10, 1.92E-3, .148 \\ \hline
-	1 & 1.6E4 & 50700 & .12 & 83778480  & 138.9, 109.6, 70.2, 64.0 & 3.63E-10, 1.64E-3, .123 \\ \hline
-	1 & 3.2E4 & 96768 & .095 & 165140640  & 277.3, 218.1, 139.4, 126.5 & 3.26E-10, 2.18E-3, .128 \\ \hline
-	32 & 1E6 & 3E6 & .03 & 1666968710  & 336.1, 277.7, 200.6, 233.1 & 6.21E-10, 1.52E-2, .176 \\ \hline
-	64 & 1E6 & 3E6 & .03 & 1666962752  & 169.9, 140.7, 102.0, 119.7 & 6.20E-10, 1.50E-2, .177 \\ \hline
-	96 & 1E6 & 3E6 & .03 & 1666760396  & 114.7, 95.0, 69.1, 79.7 & 6.18E-10, 1.50E-2, .177 \\ \hline
-	128 & 1E6 & 3E6 & .03 & 1666892660  & 86.4, 71.8, 52.4, 58.8 & 6.16E-10, 1.47E-2, .177 \\ \hline
-    \end{tabular}
-\end{center}
 
 
 %% The Appendices part is started with the command \appendix;

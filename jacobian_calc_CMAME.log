@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  28 AUG 2013 16:56
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  1 SEP 2013 21:05
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -237,9 +237,9 @@ tomatic-differentiation
  []
 
 
-Overfull \hbox (20.99063pt too wide) has occurred while \output is active
+Overfull \hbox (30.29608pt too wide) has occurred while \output is active
 \OT1/cmr/m/it/10 Preprint submitted to Computer Methods in Applied Mechanics an
-d Engineering August 28, 2013
+d Engineering September 1, 2013
  []
 
 [1
@@ -359,246 +359,12 @@ Underfull \hbox (badness 10000) in paragraph at lines 425--435
 
 [8]
 Package color Info: Redefining color UserColor on input line 455.
- [9] [10]
-Overfull \hbox (5.16496pt too wide) in paragraph at lines 545--545
-[]\OT1/cmr/m/n/12 Target| 
- []
-
-
-Overfull \hbox (9.40797pt too wide) in paragraph at lines 545--545
-[]\OT1/cmr/m/n/12 horizon
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 545--545
-[]\OT1/cmr/m/n/12 Nonzero
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 545--546
-[]\OT1/cmr/m/n/12 Accuracy
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 545--546
-\OT1/cmr/m/n/12 Diff.
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 546--546
-[]\OT1/cmr/m/n/12 CS, CD,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 547--547
-[]\OT1/cmr/m/n/12 1.92E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 547--547
-\OT1/cmr/m/n/12 1.21E-4,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 548--548
-[]\OT1/cmr/m/n/12 2.28E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 548--548
-\OT1/cmr/m/n/12 9.94E-4,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 549--549
-[]\OT1/cmr/m/n/12 2.38E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 549--549
-\OT1/cmr/m/n/12 1.59E-4,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 550--550
-[]\OT1/cmr/m/n/12 12288| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 550--550
-[]\OT1/cmr/m/n/12 2.33E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 550--550
-\OT1/cmr/m/n/12 4.61E-4,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 551--551
-[]\OT1/cmr/m/n/12 18468| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 551--551
-[]\OT1/cmr/m/n/12 2.76E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 551--551
-\OT1/cmr/m/n/12 1.05E-3,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 552--552
-[]\OT1/cmr/m/n/12 24000| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 552--552
-[]\OT1/cmr/m/n/12 2.64E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 552--552
-\OT1/cmr/m/n/12 1.65E-3,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 553--553
-[]\OT1/cmr/m/n/12 33396| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 553--553
-[]\OT1/cmr/m/n/12 3.03E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 553--553
-\OT1/cmr/m/n/12 1.92E-3,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 554--554
-[]\OT1/cmr/m/n/12 50700| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 554--554
-[]\OT1/cmr/m/n/12 138.9, 109.6,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 554--554
-[]\OT1/cmr/m/n/12 3.63E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 554--554
-\OT1/cmr/m/n/12 1.64E-3,
- []
-
-
-Overfull \hbox (0.92195pt too wide) in paragraph at lines 555--555
-[]\OT1/cmr/m/n/12 96768| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 555--555
-[]\OT1/cmr/m/n/12 277.3, 218.1,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 555--555
-[]\OT1/cmr/m/n/12 3.26E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 555--555
-\OT1/cmr/m/n/12 2.18E-3,
- []
-
-
-Overfull \hbox (1.84389pt too wide) in paragraph at lines 556--556
-[]\OT1/cmr/m/n/12 1666968710| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 556--556
-[]\OT1/cmr/m/n/12 336.1, 277.7,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 556--556
-[]\OT1/cmr/m/n/12 6.21E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 556--556
-\OT1/cmr/m/n/12 1.52E-2,
- []
-
-
-Overfull \hbox (1.84389pt too wide) in paragraph at lines 557--557
-[]\OT1/cmr/m/n/12 1666962752| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 557--557
-[]\OT1/cmr/m/n/12 169.9, 140.7,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 557--557
-[]\OT1/cmr/m/n/12 6.20E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 557--557
-\OT1/cmr/m/n/12 1.50E-2,
- []
-
-
-Overfull \hbox (1.84389pt too wide) in paragraph at lines 558--558
-[]\OT1/cmr/m/n/12 1666760396| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 558--558
-[]\OT1/cmr/m/n/12 6.18E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 558--558
-\OT1/cmr/m/n/12 1.50E-2,
- []
-
-
-Overfull \hbox (1.84389pt too wide) in paragraph at lines 559--559
-[]\OT1/cmr/m/n/12 1666892660| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
-[]\OT1/cmr/m/n/12 6.16E-10,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 559--559
-\OT1/cmr/m/n/12 1.47E-2,
- []
-
-
-Overfull \hbox (6.98024pt too wide) in paragraph at lines 542--561
+ [9] [10] [11]
+Overfull \hbox (2.13257pt too wide) in paragraph at lines 550--569
  [] 
  []
 
-[11] [12]
-Overfull \vbox (104.39966pt too high) has occurred while \output is active []
-
-
-[13] (./jacobian_calc_CMAME.bbl) [14] (./jacobian_calc_CMAME.aux) ) 
+[12] (./jacobian_calc_CMAME.bbl [13]) [14] (./jacobian_calc_CMAME.aux) ) 
 Here is how much of TeX's memory you used:
  2451 strings out of 495060
  31601 string characters out of 3182054
@@ -608,4 +374,4 @@ Here is how much of TeX's memory you used:
  14 hyphenation exceptions out of 8191
  43i,10n,30p,331b,1061s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on jacobian_calc_CMAME.dvi (14 pages, 93656 bytes).
+Output written on jacobian_calc_CMAME.dvi (14 pages, 95632 bytes).
