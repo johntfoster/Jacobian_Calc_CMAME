@@ -401,6 +401,7 @@ Newton-Raphson method which uses a tangent-stiffness matrix to help solve nonlin
 equations, similarly to the the solution method used by the software package used in the study.
 
 \subsubsection{What is a Tangent-stiffness Matrix}
+\label{tsmat}
 
 It is important to identify what a tangent-stiffness matrix is and what it is used for to help show
 the motivation for the work discussed here. It is helpful to begin with the thought that a
@@ -457,22 +458,69 @@ The reader is referred to a succinct explanation of the Newton Raphson method, w
 role of a tangent-stiffness matrix or Jacobian in that solution method \cite[chap.
 13]{young2009}. 
 
-\section{Methods and Materials} 
-\subsection{Material: Perdynamics Code}
-\subsubsection{\emph{Perdigm} and Peridynamics}
-\subsubsection{Implementing Complex-Step in \emph{Peridigm}}
+\section{Methods and Materials} \subsection{Material: Perdynamics Code}
+\subsubsection{\emph{Perdigm} and Peridynamics} 
+\subsubsection{Implementing Complex-Step in \emph{Peridigm}} 
 
-\subsection{The Comparative Study}
+Complex step was implemented in \emph{Perdigm} as follows. First a way of persistently allocating
+memory needed to store imaginary values for nodal position and dilatation was determined. Persistent
+memory allocation is a very basic way to improve performance in general for a computer program. The way
+memory was allocated for similar vector and scalar variables used by the prior existing forward
+difference method was copied and new 'field spec' variables were added into the 'elastic' material
+model to store imaginary position coordinates and imaginary dilatation. Model evaluation computer
+code methods that were used in the course of applying the forward difference method were copied,
+renamed and re-written to follow the CTSE formula, which mainly involved changing the datatype of
+intermediate variables which were method-local and dynamically casting process-local variables to
+complex compatible datatypes. Additional modifications were for the purpose of collecting
+experimental data and are not part of complex-step itself. The mathematical difference between the
+original forward-difference and complex-step code was covered in \ref{tsmat}. The source code for
+implementing complex-step in \emph{Perdigim} can be found on the corresponding author's website. Because
+\emph{Peridigm} was written by computer scientists, many advanced techniques in C++, such as
+multiple virtual inheritance, pointer arithmetic and distributed data structures were used in the
+basic code and by necessity in the modified code. To see complex-step in a more narrow context, it
+is advised that readers also take a look at the examples of complex-step provided on the
+corresponding author's website.
+
+\subsection{The Comparative Study} 
+
+The methods were compared by running two sets of test problems where each method would solve a
+problem concurrently. Each test problem simulated a $4 by .25 by .25$ meter block of metal
+undergoing tension along the axis parallel to the long dimension of the block. The test problems
+were set up in \emph{Perdigm} as qausistatic equillibrium problems, where the displacement boundary
+conditions used to apply tension were applied gradually, in 'load steps', and an equilibrium
+solution for each load step was achieved before applying the next load step. The material properties
+of the model were set at $8.0E-9 metric tonne/ mm^3$ density, $1.515E4 MPa$ bulk modulus, and
+$7.813E4 Mpa$ shear modulus. The peridynamic horizon used in a test problem was three times the node
+spacing for the corrisponding model mesh. This number was chosen out of experience to insure that
+every node could have at least one nonlocal connection along the diagonal of the initial node grid.
+
+A series of nine of these test problems were run, with the mesh discretization used in the model
+finer and finer with every test in the series. The aim of increasing the mesh complexity was to see
+if possible differences between the methods in terms of accuracy and speed would be affected. This
+series would comprise the single core runs. The specific parameters of these tests can be found in
+\emph{Peridigm} input xml files included in the archive for this paper which can be found in the
+corresponding author's website. These xml files allow users with appropriately modified versions of
+\emph{Peridigm} to reproduce the results found in this paper.
+
+Another series of four test problems were run, however this time the number of cores used to solve
+the problem was varied from test to test rather than the mesh refinement. While mesh refinement was
+not varied from test to test, it was set at a somewhat high $1E6$ perdidynamic nodes of
+discretization. This allowed the simulation computer to be challenged sufficiently that the effect
+of varying the number of cores used could be more clearly seen. The specific parameters of these
+tests can be found in \emph{Perdigm} input xml files also included in the archive for this paper on
+the corresponding author's website.
+
+What was recorded during the test runs as experimental data is the subject the following
+subsubsection. It is organized to eplain "what", "why" and "how" in that order.
 
 \subsubsection{Justification: Goals, Assumptions, and Metrics} 
+\label{JGAM}
 A goal of the study was to rank complex-step against forward-difference and central difference on
 the basis of accuracy. AD was ommited from the comparison because it served as the standard of
 accuracy for the other methods in the absence of appropriate analaytical forms for the Jacobian
 associated with the nonlinear system solved in the study. The assumption that AD is accurate
 enough to serve as a standard is supported by AD's implementation as a computerized chain rule as
-explained in \ref{ADsubsection}. For a concrete comparison of each of the methods including AD to a
-known analytical Jacobian, refer to the corresponding author's website, specifically the C++
-source-code example \emph{BeamAndSpringSystem}. 
+explained in \ref{ADsubsection}.
 
 Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps,
 or from different iterations, it was necessary to solve one load step and conclude each iteration
@@ -522,27 +570,60 @@ level such that a comparison of their relative strengths is reasonable from the 
 intuition.
 
 Once the selection of what to measure, why to measured it, and if it could be measured was
-determined, the task was to find a way to take measurements that satisfied our goals. The goals of collecting accuracy and
-speed measurements were achieved by developing and implementing metrics within the simulation
-program used in the study. The metric used to measure the accuracy of a tangent-stiffness matrix was
-the Frobenius norm of the element-wise difference between the tangent-stiffness matrix produced by
-the method being evaluated and the tangent-stiffness matrix produced by the AD based method, given
-that both methods were set upon the same problem. The lower the value of this metric, the closer the
-other method's Jacobian was to the AD Jacobian, and therefore the more accurate the method was. The
-expression for the accuracy metric:\\ $D = \sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) -
-J_{M}(i,j))^2}$\\ Where $D$ is distance, n is the number of degrees of freedom, $J_{AD}$ is the
-Jacobian matrix produced by the AD based method, M stands for other \emph{M}ethod, and the root of
-the summed squared element-wise differences between the matrices is taken.  The metric used to
-compare the speed of the methods was the time in seconds taken to resume execution in the calling
-method after instructing the implementation of the method being evaluated to run and complete itself. Another basis of
-comparison used in the study, but not quite a metric, called computational efficiency is based
-on the ratio of calculation time to number of Jacobian matrix elements.
+determined, the task was to find a way to take measurements that satisfied our goals. The goals of
+collecting accuracy and speed measurements were achieved by developing and implementing metrics
+within the simulation program used in the study. The metric used to measure the accuracy of a
+tangent-stiffness matrix was the Frobenius norm of the element-wise difference between the
+tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix
+produced by the AD based method, given that both methods were set upon the same problem. The lower
+the value of this metric, the closer the other method's Jacobian was to the AD Jacobian, and
+therefore the more accurate the method was. The expression for the accuracy metric:\\ $D =
+\sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) - J_{M}(i,j))^2}$\\ Where $D$ is distance, n is
+the number of degrees of freedom, $J_{AD}$ is the Jacobian matrix produced by the AD based method, M
+stands for other \emph{M}ethod, and the root of the summed squared element-wise differences between
+the matrices is taken.  The metric used to compare the speed of the methods was the time in seconds
+taken to resume execution in the calling method after instructing the implementation of the method
+being evaluated to run and complete itself. Another basis of comparison used in the study, but not
+quite a metric, called computational efficiency is based on the ratio of calculation time to number
+of Jacobian matrix elements.
 
-\subsubsection{Materials: Computers, Other Software}
-Mesh generation for the test problems run in the study was done using the software package $Cubit$
-developed at REFERENCE. 
+\subsubsection{Materials: Computers, Other Software} 
 
-\subsubsection{Methods: Reduction of Data}
+Mesh generation for the test problems run in the study was done using the software package
+\emph{Cubit} developed at REFERENCE. For the test series in which peridynamic node density was
+varied, journal scripts compatible with \emph{Cubit} were used. The rule used to select the
+arangement of nodes within the borders designated by simulated material block's dimensions was to
+manually choose a node spacing, fit the maximum whole number of nodes in a regular grid within the
+block, and then check whether or not this number of nodes matched the number of nodes desired for a
+particular test. The same process was used for the multicore series. An example journal script can
+be found on the corresponding author's website. For future work, it may be beneficial to automate
+and randomize this process for statistic reasons and for time efficiency. 
+
+The test problems were run the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas
+Advanced Computing Center) based out of UT Austin. The single core test series was run using the
+normal queue compute nodes, while the multicore test series was run using one to four "large memory"
+nodes each having one terrabyte of local RAM. This large amount of memory was required for reasons
+explained in \ref{JGAM}.  
+
+\subsubsection{Methods: Reduction of Data} The output produced by \emph{Perdigm} including the
+additional accuracy and speed measurements it was modified to provide was redirected from the
+console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).
+Directories and filenames were chosen so that data would be easy to sort by individual test run.
+Extraneous information was manually deleted from copies versions of the output text files so that
+they would be regular enough to be easily read by scripts written in \emph{Python}. These scripts
+averaged accuracy or speed data for a test corresponding to a particular peridynamic node density
+over all iterations for that run, and then plotted this averaged data as if it were a function of
+peridynamic node density as it varied from test to test in the series.  Similarly, for the multicore
+tests, data was averaged and plotted in much the same way, but as a funciton of number of cores used
+to solve the problem rather than as a function peridynamic node density which was held constant.
+These data reduction and plotting scripts can be found on the corresponding autor's website.
+
+Since samples were not repeated, because there was not resources for it, confidence intervals were
+not calculated. However, if results of iterations within the same test problem were considered
+samples of the same thing, then a confidence interval could be calculated. This assumption was made
+for the purpose of plotting reporting average values, but a confidence interval was not calculated.
+But, a cursory review of data showed no range overlap among the methods for accuracy or speed data
+from any test run of either series.
 
 \section{Results and Discussion}
 
@@ -573,9 +654,35 @@ developed at REFERENCE.
 \subsection{Efficiency Data}
 
 \section{Conclusions and Further Work}
+
 \subsection{Thoughts on Results}
+
+
 \subsection{Thoughts on \emph{Perdigm}}
+
+After the bulk of the study had been conducted, it was determined that the implementations of
+forward-difference, central-difference and by inherited code complex-step, in \emph{Peridigm} were
+not optimal. Each of these implementations included extensive looping over noncontiguous addresses
+in memory and unnecessary re-calculation of constant values. Unpublished preliminary results show
+that when calculations for the quantity 'zeta' are re-used and only perturbed and previously
+pertubed functions of independent variables are recomputed throughout the course of a Jacobian
+evaluation, complex-step performs at the speed of forward-difference. Because of this it is
+speculated that forward-difference and central-difference could be modified in nearly the same way to
+perform more quickly than AD. An enhanced performance implementation of forward-difference will
+eventually be made available on the corresponding author's website.
+
 \subsection{Final Thoughts on Complex-Step}
+
+Complex-step was shown to be highly accurate by the standards of this study, but as it is
+implemented in \emph{Peridigm} may not be any better than AD, and it is almost certainly slower for
+a naive implementations. When looking to the future of \emph{Peridigm}, Complex-step holds the
+advantage of relying on byte-copiable datatypes, while AD requires a complicated serialization and
+deserialization in order to function as byte-copiable. This is fine for copying in between MPI
+processes, but deserialization on an accelerator or GPU is very difficult, as this would require
+compiling a version of the AD library being used that were compatible with the accelerator or GPU
+being used. What this means is that if \emph{Peridigm} were to be reformulated to take advantage of
+accelerators like GPU's or similar, which is likely, given their performance and power efficiency
+advantages over traditional host CPU's, complex-step would become more attractive.
 
 
 
