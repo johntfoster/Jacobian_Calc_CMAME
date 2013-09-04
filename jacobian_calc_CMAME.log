@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  1 SEP 2013 21:05
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  4 SEP 2013 12:03
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -239,7 +239,7 @@ tomatic-differentiation
 
 Overfull \hbox (30.29608pt too wide) has occurred while \output is active
 \OT1/cmr/m/it/10 Preprint submitted to Computer Methods in Applied Mechanics an
-d Engineering September 1, 2013
+d Engineering September 4, 2013
  []
 
 [1
@@ -333,45 +333,45 @@ Underfull \hbox (badness 10000) in paragraph at lines 368--383
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 405--411
+Underfull \hbox (badness 10000) in paragraph at lines 406--412
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 412--424
+Underfull \hbox (badness 10000) in paragraph at lines 413--425
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 425--435
+Underfull \hbox (badness 10000) in paragraph at lines 426--436
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 425--435
+Underfull \hbox (badness 10000) in paragraph at lines 426--436
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 425--435
+Underfull \hbox (badness 10000) in paragraph at lines 426--436
 
  []
 
 [8]
-Package color Info: Redefining color UserColor on input line 455.
- [9] [10] [11]
-Overfull \hbox (2.13257pt too wide) in paragraph at lines 550--569
+Package color Info: Redefining color UserColor on input line 456.
+ [9] [10] [11] [12] [13] [14]
+Overfull \hbox (2.13257pt too wide) in paragraph at lines 637--656
  [] 
  []
 
-[12] (./jacobian_calc_CMAME.bbl [13]) [14] (./jacobian_calc_CMAME.aux) ) 
+[15] (./jacobian_calc_CMAME.bbl [16]) [17] (./jacobian_calc_CMAME.aux) ) 
 Here is how much of TeX's memory you used:
- 2451 strings out of 495060
- 31601 string characters out of 3182054
- 128736 words of memory out of 3000000
- 5595 multiletter control sequences out of 15000+200000
+ 2453 strings out of 495060
+ 31614 string characters out of 3182054
+ 129761 words of memory out of 3000000
+ 5597 multiletter control sequences out of 15000+200000
  12635 words of font info for 48 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
  43i,10n,30p,331b,1061s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on jacobian_calc_CMAME.dvi (14 pages, 95632 bytes).
+Output written on jacobian_calc_CMAME.dvi (17 pages, 107860 bytes).
