@@ -40,11 +40,14 @@
 
 %% if you use PostScript figures in your article
 %% use the graphics package for simple commands
-%% \usepackage{graphics}
+%%\usepackage{graphics}
 %% or use the graphicx package for more complicated commands
-%% \usepackage{graphicx}
+%%\usepackage{graphicx}
 %% or use the epsfig package if you prefer to use the old commands
 %% \usepackage{epsfig}
+\usepackage{color}
+\usepackage{tkz-base}
+\usepackage{pgfplots}
 
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
@@ -707,8 +710,21 @@ from any test run of either series.
 \end{center}
 
 \subsection{Speed Data}
+\begin{figure}[h]
+
+\begin{flushleft}
+{\color[rgb]{0,0,0} \input{"serial_speed.pgf"}}
+
+\end{flushleft}
+\end{figure}
+%%\includegraphics[width=\textwidth]{"/home/michael/Projects/CMAME/Jacobian_Calc_CMAME/serial_speed.png"}
+%%\includegraphics[width=\textwidth]{multi_speed.png}
 \subsection{Accuracy Data}
+%%\includegraphics[width=\textwidth]{serial_accuracy.png}
+%%\includegraphics{multi_accuracy}
 \subsection{Efficiency Data}
+%%\includegraphics[width=\textwidth]{serial_speed_rel.png}
+%%\includegraphics[width=\textwidth]{multi_speed_rel.png}
 
 \section{Conclusions and Further Work}
 
