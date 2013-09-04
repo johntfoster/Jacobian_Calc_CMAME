@@ -1,18 +1,17 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  4 SEP 2013 12:03
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=latex 2013.5.30)  4 SEP 2013 13:21
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
 **jacobian_calc_CMAME.tex
 (./jacobian_calc_CMAME.tex
 LaTeX2e <2011/06/27>
-Babel <v3.8m> and hyphenation patterns for english, dumylang, nohyphenation, lo
-aded.
-(/usr/share/texlive/texmf-dist/tex/latex/elsarticle/elsarticle.cls
+Babel <3.9f> and hyphenation patterns for 78 languages loaded.
+(/usr/local/texlive/2013/texmf-dist/tex/latex/elsarticle/elsarticle.cls
 Document Class: elsarticle 2009/09/17, 1.2.0: Elsevier Ltd
 \@bls=\dimen102
-(/usr/share/texlive/texmf-dist/tex/latex/base/article.cls
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(/usr/share/texlive/texmf-dist/tex/latex/base/size12.clo
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/size12.clo
 File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -27,40 +26,40 @@ File: size12.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen103
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphicx.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/keyval.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/graphics.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/trig.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/graphics.cfg
+(/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/graphics.cfg
 File: graphics.cfg 2010/04/23 v1.9 graphics configuration of TeX Live
 )
 Package graphics Info: Driver file: dvips.def on input line 91.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvips.def
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/dvips.def
 File: dvips.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
 \Gin@req@height=\dimen104
 \Gin@req@width=\dimen105
 )
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/pifont.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/psnfss/pifont.sty
 Package: pifont 2005/04/12 PSNFSS-v9.2a Pi font support (SPQR) 
 LaTeX Font Info:    Try loading font information for U+pzd on input line 63.
 
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/upzd.fd
+(/usr/local/texlive/2013/texmf-dist/tex/latex/psnfss/upzd.fd
 File: upzd.fd 2001/06/04 font definitions for U/pzd.
 )
 LaTeX Font Info:    Try loading font information for U+psy on input line 64.
 
-(/usr/share/texlive/texmf-dist/tex/latex/psnfss/upsy.fd
+(/usr/local/texlive/2013/texmf-dist/tex/latex/psnfss/upsy.fd
 File: upsy.fd 2001/06/04 font definitions for U/psy.
 ))
 \c@tnote=\count87
@@ -82,7 +81,7 @@ File: upsy.fd 2001/06/04 font definitions for U/psy.
 \@@sep=\skip44
 
 (./jacobian_calc_CMAME.spl)
-(/usr/share/texlive/texmf-dist/tex/latex/natbib/natbib.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/natbib/natbib.sty
 Package: natbib 2010/09/13 8.31b (PWD, AO)
 \bibhang=\skip45
 \bibsep=\skip46
@@ -93,33 +92,35 @@ LaTeX Info: Redefining \cite on input line 694.
 \openout3 = `jacobian_calc_CMAME.spl'.
 
 )
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amssymb.sty
-Package: amssymb 2009/06/22 v3.00
+(/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/amsfonts.sty
-Package: amsfonts 2009/06/22 v3.00 Basic AMSFonts support
+(/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
 \@emptytoks=\toks17
 \symAMSa=\mathgroup4
 \symAMSb=\mathgroup5
 LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
-(Font)                  U/euf/m/n --> U/euf/b/n on input line 96.
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
 ))
 (./trackchanges.sty
 Package: trackchanges 2009/04/22 v0.7.0 TrackChanges file 
- (/usr/share/texlive/texmf-dist/tex/latex/graphics/color.sty
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2005/11/14 v1.0j Standard LaTeX Color (DPC)
-(/usr/share/texlive/texmf-dist/tex/latex/latexconfig/color.cfg
+
+(/usr/local/texlive/2013/texmf-dist/tex/latex/latexconfig/color.cfg
 File: color.cfg 2007/01/18 v1.5 color configuration of teTeX/TeXLive
 )
 Package color Info: Driver file: dvips.def on input line 130.
 
-(/usr/share/texlive/texmf-dist/tex/latex/graphics/dvipsnam.def
+(/usr/local/texlive/2013/texmf-dist/tex/latex/graphics/dvipsnam.def
 File: dvipsnam.def 1999/02/16 v3.0i Driver-dependant file (DPC,SPQR)
 ))
-(/usr/share/texlive/texmf-dist/tex/latex/base/ifthen.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2001/05/26 v1.1c Standard LaTeX ifthen package (DPC)
 )
-(/usr/share/texlive/texmf-dist/tex/latex/tools/calc.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2007/08/22 v4.3 Infix arithmetic (KKT,FJ)
 \calc@Acount=\count94
 \calc@Bcount=\count95
@@ -132,7 +133,7 @@ LaTeX Info: Redefining \addtolength on input line 77.
 \calc@Ccount=\count96
 \calc@Cskip=\skip49
 )
-(/usr/share/texlive/texmf-dist/tex/latex/soul/soul.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/soul/soul.sty
 Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 \SOUL@word=\toks18
 \SOUL@lasttoken=\toks19
@@ -144,26 +145,26 @@ Package: soul 2003/11/17 v2.4 letterspacing/underlining (mf)
 \SOUL@uldp=\dimen112
 \SOUL@ulht=\dimen113
 )
-(/usr/share/texlive/texmf-dist/tex/latex/morefloats/morefloats.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/morefloats/morefloats.sty
 Package: morefloats 2012/01/28 v1.0f Raise limit of unprocessed floats (HMM; DH
 )
 
-(/usr/share/texlive/texmf-dist/tex/latex/oberdiek/kvoptions.sty
+(/usr/local/texlive/2013/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2011/06/30 v3.11 Key value format for package options (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ltxcmds.sty
 Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/kvsetkeys.sty
 Package: kvsetkeys 2012/04/25 v1.16 Key value parser (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/infwarerr.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/infwarerr.sty
 Package: infwarerr 2010/04/08 v1.3 Providing info/warning/error messages (HO)
 )
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/etexcmds.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/etexcmds.sty
 Package: etexcmds 2011/02/16 v1.5 Avoid name clashes with e-TeX commands (HO)
 
-(/usr/share/texlive/texmf-dist/tex/generic/oberdiek/ifluatex.sty
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
 )
@@ -221,13 +222,13 @@ LaTeX Font Info:    ... okay on input line 88.
 Package color Info: Redefining color UserColor on input line 135.
 LaTeX Font Info:    Try loading font information for U+msa on input line 135.
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsa.fd
-File: umsa.fd 2009/06/22 v3.00 AMS symbols A
+(/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
 LaTeX Font Info:    Try loading font information for U+msb on input line 135.
 
-(/usr/share/texlive/texmf-dist/tex/latex/amsfonts/umsb.fd
-File: umsb.fd 2009/06/22 v3.00 AMS symbols B
+(/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 Package color Info: Redefining color UserColor on input line 141.
 
@@ -246,132 +247,131 @@ d Engineering September 4, 2013
 
 
 ] [2]
-Package color Info: Redefining color UserColor on input line 206.
-Package color Info: Redefining color UserColor on input line 207.
-Package color Info: Redefining color UserColor on input line 211.
+Package color Info: Redefining color UserColor on input line 178.
+Package color Info: Redefining color UserColor on input line 182.
  [3]
-Package color Info: Redefining color UserColor on input line 229.
-Package color Info: Redefining color UserColor on input line 250.
+Package color Info: Redefining color UserColor on input line 200.
+Package color Info: Redefining color UserColor on input line 221.
  [4]
+Underfull \hbox (badness 10000) in paragraph at lines 259--260
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 261--262
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 277--278
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 280--282
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 286--288
+
+ []
+
+[5]
 Underfull \hbox (badness 10000) in paragraph at lines 288--289
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 290--291
-
- []
-
-[5]
-Underfull \hbox (badness 10000) in paragraph at lines 306--307
+Underfull \hbox (badness 10000) in paragraph at lines 294--298
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 309--311
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 315--317
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 317--318
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 323--327
-
- []
-
-
-Overfull \hbox (18.91295pt too wide) in paragraph at lines 327--334
+Overfull \hbox (18.91295pt too wide) in paragraph at lines 298--305
 [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 354--364
+Underfull \hbox (badness 10000) in paragraph at lines 325--335
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 354--364
+Underfull \hbox (badness 10000) in paragraph at lines 325--335
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 354--364
+Underfull \hbox (badness 10000) in paragraph at lines 325--335
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 339--354
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 339--354
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 339--354
+
+ []
+
+
+Overfull \hbox (73.81203pt too wide) in paragraph at lines 339--354
+[] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 339--354
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 368--383
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 368--383
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 368--383
-
- []
-
-
-Overfull \hbox (73.81203pt too wide) in paragraph at lines 368--383
-[] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 368--383
+Underfull \hbox (badness 10000) in paragraph at lines 377--383
 
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 406--412
+Underfull \hbox (badness 10000) in paragraph at lines 384--396
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 413--425
+Underfull \hbox (badness 10000) in paragraph at lines 397--407
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 426--436
+Underfull \hbox (badness 10000) in paragraph at lines 397--407
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 426--436
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 426--436
+Underfull \hbox (badness 10000) in paragraph at lines 397--407
 
  []
 
 [8]
-Package color Info: Redefining color UserColor on input line 456.
- [9] [10] [11] [12] [13] [14]
-Overfull \hbox (2.13257pt too wide) in paragraph at lines 637--656
+Package color Info: Redefining color UserColor on input line 427.
+ [9] [10] [11] [12] [13]
+Overfull \hbox (2.13257pt too wide) in paragraph at lines 608--627
  [] 
  []
 
-[15] (./jacobian_calc_CMAME.bbl [16]) [17] (./jacobian_calc_CMAME.aux) ) 
+[14] [15] (./jacobian_calc_CMAME.bbl [16]) [17] (./jacobian_calc_CMAME.aux) ) 
 Here is how much of TeX's memory you used:
- 2453 strings out of 495060
- 31614 string characters out of 3182054
- 129761 words of memory out of 3000000
- 5597 multiletter control sequences out of 15000+200000
- 12635 words of font info for 48 fonts, out of 3000000 for 9000
- 14 hyphenation exceptions out of 8191
- 43i,10n,30p,331b,1061s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 2461 strings out of 493316
+ 32106 string characters out of 6137930
+ 133336 words of memory out of 5000000
+ 5874 multiletter control sequences out of 15000+600000
+ 12635 words of font info for 48 fonts, out of 8000000 for 9000
+ 957 hyphenation exceptions out of 8191
+ 43i,10n,30p,967b,1061s stack positions out of 5000i,500n,10000p,200000b,80000s
 
-Output written on jacobian_calc_CMAME.dvi (17 pages, 107860 bytes).
+Output written on jacobian_calc_CMAME.dvi (17 pages, 100384 bytes).

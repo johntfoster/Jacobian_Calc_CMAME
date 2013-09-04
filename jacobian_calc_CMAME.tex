@@ -102,12 +102,12 @@
 %%
 \author{Michael D. Brothers}
 \author{John T. Foster\corref{cor1}}
+\cortext[cor1]{Corresponding Author: john.foster@utsa.edu}
 \author{Harry R. Millwater}
 \address{Mechanical Engineering Department, The University of Texas at San Antonio}
 
 %% \ead{email address}
 %% \ead[url]{home page}
-\cortext[cor1]{Corresponding Author: john.foster@utsa.edu}
 %% \address{Address\fnref{label3}}
 %% \fntext[label3]{}
 
@@ -156,67 +156,22 @@ Newton's method \sep Newton-Raphson \sep numeric differentiation \sep complex-st
 % \linenumbers
 
 %% main text
-\section{Acknowledgements}
-This work was funded in part by a grant from the United States Airforce Office of Scientific
-Research. This work is affiliated with the Center for Simulation Visualization and Real-Time
-Prediction at the University of Texas at San Antonio.
 
 
 \section{Introduction}
 %\subsection{Motivation}
 \label{sec:intro} 
 
-In order to maintain the quadratic convergence properties of the first-order Newton's method in
-quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate,
-algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear
-material models, these consistent tangent-stiffness operators can be derived analytically; however,
-most often in practice, they are found through numerical approximation of derivatives. 
+In order to maintain the quadratic convergence properties of the first-order Newton's method in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
 
-A goal of this comparative study, was to develop and evaluate a new, accurate, and practical method
-for calculating tangent-stiffness matrices against established methods.  This new method is based on
-a complex number Taylor series expansion and refered to as CTSE or the ``complex-step'' method.  The
-distinction of `accurate' is defined by comparison of the new method to popular finite differencing
-techniques used for computing tangent-stiffness matrices and with the exact algorithmically
-consistent derivatives computed with \emph{automatic differentiation}.
+A goal of this study was to develop and evaluate a new, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This new method is based on a complex number Taylor series expansion and referred to as CTSE or the ``complex-step'' method.  The
+distinction of `accurate' is defined by comparison of the new method to popular finite differencing techniques used for computing tangent-stiffness matrices and with the exact algorithmically consistent derivatives computed with \emph{automatic differentiation}.
 
-It was thought that in addition to comparative information regarding the new method, comparisons of
-exclusively finite-difference, central-difference and automatic differentiation could prove valuable
-for developers or analysts not necessarily considering complex-step but needing data to help decide
-whether or not to invest in automatic-differentiation vs. finite-difference.  A comparison and
-discrimination of the methods was to be achieved through application and the measurement of results
-in-situ. The results would largely be treated as deterministic consequences of method choice. There
-was not an attempt made to mathematically prove the suitability of one method over another of the
-methods. The study was retrospective, as explained in section {SECTION} of the instant paper. 
+Comparative data regarding the accuracy and compute cycle timing for the complex step, finite-difference, central-difference, and automatic differentiation methods are included to aide developers and analysts in computational mechanics code design who are faced with implementing a general method for tangent stiffness matrix calculation.  A comparison and discrimination of the methods was achieved through in-situ instrumentation of a massively parallel computational mechanics code.   
 
-The scope of the application component of the study was limited to the Linear Peridynamic Solid
-material model implemented in the computational peridynamics code, \textit{Peridigm}. Identifying a
-specific application provided a practical framework for implementing the new method and solving
-engineering problems to generate the data needed to compare the methods. In particular,
-\emph{Peridigm} was chosen cause it combined several helpful characteristics: The reliance on
-Newton's method and tangent-stiffness matrices for solving quasi-static implicit problems, prior
-inclusion of finite-difference, central-difference and automatic-differentiation based methods
-needed for comparison to a new method that would be developed, and being largely based in the Ansi
-standard version of the popular C++ programming language.
+The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step methed was developed, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
 
-The aim of this paper is to introduce new information, but also to compile prior art to serve as a
-general reference for solving non-linear systems. \remove[Michael]{The former is mainly intended for
-an audience of experienced researchers and professionals who are seeking novel tools, the later
-is intended for an audience of undergraduate to graduate level students who would benefit from a
-source detailing basic methodology.  According to this aim, concepts are presented in multiple
-levels of detail to accommodate both a broad and deep audience.} After giving background on the
-\add[Michael]{possibly less familiar} differentiation techniques underlying the methods to be
-discussed here, presented in this paper is: a description of tangent-stiffness matrices and how to
-use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices
-with each the methods identified above \remove[Michael]{preceded by background as it becomes
-necessary}, a description and justification of a new method, called 'complex-step' for calculating
-tangent-stiffness matrices, a description of implementing complex-step in the software package used
-in the comparative study, a description of the parameters of the comparative study conducted to rank
-the methods, a presentation and analysis of the results of the comparative study, and
-conclusions and thoughts on potential future work. Finally, the reader is referred to the
-corresponding author's website for c++ source-code and data necessary to reproduce the results
-presented here. Additionally included on the website is a C+ template library with classes for
-solving non-linear systems using the techniques dicussed here, as well as two validation and
-verification example problemsi which show how to use the library.
+The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of a the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally included on the website is a C++ template library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
 
 \subsection{Differentiation Techniques}
 
@@ -678,7 +633,6 @@ perform more quickly than AD. An enhanced performance implementation of forward-
 eventually be made available on the corresponding author's website.
 
 \subsection{Final Thoughts on Complex-Step}
-
 Complex-step was shown to be highly accurate by the standards of this study, but as it is
 implemented in \emph{Peridigm} may not be any better than AD, and it is almost certainly slower for
 a naive implementations. When looking to the future of \emph{Peridigm}, Complex-step holds the
@@ -694,10 +648,11 @@ advantages over traditional host CPU's, complex-step would become more attractiv
 
 %% The Appendices part is started with the command \appendix;
 %% appendix sections are then done as normal sections
-\appendix
 
-\section{Extra}
-\label{}
+\section{Acknowledgements}
+This work was funded in part by grants from the United States Air Force Office of Scientific
+Research grant number XXXX and National Energy Technology Laboratory grant number XXXXX. 
+\label{sec:ack}
 
 %% References
 %%
