@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  4 SEP 2013 17:13
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012/Debian) (format=latex 2013.5.9)  4 SEP 2013 17:18
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -749,131 +749,131 @@ d Engineering September 4, 2013
 
 
 ] [2] [3] [4]
-Underfull \hbox (badness 10000) in paragraph at lines 291--292
+Underfull \hbox (badness 10000) in paragraph at lines 246--247
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 293--294
+Underfull \hbox (badness 10000) in paragraph at lines 248--249
 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 264--265
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 267--269
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 273--275
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 275--276
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 281--285
+
+ []
+
+
+Overfull \hbox (19.31294pt too wide) in paragraph at lines 285--292
+[] 
  []
 
 [5]
-Underfull \hbox (badness 10000) in paragraph at lines 309--310
+Underfull \hbox (badness 10000) in paragraph at lines 312--322
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 312--314
+Underfull \hbox (badness 10000) in paragraph at lines 312--322
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 318--320
+Underfull \hbox (badness 10000) in paragraph at lines 312--322
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 320--321
+Underfull \hbox (badness 10000) in paragraph at lines 326--341
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 326--330
+Underfull \hbox (badness 10000) in paragraph at lines 326--341
 
  []
 
 
-Overfull \hbox (19.31294pt too wide) in paragraph at lines 330--337
+Underfull \hbox (badness 10000) in paragraph at lines 326--341
+
+ []
+
+
+Overfull \hbox (73.81203pt too wide) in paragraph at lines 326--341
 [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 357--367
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 357--367
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 357--367
+Underfull \hbox (badness 10000) in paragraph at lines 326--341
 
  []
 
 [6]
-Underfull \hbox (badness 10000) in paragraph at lines 371--386
+Underfull \hbox (badness 10000) in paragraph at lines 364--370
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 371--386
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 371--386
-
- []
-
-
-Overfull \hbox (73.81203pt too wide) in paragraph at lines 371--386
-[] 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 371--386
+Underfull \hbox (badness 10000) in paragraph at lines 371--383
 
  []
 
 [7]
-Underfull \hbox (badness 10000) in paragraph at lines 409--415
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 416--428
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 434--442
+Underfull \hbox (badness 10000) in paragraph at lines 389--397
 
  []
 
 [8] [9] [10] [11] [12] [13] [14] [15]
-Overfull \hbox (2.13257pt too wide) in paragraph at lines 691--710
+Overfull \hbox (2.13257pt too wide) in paragraph at lines 646--665
  [] 
  []
 
-[16] (./serial_speed.pgf
+(./serial_speed.pgf
 
 LaTeX Font Warning: Font shape `OT1/cmr/m/n' in size <19> not available
 (Font)              size <17.28> substituted on input line 3272.
 
 )
-Overfull \hbox (188.15999pt too wide) in paragraph at lines 3443--717
+Overfull \hbox (188.15999pt too wide) in paragraph at lines 3443--672
 [][]  
  []
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[17] (./jacobian_calc_CMAME.bbl [18]) [19] [20] (./jacobian_calc_CMAME.aux)
+[16] (./jacobian_calc_CMAME.bbl [17]) [18] [19] (./jacobian_calc_CMAME.aux)
 
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 1.72pt have occurred.
 
  ) 
 Here is how much of TeX's memory you used:
- 19525 strings out of 495060
- 439673 string characters out of 3182054
- 647454 words of memory out of 3000000
- 22238 multiletter control sequences out of 15000+200000
+ 19531 strings out of 495060
+ 439776 string characters out of 3182054
+ 649842 words of memory out of 3000000
+ 22244 multiletter control sequences out of 15000+200000
  12635 words of font info for 48 fonts, out of 3000000 for 9000
  14 hyphenation exceptions out of 8191
- 63i,10n,74p,641b,1073s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 63i,10n,74p,1429b,1073s stack positions out of 5000i,500n,10000p,200000b,50000s
 
-Output written on jacobian_calc_CMAME.dvi (20 pages, 200940 bytes).
+Output written on jacobian_calc_CMAME.dvi (19 pages, 191604 bytes).
