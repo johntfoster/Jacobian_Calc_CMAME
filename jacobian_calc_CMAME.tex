@@ -379,8 +379,11 @@ variable with respect to every displacement component variable, with the rows or
 components and the columns ordering the displacement components.  \\
 
 How is a tangent-stiffness matrix computed? The mathematical formula for a tangent stiffness matrix
-can be expressed in indicial notation as:\\\\ $\frac{\partial F_i}{\partial X_j}\mid_{X_0,...,X_n}$
-\\\\ $F_i$ is the i'th component of the vector valued function, $X_j$ is the j'th component of the
+can be expressed in indicial notation as: 
+
+\begin{equation} \frac{\partial F_i}{\partial X_j}\mid_{X_0,...,X_n} \end{equation}
+
+Where $F_i$ is the i'th component of the vector valued function, $X_j$ is the j'th component of the
 vector variable, and a particular value of the vector variable is chosen $X_0,...,X_n$. One then
 evaluates the expression for each combination $i, j$ corresponding to an element at $row, column$ in
 the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be
@@ -389,8 +392,53 @@ since taking partial derivatives entails holding all but a single independent va
 function constant, and each component of a vector valued function can be evaluated independently of
 the other components. \\
 
+\subsubsection{Calculating Tangent-stiffness Matrices with Each Method}
 For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
 central-difference and forward-difference will be shown and explained.
+
+When the using the forward-difference technique the formula for calculating a tangent-stiffness
+matrix is:
+
+\begin{equation} K_{ij} = \frac{\partial F_i^{int}(x + \delta e_j) - F_i^{int}(x)}{\delta}
+\end{equation}
+
+Where $K_{ij}$ is the index notation representation of an element of the tangent-stiffness matrix at
+row $i$, column $j$. The expression says that the partial derivative of the $i$'th component of $F$
+w.r.t the $j$'th component of $x$ is equal to the quotient of the partial difference of two terms
+and a denomenator. The first of the 'two terms' is $F_i$ evaluated at $x$ where
+the $j$'th component of $x$ has been perturbed by an very small amount in the direction of the
+positive $x_j$ axis. The second of the 'two terms' is $F_I$ evaluated at an unperturbed $x$. The
+denominator is the magnitude of perturbation called "probe distance" {ADDAGIO MANUAL REF}
+
+When using the central-difference technique the formula for calculating a tangent-stiffness matrix
+is:
+
+\begin{equation} K_{ij} = \frac{\partial F_i^{int}(x + \delta e_j) - F_i^{int}(x - \delta
+e_j)}{2\delta} \end{equation}
+
+The distiction between the central difference-method and the forward-difference method
+tangent-stiffness calculation formula is that the partial difference is now between two perturbed
+function evaluations, rather than between an unperturbed and perturbed function evaluation as in
+forward-difference. Additionally, the minuend involves a perturbation of $x$ in the direction opposite to
+the direction of the $j$'th component of $x$. 
+
+When using the comple-step technique, which is based on CTSE, the formula for calculating a
+tangent-stiffness matrix is:
+
+\begin{equation} K_{ij} = \frac{imag(F_i^{int}(x + \delta e_j^{imag}))}{\delta} \end{equation}
+
+Where our model $F$ is treated as function of complex variables and $x$ is treated as a vector of
+complex values. The expressions says that the real valued partial derivative of the $i$'th component of $F$
+w.r.t the $j$'th component of $x$ is equal to the imaginary component of $F_i$ evaluated at $x$
+where $x$ is perturbed by a very small amount in the direciton of the imaginary axis corresponding
+to the $j$'th component of $x$ all divided by the magnitude of the perturbation. There is no partial
+notation because a partial difference is not taken.
+
+When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to
+follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD
+system. The formula is just as expected:
+
+\begin{equation} K_{ij} = \frac{\partial F_i^{int}}{\partial x_j} \end{equation}
 
 \subsubsection{Solve a Nonlinear System with a Tangent-stiffness Matrix} \label{solve_a_system}
 \remove[Michael]{ 
@@ -538,15 +586,18 @@ tangent-stiffness matrix was the Frobenius norm of the element-wise difference b
 tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix
 produced by the AD based method, given that both methods were set upon the same problem. The lower
 the value of this metric, the closer the other method's Jacobian was to the AD Jacobian, and
-therefore the more accurate the method was. The expression for the accuracy metric:\\ $D =
-\sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) - J_{M}(i,j))^2}$\\ Where $D$ is distance, n is
-the number of degrees of freedom, $J_{AD}$ is the Jacobian matrix produced by the AD based method, M
-stands for other \emph{M}ethod, and the root of the summed squared element-wise differences between
-the matrices is taken.  The metric used to compare the speed of the methods was the time in seconds
-taken to resume execution in the calling method after instructing the implementation of the method
-being evaluated to run and complete itself. Another basis of comparison used in the study, but not
-quite a metric, called computational efficiency is based on the ratio of calculation time to number
-of Jacobian matrix elements.
+therefore the more accurate the method was. The expression for the accuracy metric:
+
+\begin{equation} D = \sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) - J_{M}(i,j))^2}
+\end{equation}
+
+Where $D$ is distance, n is the number of degrees of freedom, $J_{AD}$ is the Jacobian matrix
+produced by the AD based method, M stands for other \emph{M}ethod, and the root of the summed
+squared element-wise differences between the matrices is taken.  The metric used to compare the
+speed of the methods was the time in seconds taken to resume execution in the calling method after
+instructing the implementation of the method being evaluated to run and complete itself. Another
+basis of comparison used in the study, but not quite a metric, called computational efficiency is
+based on the ratio of calculation time to number of Jacobian matrix elements.
 
 \subsubsection{Materials: Computers, Other Software} 
 
