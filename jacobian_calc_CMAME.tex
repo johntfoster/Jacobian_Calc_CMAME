@@ -45,8 +45,8 @@
 %%\usepackage{graphicx}
 %% or use the epsfig package if you prefer to use the old commands
 %% \usepackage{epsfig}
-\usepackage{color}
-\usepackage{tkz-base}
+%%\usepackage{color}
+%%\usepackage{tkz-base}
 \usepackage{pgfplots}
 
 %% The amssymb package provides various useful mathematical symbols
@@ -134,14 +134,13 @@ called \emph{Peridigm}. In the comparative study, for each datum for each run, c
 multiple orders of magnitude more accurate the finite-difference methods, according to a common
 comparison made to the automatic-differentiation method datum. However, for the implementation
 contemporary to the study, complex-step was also the slowest method among the four for each
-datum for each run. A mathematical definition of \change[Michael]{the methods}{complex-step and
-and automatic differentiation}, description of the computer implementations and justification
+datum for each run. A mathematical definition of complex-step and
+and automatic differentiation, description of the computer implementations and justification
 of the comparative study precede results for clarity. The intended audience of this paper
-includes researchers, professionals and students, \change[Michael]{therefore conceptually explicit language
-appealing to multiple levels of understanding is used}{therefor readers are directed to
+includes researchers, professionals and students, therefor readers are directed to
 selected background sources in the text for well-known concepts while less familiar concepts
 are derived in-paper with an attempt made to lay steps out plainly for those in disparate fields
-or who are new to their studies.}  \end{abstract}
+or who are new to their studies.  \end{abstract}
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
@@ -180,11 +179,11 @@ The aim of this paper is not only to introduce the new complex-step method in th
 
 This subsection contains background information on the differentiation techniques underlying the
 tangent-stiffness matrix calculation methods compared in the study. Since first-order finite
-difference techniques are considered well known, they are not described where. Instead the
+difference techniques are considered well known, they are not described here. Instead the
 reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
 \subsubsection{Basis of New Method, 'Complex Step', in CTSE}  
-\note[Michael]{TODO: cite lyness and moler, complete section}
+\note[Michael]{Will be replaced by Dr. Millwater's background section}
 
 During a literature review in preparation of material distinct from the instant paper, one of the
 instant authors identified a work presenting an application of the prior work of applied
@@ -199,14 +198,6 @@ derivative formula could resist the accuracy reducing phenomenon of subtractive 
 circumstances where central-difference and forward-difference were  demonstrated to succumb to
 subtractive-cancellation.       
  
-\remove[Michael]{
-\subsubsection{First-order Finite-difference}
-
-The types of first-order finite-difference that will be discussed are forward-difference and
-central-difference. CTSE and these finite-difference techniques are similar in that they have been
-developed by algebraically solving approximated Taylor series expansions for first derivative terms.
-}
-
 \subsubsection{Differentiation Technique: Automatic-differentiation} 
 \label{ADsubsection}
 
@@ -444,22 +435,6 @@ system. The formula is just as expected:
 \begin{equation} K_{ij} = \frac{\partial F_i^{int}}{\partial x_j} \end{equation}
 
 \subsubsection{Solve a Nonlinear System with a Tangent-stiffness Matrix} \label{solve_a_system}
-\remove[Michael]{ 
-An accurate tangent-stiffness matrix is a main part of the Newton-Raphson method for iteratively
-solving non-linear systems for equilibrium solutions. The method is derived by a linearisation using
-Taylor expansion of the vector valued function modelling the system in a way reminiscent of how
-forward-difference is derived from the Taylor expansion of a scalar valued function. Here the two
-derivations are shown side by side: The difference between the two is that in the forward difference
-derivation, it is assumed that the derivative term is unknown and can be determined from knowing
-change in location, while in the Newton-Raphson derivation, it is assumed that the change in
-location is unknown and can be determined from knowing the value of the derivative term.
-Additionally we could derive a version of Newton Raphson for CTSE directly: The Newton Raphson
-method is applied in the following manner: It is clear to see how if the tangent-stiffness matrix
-used in the Newton Raphson method is inaccurate, predicted changes in location will be inaccurate.
-However, non-linear functions don't have constant slopes by definition, meaning that a perfectly
-accurate tangent-stiffness matrix at the current guess location is not a guarantee of a one step
-solution path to the solution location since slope changes over the interval guess to updated guess.
-}
 The reader is referred to a succinct explanation of the Newton Raphson method, which shows the
 role of a tangent-stiffness matrix or Jacobian in that solution method \cite[chap.
 13]{young2009}. 
@@ -668,17 +643,52 @@ from any test run of either series.
 
 \begin{figure}[h]
   \centering
-  \scalebox{0.7}{\input{./figs/serial_speed.pgf}}
-  \caption{A figure.}
+  \scalebox{.7}{\input{./figs/serial_speed.pgf}}
+  \caption{Serial test series speed measurements.}
   \label{fig:serial_speed}
 \end{figure}
 
-%%\includegraphics[width=\textwidth]{"/home/michael/Projects/CMAME/Jacobian_Calc_CMAME/serial_speed.png"}
-%%\includegraphics[width=\textwidth]{multi_speed.png}
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{\input{./figs/multi_speed.pgf}}
+  \caption{Multicore test series speed measurements.}
+  \label{fig:multi_speed}
+\end{figure}
+
 \subsection{Accuracy Data}
-%%\includegraphics[width=\textwidth]{serial_accuracy.png}
-%%\includegraphics{multi_accuracy}
+
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{\input{./figs/serial_accuracy.pgf}}
+  \caption{Serial test series speed measurements.}
+  \label{fig:serial_accuracy}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{\input{./figs/multi_accuracy.pgf}}
+  \caption{Multicore test series accuracy measurements.}
+  \label{fig:multi_accuracy}
+\end{figure}
+
 \subsection{Efficiency Data}
+
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{\input{./figs/serial_speed_rel.pgf}}
+  \caption{Serial test series efficiency measurements.}
+  \label{fig:serial_efficiency}
+\end{figure}
+
+\begin{figure}[h]
+  \centering
+  \scalebox{.7}{\input{./figs/multi_speed_rel.pgf}}
+  \caption{Multicore test series efficiency measurements.}
+  \label{fig:multi_efficiency}
+\end{figure}
+
+
+
 %%\includegraphics[width=\textwidth]{serial_speed_rel.png}
 %%\includegraphics[width=\textwidth]{multi_speed_rel.png}
 
