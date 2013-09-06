@@ -28,3 +28,8 @@ git push origin master
 
 `origin` is the default name given to the remote github repository when the
 initial clone is done.  `master` is the default branch.
+
+### To build the paper ###
+Make sure you have a current $\LaTeX$ installation in your `$PATH`, then just
+type `make`.  The included `Makefile` will correctly typeset and update
+references, cross-references, bibliography, etc.
