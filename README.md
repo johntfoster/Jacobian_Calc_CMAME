@@ -38,4 +38,5 @@ git pull
 ### To build the paper ###
 Make sure you have a current LaTeX installation in your `$PATH`, then just
 type `make`.  The included `Makefile` will correctly typeset and update
-references, cross-references, bibliography, etc.
+references, cross-references, bibliography, etc. You can also type `make clean`
+to remove all the auxiliary files in the directory.
