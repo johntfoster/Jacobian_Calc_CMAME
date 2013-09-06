@@ -10,7 +10,7 @@ To clone:
 git clone https://github.com/johntfoster/Jacobian_Calc_CMAME.git
 ````
 
-After makeing changes in your local repository, commit then _locally_ with:
+After making changes in your local repository, commit then _locally_ with:
 
 ````
 git commit -a -m "A Commit Message"
