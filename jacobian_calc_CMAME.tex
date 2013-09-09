@@ -173,7 +173,7 @@ Comparative data regarding the accuracy and compute cycle timing for the complex
 
 The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step methed was developed, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
 
-The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of a the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally included on the website is a C++ template library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
+The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of a the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally included on the website is a C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
 
 \subsection{Differentiation Techniques}
 
@@ -356,10 +356,10 @@ It is important to identify what a tangent-stiffness matrix is and what it is us
 the motivation for the work discussed here. It is helpful to begin with the thought that a
 tangent-stiffness matrix is a type of slope for vector valued functions of vector variables at
 a single point in the space of the vector valued variable. A tangent-stiffness matrix is similar to the
-"$m$" in the scalar function $y = mx + b$, except that $y$ and $x$ are vectors while $m$ is
+"$m$" in the function $y = mx + b$, except that $y$, $x$ and $b$ are vectors while $m$ is
 a matrix. \\
 
-In detail, a tangent-stiffness matrix (or operator) can be described as a collection of the first
+In detail, a tangent-stiffness matrix can be described as a collection of the first
 order partial derivatives of a vector valued function w.r.t each degree of freedom of the vector
 valued function for a given value of the vector variable.  The tangent-stiffness matrix comprises a
 linear operator that can be used to transform a difference in the vector variable into a difference
@@ -369,8 +369,8 @@ variables represented force components of force vectors at nodes of discretizati
 variables represented displacement components for those same nodes. Suppose that as is possible in
 peridynamic nodes each dependent variable is a function of all of the independent variables. For
 this situation, the tangent-stiffness matrix would be the first derivatives of every force component
-variable with respect to every displacement component variable, with the rows ordering the force
-components and the columns ordering the displacement components.  \\
+variable with respect to every displacement component variable, with the rows corresponding to the force
+components and the columns corresponding to the displacement components.  \\
 
 How is a tangent-stiffness matrix computed? The mathematical formula for a tangent stiffness matrix
 can be expressed in indicial notation as: 
@@ -388,7 +388,9 @@ the other components. \\
 
 \subsubsection{Calculating Tangent-stiffness Matrices with Each Method}
 For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
-central-difference and forward-difference will be shown and explained.
+central-difference and forward-difference will be shown and explained. The expressions for AD,
+central-difference and forward-difference are taken from {ADDAGIO MANUAL REF}, while the expression
+for CTSE is original. 
 
 When the using the forward-difference technique the formula for calculating a tangent-stiffness
 matrix is:
@@ -451,22 +453,24 @@ comparative study and explain what modifications were necessary.
 
 Complex step was implemented in \emph{Perdigm} as follows. First a way of persistently allocating
 memory needed to store imaginary values for nodal position and dilatation was determined. Persistent
-memory allocation is a very basic way to improve performance in general for a computer program. The way
-memory was allocated for similar vector and scalar variables used by the prior existing forward
+memory allocation is a very basic way to improve performance in general for a computer program. The
+way memory was allocated for similar vector and scalar variables used by the prior existing forward
 difference method was copied and new 'field spec' variables were added into the 'elastic' material
-model to store imaginary position coordinates and imaginary dilatation. Model evaluation computer
-code methods that were used in the course of applying the forward difference method were copied,
-renamed and re-written to follow the CTSE formula, which mainly involved changing the datatype of
-intermediate variables which were method-local and dynamically casting process-local variables to
-complex compatible datatypes. Additional modifications were for the purpose of collecting
-experimental data and are not part of complex-step itself. The mathematical difference between the
-original forward-difference and complex-step code was covered in \ref{tsmat}. The source code for
-implementing complex-step in \emph{Perdigim} can be found on the corresponding author's website. Because
-\emph{Peridigm} was written by computer scientists, many advanced techniques in C++, such as
-multiple virtual inheritance, pointer arithmetic and distributed data structures were used in the
-basic code and by necessity in the modified code. To see complex-step in a more narrow context, it
-is advised that readers also take a look at the examples of complex-step provided on the
-corresponding author's website.
+model to store imaginary position coordinates and imaginary dilatation. Because of \emph{Peridigm}'s
+dependence on the \emph{Epetra} package of the \emph{Trilinos} library, 'field spec' variables could
+not be simply be declared as having a complex datatype. Program methods that were used in the
+course of applying the forward-difference method were copied, renamed and re-written to follow the
+CTSE formula, which involved changing the datatype of intermediate variables which were locally
+scoped and dynamically casting persistent variables, like the 'field spec' variables, to complex
+datatypes where necessary. Additional modifications were for the purpose of collecting experimental
+data and are not part of complex-step itself. The mathematical difference between the original
+forward-difference and complex-step code was covered in \ref{tsmat}. The source code for
+implementing complex-step in \emph{Perdigim} can be found on the corresponding author's website.
+Because \emph{Peridigm} was written by computer scientists rather than mechanical engineers
+primarily, many advanced techniques in C++ such as multiple virtual inheritance, pointer arithmetic
+and distributed data structures were used in the basic code and by necessity in the modified code.
+To see complex-step in a more narrow context, it is advised that readers also take a look at the
+examples of complex-step and the other methods provided on the corresponding author's website.
 
 \subsection{The Comparative Study} 
 
@@ -475,59 +479,61 @@ problem concurrently. Each test problem simulated a $4 by .25 by .25$ meter bloc
 undergoing tension along the axis parallel to the long dimension of the block. The test problems
 were set up in \emph{Perdigm} as qausistatic equillibrium problems, where the displacement boundary
 conditions used to apply tension were applied gradually, in 'load steps', and an equilibrium
-solution for each load step was achieved before applying the next load step. The material properties
-of the model were set at $8.0E-9 metric tonne/ mm^3$ density, $1.515E4 MPa$ bulk modulus, and
-$7.813E4 Mpa$ shear modulus. The peridynamic horizon used in a test problem was three times the node
-spacing for the corrisponding model mesh. This number was chosen out of experience to insure that
-every node could have at least one nonlocal connection along the diagonal of the initial node grid.
+solution for each load step was achieved before applying the next load step. The purpose of applying
+the load in gradual steps is a widely used technique to ensure the Newton-Raphson method is always
+guessing near the actual solution. The material properties of the model were set at $8.0E-9 metric
+tonne/ mm^3$ density, $1.515E4 MPa$ bulk modulus, and $7.813E4 Mpa$ shear modulus. The peridynamic
+horizon used in a test problem was three times the node spacing for the corrisponding model mesh.
+This value for horizon was chosen out of experience to insure that every node could have at least
+one nonlocal connection along the diagonal of the node grid.
 
-A series of nine of these test problems were run, with the mesh discretization used in the model
-finer and finer with every test in the series. The aim of increasing the mesh complexity was to see
-if possible differences between the methods in terms of accuracy and speed would be affected. This
-series would comprise the single core runs. The specific parameters of these tests can be found in
-\emph{Peridigm} input xml files included in the archive for this paper which can be found in the
-corresponding author's website. These xml files allow users with appropriately modified versions of
-\emph{Peridigm} to reproduce the results found in this paper.
+A series of nine of these single core test problems were run, with the mesh discretization used in
+the model finer and finer with every test in the series. The aim of increasing the mesh complexity
+was to see if possible differences between the methods in terms of accuracy and speed would arise
+and trend based on model complexity. This series would comprise the single core runs. The specific
+parameters of these tests can be found in \emph{Peridigm} input xml files included in the archive
+for this paper which can be found in the corresponding author's website. These xml files allow users
+with appropriately modified versions of \emph{Peridigm} to reproduce the results found in this
+paper.
 
 Another series of four test problems were run, however this time the number of cores used to solve
 the problem was varied from test to test rather than the mesh refinement. While mesh refinement was
 not varied from test to test, it was set at a somewhat high $1E6$ perdidynamic nodes of
 discretization. This allowed the simulation computer to be challenged sufficiently that the effect
-of varying the number of cores used could be more clearly seen. The specific parameters of these
-tests can be found in \emph{Perdigm} input xml files also included in the archive for this paper on
-the corresponding author's website.
+of varying the number of cores on speed and accuracy between the methods used could be more clearly
+seen. The specific parameters of these tests can be found in \emph{Perdigm} input xml files also
+included in the archive for this paper on the corresponding author's website.
 
 What was recorded during the test runs as experimental data is the subject the following
 subsubsection. It is organized to explain "what", "why" and "how" in that order.
 
-\subsubsection{Justification: Goals, Assumptions, and Metrics} 
-\label{JGAM}
-A goal of the study was to rank complex-step against forward-difference and central difference on
-the basis of accuracy. AD was ommited from the comparison because it served as the standard of
-accuracy for the other methods in the absence of appropriate analaytical forms for the Jacobian
-associated with the nonlinear system solved in the study. The assumption that AD is accurate
-enough to serve as a standard is supported by AD's implementation as a computerized chain rule as
-explained in \ref{ADsubsection}.
+\subsubsection{Justification: Goals, Assumptions, and Metrics} \label{JGAM} As stated in the
+previous section a goal of the study was to rank complex-step against forward-difference and central
+difference on the basis of accuracy. AD was ommited from the comparison because it served as the
+standard of accuracy for the other methods in the absence of appropriate analaytical forms for the
+Jacobian associated with the nonlinear system solved in the study. The assumption that AD is
+accurate enough to serve as a standard is supported by AD's implementation as a computerized chain
+rule as explained in \ref{ADsubsection}.
 
-Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps,
-or from different iterations, it was necessary to solve one load step and conclude each iteration
-within that load step by updating displacement guess only from the the results of the AD method, and
-to subsequently feed all four methods the same updated guess the following iteration. This decision
-precluded a comparison of convergence rate, since if the methods were allowed to solve a problem at
-their individual pace, differences in accuracy would produce differences in guess updates and
-therefor the number and nature of iterations perfomed. Different guesses from iterations started
-with different previous guesses could not be data for a valid comparison of tangent-stiffness
-accuracy between methods.  However a separate convergence rate comparison study could be done given
-some modifications to the materials for the study described in this paper, and of course, the
-resources to perform that study.   Additionally, having each of the methods physically operate in
-the same process, single or parallel, allowed the comparison of tangent-stiffness matrices as loaded
-from random access memory rather than from the hard-disk.  Loading from RAM gives the benefit of
-vastly greater speed and the simpler programming compared to some other solution speculatively
-involving dynamic file management on files which for one of the components of the study would be on
-the order of $1XE10$ bytes for which "vastly" is not hyperbole. However, the price of running the
-methods together in the same process and avoiding the use of the hard-disk was that at least two
-tangent-stiffness matrices had to be stored in RAM during simulation, which meant that special
-high-memory compute nodes were needed for the $1E6$ peridynamic element problem series.
+Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps
+that started with difference guesses, or from different iterations, it was necessary to solve one
+load step and conclude each iteration within that load step by updating the displacement guess only
+from the results of the AD method and to subsequently feed all four methods the same updated guess
+the following iteration. This decision precluded a comparison of convergence rate, since if the
+methods were allowed to solve a problem at their individual pace, differences in accuracy would
+produce differences in guess updates and therefor the number and nature of iterations perfomed.
+Different guesses from iterations started with different previous guesses could not be data for a
+valid comparison of tangent-stiffness accuracy between methods.  However a separate convergence rate
+comparison study could be done given some modifications to the materials for the study described in
+this paper, and of course, the resources to perform that study.   Additionally, having each of the
+methods physically operate in the same process, single or one of associated parallel, allowed the
+comparison of tangent-stiffness matrices as loaded from random access memory rather than from the
+hard-disk.  Loading from RAM gives the benefit of vastly greater speed and the simpler programming
+compared to some other solution speculatively involving dynamic file management on files which for
+one of the components of the study would be on the order of $1XE10$ bytes. However, the price of
+running the methods together in the same process and avoiding the use of the hard-disk was that at
+least two tangent-stiffness matrices had to be stored in RAM during simulation, which meant that
+special high-memory compute nodes were needed for the $1E6$ peridynamic element problem series.
 
 The other goal was to rank the four methods, that is including AD, on the basis of speed. Instead of
 convergence rate being measured, speed of iteration was measured because it could be so done at the
@@ -542,8 +548,8 @@ to iteration as the guessed equilibrium solution is updated.  This assumption al
 time measurements to be averaged over all iterations within a solution attempt. The purpose of
 averaging calculation time measurements was to informally address the extraneous variables of
 evaluation order and computer system load due to other user's processes or processes not associated
-with the study. It begs the question that if it is assumed that the value of independent variables
-had no effect on iteration speed, than why couldn't each of the method have been run independently
+with the study. The question is begged: if it is assumed that the value of independent variables
+had no effect on iteration speed, then why couldn't each of the method have been run independently
 so that convergence data were recorded, so long as system being solved was the same? The answer is
 that this would have made accuracy comparisons invalid if measured concurrently with convergence
 rate, while it would cost additional time and resources if convergence rate were measured in
@@ -551,20 +557,16 @@ serparate runs. Instead, while not part of the study, the example programs avail
 corresponding author's website allow the reader to make a comparison of the methods for themselves
 on the basis of accuracy and convergence rate for two example nonlinear systems. In the examples,
 notice how convergence rate decreases when the step size selected for forward-difference or
-complex-step is set to larger numbers such that accuracy relative to AD is decreased. While likely
-not the best possible implementations of these methods, they each were coded with the same skill
-level such that a comparison of their relative strengths is reasonable from the standpoint of
-intuition.
+complex-step is set to larger numbers such that accuracy relative to AD is decreased.
 
-Once the selection of what to measure, why to measured it, and if it could be measured was
-determined, the task was to find a way to take measurements that satisfied our goals. The goals of
-collecting accuracy and speed measurements were achieved by developing and implementing metrics
-within the simulation program used in the study. The metric used to measure the accuracy of a
-tangent-stiffness matrix was the Frobenius norm of the element-wise difference between the
-tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix
-produced by the AD based method, given that both methods were set upon the same problem. The lower
-the value of this metric, the closer the other method's Jacobian was to the AD Jacobian, and
-therefore the more accurate the method was. The expression for the accuracy metric:
+Once the selection of what to measure was determined, the task was to find a way to take measurements
+that satisfied our goals. The goals of collecting accuracy and speed measurements were achieved by
+developing and implementing metrics within the simulation program used in the study. The metric used
+to measure the accuracy of a tangent-stiffness matrix was the Frobenius norm of the element-wise
+difference between the tangent-stiffness matrix produced by the method being evaluated and the
+tangent-stiffness matrix produced by the AD based method, given that both methods were set upon the
+same problem. The lower the value of this metric, the closer the other method's Jacobian was to the
+AD Jacobian, and therefore the more accurate the method was. The expression for the accuracy metric:
 
 \begin{equation} D = \sqrt{\sum_{i=0}^{n-1}\sum_{j=0}^{n-1} (J_{AD}(i,j) - J_{M}(i,j))^2}
 \end{equation}
@@ -700,27 +702,28 @@ from any test run of either series.
 \subsection{Thoughts on \emph{Perdigm}}
 
 After the bulk of the study had been conducted, it was determined that the implementations of
-forward-difference, central-difference and by inherited code complex-step, in \emph{Peridigm} were
+forward-difference, central-difference and by virtue of reusing code, complex-step, in \emph{Peridigm} were
 not optimal. Each of these implementations included extensive looping over noncontiguous addresses
-in memory and unnecessary re-calculation of constant values. Unpublished preliminary results show
+in memory and unnecessary re-calculation of constant values. The approach used does minimize
+temporary memory use, but is very wasteful of cpu and memory bandwidth. Unpublished preliminary results show
 that when calculations for the quantity 'zeta' are re-used and only perturbed and previously
 pertubed functions of independent variables are recomputed throughout the course of a Jacobian
-evaluation, complex-step performs at the speed of forward-difference. Because of this it is
+evaluation, complex-step performs at the speed of unmodified forward-difference. Because of this it is
 speculated that forward-difference and central-difference could be modified in nearly the same way to
 perform more quickly than AD. An enhanced performance implementation of forward-difference will
 eventually be made available on the corresponding author's website.
 
-\subsection{Final Thoughts on Complex-Step}
-Complex-step was shown to be highly accurate by the standards of this study, but as it is
-implemented in \emph{Peridigm} may not be any better than AD, and it is almost certainly slower for
-a naive implementations. When looking to the future of \emph{Peridigm}, Complex-step holds the
-advantage of relying on byte-copiable datatypes, while AD requires a complicated serialization and
-deserialization in order to function as byte-copiable. This is fine for copying in between MPI
-processes, but deserialization on an accelerator or GPU is very difficult, as this would require
-compiling a version of the AD library being used that were compatible with the accelerator or GPU
-being used. What this means is that if \emph{Peridigm} were to be reformulated to take advantage of
-accelerators like GPU's or similar, which is likely, given their performance and power efficiency
-advantages over traditional host CPU's, complex-step would become more attractive.
+\subsection{Final Thoughts on Complex-Step} Complex-step was shown to be highly accurate by the
+standards of this study, but as it is implemented in \emph{Peridigm} may not be any better than AD,
+and it is almost certainly slower for a naive implementation. When looking to the future of
+\emph{Peridigm}, Complex-step holds the advantage of relying on byte-copiable datatypes, while AD
+requires a complicated serialization and deserialization in order to function as byte-copiable. This
+is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very
+difficult, as this would require compiling a version of the AD library being used that were
+compatible with the accelerator or GPU being used. What this means is that if \emph{Peridigm} were
+to be reformulated to take advantage of accelerators or GPUs, attractive given their performance and
+power efficiency advantages over traditional CPUs, the flexibilty of complex-step owed to its simple
+implementation may make it more viable fo rthat application.
 
 
 
