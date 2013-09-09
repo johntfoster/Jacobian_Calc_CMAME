@@ -626,10 +626,9 @@ average calculation time and load step average accuracy. The units for accuracy 
 expression used to calculate the Jacobian matrix elements and the units used to define bulk material
 properties, mentioned in \ref{tcs}.
 
-\begin{table}
+\begin{table}    
+        \caption{Averaged Results, Each Test} \label{tab:results}   
     \begin{tabular}{c c c c }
-        \caption{Averaged Results, Each Test} \label{tab:results}
-    \hline
     Cores & Jacobian Els. & Calc. Time (s) & Accuracy Diff. (MPa)\\ 
     \multicolumn{2}{c}{} & CS, CD, FD, AD & CS, CD, FD \\ \hline 
 	1 & 1.99E6  & 3.5, 2.7, 1.7, 1.6 & 1.92E-10, 1.21E-4, .137 \\ \hline
@@ -647,6 +646,8 @@ properties, mentioned in \ref{tcs}.
 	128 & 1.67E10  & 86.4, 71.8, 52.4, 58.8 & 6.16E-10, 1.47E-2, .177 \\ \hline
     \end{tabular}
 \end{table}
+
+
 
 The data presented in \ref{tab:results} will now be shown in graphic form alongside some discussion
 of results and trends.
@@ -690,7 +691,7 @@ determined.
 \end{figure}
 
 \subsection{Accuracy Data}
-Accuracy measurements where taken according to the methods mentioned in \red{tcs}. The averaged
+Accuracy measurements where taken according to the methods mentioned in \ref{tcs}. The averaged
 results of these accuracy measurements for the single core tests can be seen in
 \ref{fig:serial_accuracy}. Averaged Frobenius norm of the element-wise difference between a given
 Jacobian and the Jacobian produced by the automatic-differentiation method is plotted against number
