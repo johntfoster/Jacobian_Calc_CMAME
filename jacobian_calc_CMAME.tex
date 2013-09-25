@@ -137,7 +137,7 @@ contemporary to the study, complex-step was also the slowest method among the fo
 datum for each run. A mathematical definition of complex-step and
 and automatic differentiation, description of the computer implementations and justification
 of the comparative study precede results for clarity. The intended audience of this paper
-includes researchers, professionals and students, therefor readers are directed to
+includes researchers, professionals and students, therefore readers are directed to
 selected background sources in the text for well-known concepts while less familiar concepts
 are derived in-paper with an attempt made to lay steps out plainly for those in disparate fields
 or who are new to their studies.  \end{abstract}
@@ -171,7 +171,7 @@ distinction of `accurate' is defined by comparison of the new method to popular 
 
 Comparative data regarding the accuracy and compute cycle timing for the complex step, finite-difference, central-difference, and automatic differentiation methods are included to aide developers and analysts in computational mechanics code design who are faced with implementing a general method for tangent stiffness matrix calculation.  A comparison and discrimination of the methods was achieved through in-situ instrumentation of a massively parallel computational mechanics code.   
 
-The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step methed was developed, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
+The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step method was developed, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
 
 The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of a the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally included on the website is a C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
 
@@ -206,8 +206,7 @@ chain-rule from calculus. AD takes advantage of the fact that any
 mathematical function executed on a computer, no matter how complicated, is a "composition of simple
 operations" (add, multiply, power, transcendental and the like) each having known analytical derivatives
 \cite{ref-sacado-presentation}. For reference, the AD
-implementation used in the study is the "Sacado" package from the "Trilinos" library developed out of Sandia
-National Labs \cite{ref-Sacado}.
+implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} library developed out of Sandia National Labs \cite{ref-Sacado}.
 
 The way an AD system works is by first evaluating the innermost function of the composition, then presenting
 that function's output as input to the next level function until all levels are complete, in a way no
@@ -389,7 +388,7 @@ the other components. \\
 \subsubsection{Calculating Tangent-stiffness Matrices with Each Method}
 For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
 central-difference and forward-difference will be shown and explained. The expressions for AD,
-central-difference and forward-difference are taken from {ADDAGIO MANUAL REF}, while the expression
+central-difference and forward-difference are taken from \cite{ref-Adaggio}, while the expression
 for CTSE is original. 
 
 When the using the forward-difference technique the formula for calculating a tangent-stiffness
@@ -404,7 +403,7 @@ w.r.t the $j$'th component of $x$ is equal to the quotient of the partial differ
 and a denomenator. The first of the 'two terms' is $F_i$ evaluated at $x$ where
 the $j$'th component of $x$ has been perturbed by an very small amount in the direction of the
 positive $x_j$ axis. The second of the 'two terms' is $F_I$ evaluated at an unperturbed $x$. The
-denominator is the magnitude of perturbation called "probe distance" {ADDAGIO MANUAL REF}
+denominator is the magnitude of perturbation called "probe distance" \cite{ref-Adaggio}
 
 When using the central-difference technique the formula for calculating a tangent-stiffness matrix
 is:
@@ -583,7 +582,7 @@ based on the ratio of calculation time to number of Jacobian matrix elements.
 \subsubsection{Materials: Computers, Other Software} 
 
 Mesh generation for the test problems run in the study was done using the software package
-\emph{Cubit} developed at REFERENCE. For the test series in which peridynamic node density was
+\emph{Cubit} developed at Sandia National Labs \cite{ref-Cubit}. For the test series in which peridynamic node density was
 varied, journal scripts compatible with \emph{Cubit} were used. The rule used to select the
 arangement of nodes within the borders designated by simulated material block's dimensions was to
 manually choose a node spacing, fit the maximum whole number of nodes in a regular grid within the
@@ -613,10 +612,9 @@ These data reduction and plotting scripts can be found on the corresponding auto
 
 Since samples were not repeated, because there was not resources for it, confidence intervals were
 not calculated. However, if results of iterations within the same test problem were considered
-samples of the same thing, then a confidence interval could be calculated. This assumption was made
-for the purpose of plotting reporting average values, but a confidence interval was not calculated.
-But, a cursory review of data showed no range overlap among the methods for accuracy or speed data
-from any test run of either series.
+samples of the same thing, then a confidence interval could be calculated. This assumption was only made
+for the purpose of reporting average values on the plots. But, a cursory review of data showed no 
+range overlap among the methods for accuracy or speed data from any test run of either series.
 
 \section{Results and Discussion}
 
@@ -675,7 +673,7 @@ For the multicore tests, averaged speed results appear in \ref{fig:multi_speed}.
 rather than varying the number of nonzero Jacobian matrix elements the number of cores used to
 solve the problem is varied, while the number of nonzero Jacobian matrix elements remained constant.
 Complex-step again was the slowest method, followed by central-difference, automatic-differentiation
-and then forward-difference, taking the title of fastests method for this group of tests.
+and then forward-difference, taking the title of fastest method for this group of tests.
 \ref{fig:multi_speed} indicates that when looking at average in-iteration speed, each of the
 methods scale linearly with the number of cores used for the given conditions of this group of
 tests. Again, these results show that each of the methods as implemented in \emph{Peridigm} scale
@@ -760,14 +758,14 @@ trend was not determined.
 \subsection{Thoughts on Results} Based on the experimental results, it appears that for users of
 \emph{Peridigm} there is a case to be made for using automatic-differentiation for reasons of
 performance and accuracy. Although, the greater speed of finite-difference for certain multicore
-tests done in this study may give some users pause. While the results showed that complex-step was
-clearly more accurate than central-difference and forward-difference for the parameters of the
-tests, it was not determined whether or not this is a clear advantage of complex-step over
-finite-difference in terms of accuracy of final results and speed of convergence.   For other
+tests done in this study may give some users pause. While the results showed that complex-step
+produced more accurate tangent-stiffness matrices than central-difference and forward-difference 
+under the parameters of the tests, it was not determined whether or not this is a clear advantage of complex-step over
+finite-difference in terms of accuracy of final predicted node positions and speed of convergence. For other
 simulation software it is obviously necessary to collect the same types measurements as decribed in
 this paper in order to make a design decision. For new developments it is recommended that combined
 accuracy and speed of iteration mesurments be conduted along with entirely separate convergence
-studies.  For reasons explained in the next subsection, a convergence study in \emph{Peridigm} performed using
+studies. For reasons explained in the next subsection, a convergence study in \emph{Peridigm} performed using
 the implementations of the methods used for this paper would be moot.
 
 \subsection{Thoughts on \emph{Perdigm}}
@@ -775,32 +773,33 @@ the implementations of the methods used for this paper would be moot.
 After the bulk of the study had been conducted, gained familiarity with \emph{Peridigm} revealed
 that the implementations of forward-difference, central-difference and by virtue of reusing code,
 complex-step, in \emph{Peridigm} were not optimal due to inefficiencies in the implementations of
-the Linear Peridynamic Solid (LPS) model. Each of these implementations included extensive looping
-over noncontiguous addresses in memory and unnecessary re-calculation of constant values.  The
-approach used does minimize temporary memory use, and preserve modularity of the code for non-LPS
-models, but is very wasteful of cpu and memory bandwidth for use with LPS. Unpublished preliminary
-results show that when calculations for the quantity 'zeta' are re-used and only perturbed and
-previously pertubed functions of independent variables are recomputed throughout the course of a
-Jacobian evaluation, complex-step performs at the speed of unmodified forward-difference. Because of
-this it is speculated that forward-difference and central-difference could be modified in nearly the
-same way to perform more quickly than AD. In fact, because forward difference involves double the
-number of model evaluations than that of complex-step, forward-difference stands to gain
-proportionally more efficiency. Although no formal academic paper will be likely written based on
-this, a brief report and an enhanced performance implementation of forward-difference for peridynamic LPS
-in \emph{Peridigm} will eventually be made available on the corresponding author's website and is
-intended to be submitted for official inclusion in future releases of \emph{Peridigm}. 
+the Linear Peridynamic Solid (LPS) model. Each of these implementations included a large amount of
+unnecessary re-calculation of constant values.  The approach used does minimize temporary memory
+use, and allow other objects in \emph{Peridigm} to make calls directly to methods in the material
+objects, but is wastefull. Unpublished preliminary results show that when calculations for the
+constant quantity 'zeta' in the LPS implementation are re-used and only perturbed and previously
+pertubed functions of independent variables are recomputed throughout the course of a Jacobian
+evaluation, complex-step performs at the speed of unmodified forward-difference. Because of this it
+is speculated that forward-difference and central-difference could be modified in nearly the same
+way to perform more quickly than AD. In fact, because central-difference involves double the number
+of model evaluations than that of complex-step, central-difference stands to gain proportionally
+more efficiency. Although no formal academic paper will be likely written based on this, a brief
+report and an enhanced performance implementation of finite-difference for peridynamic LPS Jacbian
+calculation  in \emph{Peridigm} will eventually be made available on the corresponding author's
+website and is intended to be submitted for official inclusion in future releases of \emph{Peridigm}. 
 
-\subsection{Final Thoughts on Complex-Step} Complex-step was shown to be highly accurate by the
-standards of this study, but as it is implemented in \emph{Peridigm} may not be any better than AD,
-and it is almost certainly slower for a naive implementation. When looking to the future of
-\emph{Peridigm}, Complex-step holds the advantage of relying on byte-copiable datatypes, while AD
-requires a complicated serialization and deserialization in order to function as byte-copiable. This
-is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very
-difficult, as this would require compiling a version of the AD library being used that were
-compatible with the accelerator or GPU being used. What this means is that if \emph{Peridigm} or any
-simulation software were to be reformulated to take advantage of accelerators or GPUs, attractive
-given their performance and power efficiency advantages over traditional CPUs, the flexibilty of
-complex-step owed to its simple implementation may make it more viable fo rthat application.
+\subsection{Final Thoughts on Complex-Step} Complex-step was shown to be highly accurate in
+calculating tangent-stiffness matrices by the standards of this study, but as it is implemented in
+\emph{Peridigm} may not be any more accurate than AD, and it is almost certainly slower for a naive
+implementation. When looking to the future of \emph{Peridigm}, Complex-step holds the advantage of
+relying on byte-copiable datatypes, while AD requires a complicated serialization and
+deserialization in order to function as byte-copiable. This is fine for copying in between MPI
+processes, but deserialization on an accelerator or GPU is very difficult, as this would require
+compiling a version of the AD library being used that were compatible with the accelerator or GPU
+being used. What this means is that if \emph{Peridigm} or any simulation software were to be
+reformulated to take advantage of accelerators or GPUs, attractive given their performance and power
+efficiency advantages over traditional CPUs, the flexibilty of complex-step owed to its simple
+implementation may make it more viable fo rthat application.
 
 
 
