@@ -765,28 +765,7 @@ finite-difference in terms of accuracy of final predicted node positions and spe
 simulation software it is obviously necessary to collect the same types measurements as decribed in
 this paper in order to make a design decision. For new developments it is recommended that combined
 accuracy and speed of iteration mesurments be conduted along with entirely separate convergence
-studies. For reasons explained in the next subsection, a convergence study in \emph{Peridigm} performed using
-the implementations of the methods used for this paper would be moot.
-
-\subsection{Thoughts on \emph{Perdigm}}
-
-After the bulk of the study had been conducted, gained familiarity with \emph{Peridigm} revealed
-that the implementations of forward-difference, central-difference and by virtue of reusing code,
-complex-step, in \emph{Peridigm} were not optimal due to inefficiencies in the implementations of
-the Linear Peridynamic Solid (LPS) model \cite[A 1]{ref-LPS}. Each of these implementations included a large amount of
-unnecessary re-calculation of constant values.  The approach used does minimize temporary memory
-use, and allow other objects in \emph{Peridigm} to make calls directly to methods in the material
-objects, but is wastefull. Unpublished preliminary results show that when calculations for the
-constant quantity 'zeta' in the LPS implementation are re-used and only perturbed and previously
-pertubed functions of independent variables are recomputed throughout the course of a Jacobian
-evaluation, complex-step performs at the speed of unmodified forward-difference. Because of this it
-is speculated that forward-difference and central-difference could be modified in nearly the same
-way to perform more quickly than AD. In fact, because central-difference involves double the number
-of model evaluations than that of complex-step, central-difference stands to gain proportionally
-more efficiency. Although no formal academic paper will be likely written based on this, a brief
-report and an enhanced performance implementation of finite-difference for peridynamic LPS Jacbian
-calculation  in \emph{Peridigm} will eventually be made available on the corresponding author's
-website and is intended to be submitted for official inclusion in future releases of \emph{Peridigm}. 
+studies. 
 
 \subsection{Final Thoughts on Complex-Step} Complex-step was shown to be highly accurate in
 calculating tangent-stiffness matrices by the standards of this study, but as it is implemented in
