@@ -202,11 +202,11 @@ This shows that an estimate of the first derivative of a function can be made by
 
 Automatic-differentiation (AD) is a computerized method for computing exact derivatives based the chain-rule from calculus. AD takes advantage of the fact that any mathematical function executed on a computer, no matter how complicated, is a ``composition of simple operations'' (add, multiply, power, transcendental and the like) each having known analytical derivatives \cite{ref-sacado-presentation}. For reference, the AD implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} agile component libraries developed at Sandia National Laboratories \cite{ref-Sacado}.
 
-The way an AD system works is by first evaluating the innermost function of the composition, then presenting that function's output as input to the next level function until all levels are complete, in a way no different from how a normal computer program or human would evaluate composition functions.  AD departs in that as each nested function is evaluated, the function's partial derivative with respect to the designated variables of the given input is also calculated.  This is possible because the elementary math functions are hard-coded into the AD source-code along with their analytical derivatives, and linked by special instructions, so that when the elementary math functions are called upon for computation, their partial derivatives may be computed and stored in a sequence. The AD system then multiples the final sequence of partial derivatives together to produce the exact equivalent to taking a partial derivative of the corresponding composition function with respect to a designated variable at a particular value. It is obvious, but bears mentioning, that the AD system could simply store one value for partial derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence.  In the literature, the AD scheme described here is called \emph{forward automatic-differentiation}. Only forward AD will be covered here since it is the implementation used in \emph{Sacado} and therefore this study; however, the reader is referred to the introduction section of \cite{ref-AD-methods} and its citations for further information on AD, particularly \cite{ref-on-AD} which is foundational. Appendix~\ref{sec:appendixB} includes an example that walks the reader through the process a computer uses to compute derivates via AD.  Some things to note about AD are that no approximation of derivatives is being made because the analytical forms of the partials of the elementary math functions are defined alongside them. The accuracy of AD is then limited by the precision of the AD system's definition of the elementary math functions and their partial derivatives .
+The way an AD system works is by first evaluating the innermost function of the composition, then presenting that function's output as input to the next level function until all levels are complete, in a way no different from how a normal computer program or human would evaluate composition functions.  AD departs in that as each nested function is evaluated, the function's partial derivative with respect to the designated variables of the given input is also calculated.  This is possible because the elementary math functions are hard-coded into the AD source-code along with their analytical derivatives, and linked by special instructions, so that when the elementary math functions are called upon for computation, their partial derivatives may be computed and stored in a sequence. The AD system then multiplies the final sequence of partial derivatives together to produce the exact equivalent to taking a partial derivative of the corresponding composition function with respect to a designated variable at a particular value. It is obvious, but bears mentioning, that the AD system could simply store one value for partial derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence.  In the literature, the AD scheme described here is called \emph{forward automatic-differentiation}. Only forward AD will be covered here since it is the implementation used in \emph{Sacado} and therefore this study; however, the reader is referred to the introduction section of \cite{ref-AD-methods} and its citations for further information on AD, particularly \cite{ref-on-AD} which is foundational. Appendix~\ref{sec:appendixB} includes an example that walks the reader through the process a computer uses to compute derivates via AD.  Some things to note about AD are that no approximation of derivatives is being made because the analytical forms of the partials of the elementary math functions are defined alongside them. The accuracy of AD is then limited by the precision of the AD system's definition of the elementary math functions and their partial derivatives .
  
 \subsection{Tangent-stiffness} 
 
-In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface the ``points'' in the minimum direction. While we've adopted the terminology of solid mechanics, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmisability matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
+In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While we've adopted the terminology of solid mechanics, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmisability matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
 While, for simplicity, the examples shown in the sequel refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of some residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent, hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorthmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method so attractive for this class of problems.  Again, in the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when these models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.
 
@@ -218,7 +218,7 @@ can be expressed in indicial notation as
   K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0}
 \end{equation}
 %
-Where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using the any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
+Where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
 
 \subsubsection{Differencing formulas for tangent-stiffness matrix evaluation with each method.}
 For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
@@ -226,7 +226,7 @@ central-difference and forward-difference will be shown and explained. The expre
 central-difference and forward-difference are taken from \cite{ref-Adaggio}, while the expression
 for CTSE is original. 
 
-When the using the forward-difference technique the formula for calculating a tangent-stiffness
+When using the forward-difference technique the formula for calculating a tangent-stiffness
 matrix is:
 
 \begin{equation} K_{ij} = \frac{\partial F_i^{int}(x + \delta e_j) - F_i^{int}(x)}{\delta}
@@ -238,7 +238,7 @@ w.r.t the $j$'th component of $x$ is equal to the quotient of the partial differ
 and a denomenator. The first of the 'two terms' is $F_i$ evaluated at $x$ where
 the $j$'th component of $x$ has been perturbed by an very small amount in the direction of the
 positive $x_j$ axis. The second of the 'two terms' is $F_I$ evaluated at an unperturbed $x$. The
-denominator is the magnitude of perturbation called "probe distance" \cite{ref-Adaggio}
+denominator is the magnitude of perturbation called "probe distance" \cite{ref-Adaggio}.
 
 When using the central-difference technique the formula for calculating a tangent-stiffness matrix
 is:
@@ -258,7 +258,7 @@ tangent-stiffness matrix is:
 \begin{equation} K_{ij} = \frac{imag(F_i^{int}(x + \delta e_j^{imag}))}{\delta} \end{equation}
 
 Where our model $F$ is treated as function of complex variables and $x$ is treated as a vector of
-complex values. The expressions says that the real valued partial derivative of the $i$'th component of $F$
+complex values. The expression says that the real valued partial derivative of the $i$'th component of $F$
 w.r.t the $j$'th component of $x$ is equal to the imaginary component of $F_i$ evaluated at $x$
 where $x$ is perturbed by a very small amount in the direciton of the imaginary axis corresponding
 to the $j$'th component of $x$ all divided by the magnitude of the perturbation. There is no partial
@@ -285,39 +285,43 @@ comparative study and explain what modifications were necessary.
 \subsubsection{\emph{Perdigm} and Peridynamics} 
 \subsubsection{Implementing Complex-Step in \emph{Peridigm}} 
 
-Complex step was implemented in \emph{Perdigm} as follows. First a way of persistently allocating
-memory needed to store imaginary values for nodal position and dilatation was determined. Persistent
-memory allocation is a very basic way to improve performance in general for a computer program. The
-way memory was allocated for similar vector and scalar variables used by the prior existing forward
-difference method was copied and new 'field spec' variables were added into the 'elastic' material
-model to store imaginary position coordinates and imaginary dilatation. Because of \emph{Peridigm}'s
-dependence on the \emph{Epetra} package of the \emph{Trilinos} library, 'field spec' variables could
-not be simply be declared as having a complex datatype. Program methods that were used in the
-course of applying the forward-difference method were copied, renamed and re-written to follow the
-CTSE formula, which involved changing the datatype of intermediate variables which were locally
-scoped and dynamically casting persistent variables, like the 'field spec' variables, to complex
-datatypes where necessary. Additional modifications were for the purpose of collecting experimental
-data and are not part of complex-step itself. The mathematical difference between the original
-forward-difference and complex-step code was covered in \ref{tsmat}. The source code for
-implementing complex-step in \emph{Perdigim} can be found on the corresponding author's website.
-Because \emph{Peridigm} was written by computer scientists rather than mechanical engineers
-primarily, many advanced techniques in C++ such as multiple virtual inheritance, pointer arithmetic
-and distributed data structures were used in the basic code and by necessity in the modified code.
-To see complex-step in a more narrow context, it is advised that readers also take a look at the
-examples of complex-step and the other methods provided on the corresponding author's website.
+Complex step was implemented in \emph{Perdigm} as follows. First a way of
+persistently allocating memory needed to store imaginary values for nodal
+position and dilatation was determined. Persistent memory allocation is a very
+basic way to improve performance in general for a computer program. The way
+memory was allocated for similar vector and scalar variables used by the prior
+existing forward difference method was copied and new 'field spec' variables
+were added into the 'elastic' material model to store imaginary position
+coordinates and imaginary dilatation. Because of \emph{Peridigm}'s dependence
+on the \emph{Epetra} package of the \emph{Trilinos} library, 'field spec'
+variables could not be simply be declared as having a complex datatype. Program
+methods that were used in the course of applying the forward-difference method
+were copied, renamed and re-written to follow the CTSE formula, which involved
+changing the datatype of intermediate variables which were locally scoped and
+dynamically casting persistent variables, like the 'field spec' variables, to
+complex datatypes where necessary. Additional modifications were for the
+purpose of collecting experimental data and are not part of complex-step
+itself. The source code for implementing complex-step in \emph{Perdigim} can be
+found on the corresponding author's website.  Because \emph{Peridigm} was
+written by computer scientists rather than mechanical engineers primarily, many
+advanced techniques in C++ such as multiple virtual inheritance, pointer
+arithmetic and distributed data structures were used in the basic code and by
+necessity in the modified code.  To see complex-step in a more narrow context,
+it is advised that readers also take a look at the examples of complex-step and
+the other methods provided on the corresponding author's website.
 
 \subsection{The Comparative Study} 
 \label{tcs}
 
 The methods were compared by running two sets of test problems where each method would solve a
-problem concurrently. Each test problem simulated a $4 by .25 by .25$ meter block of metal
+problem concurrently. Each test problem simulated a $4$ by $.25$ by $.25$ meter block of metal
 undergoing tension along the axis parallel to the long dimension of the block. The test problems
-were set up in \emph{Perdigm} as qausistatic equillibrium problems, where the displacement boundary
+were set up in \emph{Perdigm} as quasistatic equillibrium problems, where the displacement boundary
 conditions used to apply tension were applied gradually, in 'load steps', and an equilibrium
 solution for each load step was achieved before applying the next load step. The purpose of applying
 the load in gradual steps is a widely used technique to ensure the Newton-Raphson method is always
-guessing near the actual solution. The material properties of the model were set at $8.0E-9 metric
-tonne/ mm^3$ density, $1.515E4 MPa$ bulk modulus, and $7.813E4 MPa$ shear modulus. The peridynamic
+guessing near the actual solution. The material properties of the model were set at $8.0E-9$ $ metric
+tonne/ mm^3$ density, $1.515E4$ $MPa$ bulk modulus, and $7.813E4$ $MPa$ shear modulus. The peridynamic
 horizon used in a test problem was three times the node spacing for the corrisponding model mesh.
 This value for horizon was chosen out of experience to insure that every node could have at least
 one nonlocal connection along the diagonal of the node grid.
@@ -340,7 +344,7 @@ seen. The specific parameters of these tests can be found in \emph{Perdigm} inpu
 included in the archive for this paper on the corresponding author's website.
 
 What was recorded during the test runs as experimental data is the subject the following
-subsubsection. It is organized to explain "what", "why" and "how" in that order.
+subsubsection. 
 
 \subsubsection{Justification: Goals, Assumptions, and Metrics} \label{JGAM} As stated in the
 previous section a goal of the study was to rank complex-step against forward-difference and central
@@ -365,7 +369,7 @@ methods physically operate in the same process, single or one of associated para
 comparison of tangent-stiffness matrices as loaded from random access memory rather than from the
 hard-disk.  Loading from RAM gives the benefit of vastly greater speed and the simpler programming
 compared to some other solution speculatively involving dynamic file management on files which for
-one of the components of the study would be on the order of $1XE10$ bytes. However, the price of
+one of the components of the study would be on the order of $1E10$ bytes. However, the price of
 running the methods together in the same process and avoiding the use of the hard-disk was that at
 least two tangent-stiffness matrices had to be stored in RAM during simulation, which meant that
 special high-memory compute nodes were needed for the $1E6$ peridynamic element problem series.
@@ -424,7 +428,7 @@ manually choose a node spacing, fit the maximum whole number of nodes in a regul
 block, and then check whether or not this number of nodes matched the number of nodes desired for a
 particular test. The same process was used for the multicore series. An example journal script can
 be found on the corresponding author's website. For future work, it may be beneficial to automate
-and randomize this process for statistic reasons and for time efficiency. 
+and randomize this process for time efficiency and to assist statistical analysis. 
 
 The test problems were run the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas
 Advanced Computing Center) based out of UT Austin. The single core test series was run using the
@@ -436,7 +440,7 @@ explained in \ref{JGAM}.
 additional accuracy and speed measurements it was modified to provide was redirected from the
 console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).
 Directories and filenames were chosen so that data would be easy to sort by individual test run.
-Extraneous information was manually deleted from copies versions of the output text files so that
+Extraneous information was manually deleted from copied versions of the output text files so that
 they would be regular enough to be easily read by scripts written in \emph{Python}. These scripts
 averaged accuracy or speed data for a test corresponding to a particular peridynamic node density
 over all iterations for that run, and then plotted this averaged data as if it were a function of
@@ -530,7 +534,7 @@ results of these accuracy measurements for the single core tests can be seen in
 Jacobian and the Jacobian produced by the automatic-differentiation method is plotted against number
 of nonzero Jacobian matrix elements. Complex-step was revealed as the most accurate of the methods
 besides automatic-differentiation, complex-step resulting in several orders of magnitude less
-difference that resulted from using the central-difference method and the most inaccurate
+difference than resulted from using the central-difference method and the most inaccurate
 forward-difference method. This accuracy ranking order was mantained for each test in the series. It
 should be pointed out compared to the L2 norms of any of the Jacobian matrices by themselves, the
 magnitude of these differences for any of the methods is relatively small. These values appear in
@@ -613,7 +617,7 @@ compiling a version of the AD library being used that were compatible with the a
 being used. What this means is that if \emph{Peridigm} or any simulation software were to be
 reformulated to take advantage of accelerators or GPUs, attractive given their performance and power
 efficiency advantages over traditional CPUs, the flexibilty of complex-step owed to its simple
-implementation may make it more viable fo rthat application.
+implementation may make it more viable for that application.
 
 
 
