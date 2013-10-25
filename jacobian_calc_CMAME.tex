@@ -171,221 +171,56 @@ distinction of `accurate' is defined by comparison of the new method to popular 
 
 Comparative data regarding the accuracy and compute cycle timing for the complex step, finite-difference, central-difference, and automatic differentiation methods are included to aide developers and analysts in computational mechanics code design who are faced with implementing a general method for tangent stiffness matrix calculation.  A comparison and discrimination of the methods was achieved through in-situ instrumentation of a massively parallel computational mechanics code.   
 
-The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step method was developed, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
+The scope of the application component of the study was limited to a single material model implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step method implementation, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters.
 
-The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of a the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally included on the website is a C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
+The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques and as a general reference for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: a description of tangent-stiffness matrices and how to use them to solve non-linear systems, detailed directions for producing tangent-stiffness matrices with each the methods identified above, a description and justification of the new complex-step method for calculating tangent-stiffness matrices, a description of implementing complex-step in the \emph{Peridigm} software, a description of the quantities-of-interest used to rank the methods, a presentation and analysis of the results of the comparative study, and conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for C++ source-code and data necessary to reproduce the results presented here. Additionally, included on the website is a C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.
 
 \subsection{Differentiation Techniques}
 
-This subsection contains background information on the differentiation techniques underlying the
-tangent-stiffness matrix calculation methods compared in the study. Since first-order finite
-difference techniques are considered well known, they are not described here. Instead the
-reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
+This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since first-order finite difference techniques are considered well known, they are not described here. Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
-\subsubsection{Basis of New Method, 'Complex Step', in CTSE}  
-\note[Michael]{Will be replaced by Dr. Millwater's background section}
+\subsubsection{The ``complex-step'' method.}  
+It is possible to approximate derivatives quite accurately with a technique based on a complex variable Taylor series expansion of a function.  This method was first described by Lyness and Moler \cite{lyness1967numerical, lyness1968differentiation} and has more recently been rediscovered \cite{squire1998using, voorhees2011complex, al2010complex} for use in engineering analysis.  The basic idea is that a model parameter can be be made to be complex and expanded in a Taylor series about a small perturbation in the imaginary plane by some arbitrary value $h$ as follows
+%
+\begin{equation}
+f ( \beta_n + i h ) = f (\beta_n) + \frac{\partial f( \beta_n )}{\partial \beta_n} \frac{i h}{1!} + \frac{\partial f^2(\beta_n)}{\partial \beta_n^2} \frac{(i h)^2}{2!} + \frac{\partial f^3(\beta_n)}{\partial \beta_n^3} \frac{(i h)^3}{3!} + \cdots
+\label{eqn:complexTaylor}
+\end{equation}
+%
+Now we can take the imaginary part of both sides of equation (\ref{eqn:complexTaylor}) and solve for the first derivative ignoring terms of $\mathcal{O}\left ( h^2 \right)$ to yield an the estimate
+%
+\begin{equation}
+ \frac{\partial f( \beta_n )}{\partial \beta_n} \approx \frac{\mbox{Im} \left( f (\beta_n + i h) \right)}{h}.
+\label{eqn:complexFirstDeriv}
+\end{equation}
+%
+This shows that an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter up the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite-differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustraties the use of the complex-step method for derivative calculation of a function. 
 
-During a literature review in preparation of material distinct from the instant paper, one of the
-instant authors identified a work presenting an application of the prior work of applied
-mathematicians Lyness and Moler to the numerical approximations of the first derivatives of real
-functions. First called Complex Taylor Series Expansion (CTSE) in (Lyness and Moler) and later by
-\cite{voorhees2011complex}, where Dr. Millwater is one of the  instant authors, the use of the term and
-its acronym are adopted out of deference to their  originators. Lyness and Moler described CTSE
-based on  approximating the Taylor Series Expansion of a function F, where $F:R^1 \rightarrow R^1$  about a
-complex point and solving for the first derivative. The application of Lyness and Moler's work
-demonstrated by Squire and Trap showed that there was empirical evidence that a CTSE based numerical
-derivative formula could resist the accuracy reducing phenomenon of subtractive cancellation in
-circumstances where central-difference and forward-difference were  demonstrated to succumb to
-subtractive-cancellation.       
- 
+
 \subsubsection{Differentiation Technique: Automatic-differentiation} 
 \label{ADsubsection}
 
-Automatic-differentiation or 'AD' is a computerized method for computing exact derivatives based the
-chain-rule from calculus. AD takes advantage of the fact that any
-mathematical function executed on a computer, no matter how complicated, is a "composition of simple
-operations" (add, multiply, power, transcendental and the like) each having known analytical derivatives
-\cite{ref-sacado-presentation}. For reference, the AD
-implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} library developed out of Sandia National Labs \cite{ref-Sacado}.
+Automatic-differentiation (AD) is a computerized method for computing exact derivatives based the chain-rule from calculus. AD takes advantage of the fact that any mathematical function executed on a computer, no matter how complicated, is a ``composition of simple operations'' (add, multiply, power, transcendental and the like) each having known analytical derivatives \cite{ref-sacado-presentation}. For reference, the AD implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} agile component libraries developed at Sandia National Laboratories \cite{ref-Sacado}.
 
-The way an AD system works is by first evaluating the innermost function of the composition, then presenting
-that function's output as input to the next level function until all levels are complete, in a way no
-different from how a normal computer program or human would evaluate composition functions.
-AD departs in that as each nested function is evaluated, the function's
-partial derivative with respect to the designated variables of the given input is also calculated.
-This is possible because the elementary math functions are hard-coded into the
-AD source-code along with their analytical derivatives, and linked by special instructions, so that when
-the elementary math functions are called upon for computation, their partial derivatives may be computed and
-stored in a sequence. The AD system then multiples the final sequence of partial derivatives together to
-produce the exact equivalent to taking a partial derivative of the corresponding composition
-function made up of the elementary functions with respect to a designated variable at a particular
-value. It is obviously, but bears mentioning, that the AD system could simply store one value for partial
-derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence.
-In the literature, the AD scheme described here is called 'forward automatic-differentiation'. For
-brevity, only forward AD will be covered since it is pertinent to the study, however the reader is referred
-to the introduction section of \cite{ref-AD-methods} and its references list for further information on AD,
-particularly \cite{ref-on-AD} which is foundational. 
-
-To make the above description complete, this subsection concludes with an example forward AD process, with 
-an emphasis on how general purpose information known to the computer is specialized with additional
-information from the problem and used to carry out AD:
-
-\begin{enumerate}
-%Set up example problem. The example is meant to walk the reader through the forward AD algorithm
-%while encouraging them to rely on their understanding of the chain rule
-\item Take an example composition function $f(x) = (sin(cos(x)))^2$\\
-
-\item Suppose we want to know $\frac{df}{dx} \mid_{x_0}$ where $x_0$ is a particular value of $x$. \\
-
-\begin{enumerate}
-%This first block of subitems is meant to establish that the values of x that the user cares about
-%about evaluating functions for are included within the set of numbers that functions g,h,k are allowed 
-%to deal with, and that nested functions can take each other as input, where s may not necessarily equal
-%x.
-\item Given that: \\
-\label{given}
-\begin{enumerate}
-\item $S \in R^1$ 
-\item $X \in S$ 
-\item $g, h, k \in H: S \rightarrow S$ 
-\item $\forall s \in S : g(s) = {s}^2$, $h(s) = sin(s)$, $k(s) = cos(s)$ 
-\item
-\label{composition}
-$\forall x \in X : f(x) = g(h(k(x)))$ \\
-\end{enumerate}
-
-\item Given that the computer is programmed with some mathematical definitions:\\
-\begin{enumerate}
-\item
-\begin{enumerate}
-\item
-%The computer has at least definitions for these functions and variables
-$u, v, w \in H: R^3 \rightarrow R^1$ \\
-\item
-$s,a,b,x \in R^1$\\
-\end{enumerate}
-
-\item
-%AD doesn't return symbolic epressions for derivitives that can be re-evaluated.
-%Instead, generic versions of functions and evaluations of their partials are defined together.
-particular values can be identified: \\
-$s = s_0,..,s_n,...s_{\infty} \mid n=[0,\infty)$ \\ 
-and similarly for the other variables $a,b,x$ \\
-\item
-functions $u,v,w$ and their partial derivatives w.r.t $s$ are defined such that: \\
-\begin{tabular}{l | l}
-\multicolumn{2}{c}{for $a, b, s$ equal to $a_n, b_n, s_n$:} \\ \hline
-$u \mid _{a_n, b_n, s_n} = a_n \cdot s_n^{b_n}$ & $\frac{\partial{u}}{\partial{s}} \mid _{a_n, b_n, s_n} = a_n \cdot b_n \cdot s_n^{b_n - 1}$ \\
-$v \mid _{a_n, b_n, s_n} = a_n \cdot sin(b_n \cdot s_n)$ & $\frac{\partial{v}}{\partial{s}} \mid _{a_n, b_n, s_n} = a_n \cdot b_n \cdot cos(b_n \cdot s_n)$\\ 
-$w \mid _{a_n, b_n, s_n} = a_n \cdot cos(b_n \cdot s_n)$ & $\frac{\partial{w}}{\partial{s}} \mid _{a_n, b_n, s_n} = -a_n \cdot b_n \cdot sin(b_n \cdot s_n)$\\
-\end{tabular} 
-\end{enumerate}
-%a comment
-\item 
-\label{abcvalues}
-%General definitions of functions are specialized by arguments. 
-Given that it is possible to describe $f(x) = (sin(cos(x)))^2$ in terms the computer understands by inputting
-$f(x)$ such that the computer stores an equivalent statement $f(x) = u(a, b, s) \mid_{arguments}$,
-iff the arguments of $u,v,w$ are chosen such that $u,v,w$ approximate $g,h,k$ as follows:\\
-\begin{tabular}{l l l l | c}
-	Function & a & b & s & Approximates Function\\ \hline 
-	$u$ & $1$ & $2$ & $v$ & $g$\\ \hline 
-	$v$ & $1$ & $1$ & $w$ & $h$\\ \hline 
-	$w$ & $1$ & $1$ & $x$ & $k$\\ \hline 	
-\end{tabular}
-\end{enumerate} 
-
-\item 
-\label{differentiation}
-%AD is eqivalent to the chain rule, when the computer has definitions for functions and partials
-%that can be adapted to match the compostition function.
-It follows from \ref{composition} that we can evaluate $\frac{d}{d x}f(x) \mid_{x_0}$ with the chain rule: \\ \\
-$\frac{d}{d x}f(x) = \frac{d}{d x} \cdot g(h(k(x))) \mid_{x_0}$ \\
-$\frac{d}{d x}f(x) =  \frac{d{g}}{d{h}} \cdot \frac{d{h}}{d{k}}
-\cdot \frac{d{k}}{d{x}}\mid_{x_0}$ \\ \\
-From the rest of \ref{given} it follows that we can approximate  $\frac{d}{d x}f(x) \mid_{x_0}$ by
-specializing the computer's general forms of $u, v, w$ 
-according to \ref{abcvalues}, with parameters $a, b$ chosen for each function and held as constant, and
-evaluating, such that the total derivative our original function w.r.t $x$ where $x = x_0$ is approximated
-by the partial derivative of our equivalent statement, $f(x) = u(a, b, s) \mid_{arguments}$,  w.r.t $s$ 
-where $s = x_0$. \\
-
-\end{enumerate}
-\label{doingthework}
-%This shows how information flows through the nested functions in one expression, like a table of contents
-For completeness we write out the computer's steps to evaluate \ref{differentiation} under the conditions of
-\ref{abcvalues} with a particular value of $s = x_0$, in equation format: \\ \\
-$\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot \frac{ds}{dx}$\\ \\
-Repeating above in tabular format: \\ \\
-%This shows the same information but is ordered to show progression, like chapters
-\begin{tabular}{l l l}
-Current Evaluation & $s$ Value & Partial Derivative \\ \hline
-$w(a, b, s)\mid_{1, 1, s}$ & $x_0$ & $\frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0}$ \\
-$v(a, b, s)\mid_{1, 1, s}$ & $w(a, b, s)\mid_{1, 1, x_0}$ & $\frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0}$ \\
-$u(a, b, s)\mid_{1, 2, s}$ & $v(a, b, s)\mid_{1, 1, w(a, b, s)\mid_{1, 1, x_0}}$ & $\frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot 1$ \\
-\end{tabular} \\ \\
-%This explains what the equation and table above mean.
-Because the computer knew the analytical forms of the partial derivatives of each of $u,v,w$ beforehand,
-all it needed to do was:
-\begin{enumerate}
-\item to evaluate each of $u,v,w$ according to \ref{abcvalues}, in order from $w \rightarrow
-v \rightarrow u$, 
-\item to remember the values for $x_0$ and the output of each function evaluation besides  $u$, 
-\item then to use $x_0$ and the output of the function evaluations as input for the corresponding partial
-derivative function  evaluations, and
-\item store the individual partials.
-\end{enumerate}
-Lastly, to compute the partial derivative of the entire composition function, the computer multiplies
-the individual partials together in observance of the chain-rule.  
-
-Some things to note about AD are that no approximation of derivatives is being made because the analytical 
-forms of the partials of the elementary math functions are defined alongside them. Accuracy of AD is then limited
-by the precision of the AD system's definition of the elementary math functions and their partials.
+The way an AD system works is by first evaluating the innermost function of the composition, then presenting that function's output as input to the next level function until all levels are complete, in a way no different from how a normal computer program or human would evaluate composition functions.  AD departs in that as each nested function is evaluated, the function's partial derivative with respect to the designated variables of the given input is also calculated.  This is possible because the elementary math functions are hard-coded into the AD source-code along with their analytical derivatives, and linked by special instructions, so that when the elementary math functions are called upon for computation, their partial derivatives may be computed and stored in a sequence. The AD system then multiples the final sequence of partial derivatives together to produce the exact equivalent to taking a partial derivative of the corresponding composition function with respect to a designated variable at a particular value. It is obvious, but bears mentioning, that the AD system could simply store one value for partial derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence.  In the literature, the AD scheme described here is called \emph{forward automatic-differentiation}. Only forward AD will be covered here since it is the implementation used in \emph{Sacado} and therefore this study; however, the reader is referred to the introduction section of \cite{ref-AD-methods} and its citations for further information on AD, particularly \cite{ref-on-AD} which is foundational. Appendix~\ref{sec:appendixB} includes an example that walks the reader through the process a computer uses to compute derivates via AD.  Some things to note about AD are that no approximation of derivatives is being made because the analytical forms of the partials of the elementary math functions are defined alongside them. The accuracy of AD is then limited by the precision of the AD system's definition of the elementary math functions and their partial derivatives .
  
-\subsection{Tangent-stiffness Matrices} 
+\subsection{Tangent-stiffness} 
 
-This subsection gives a working definition of a tangent-stiffness matrix and background on a
-Newton-Raphson method which uses a tangent-stiffness matrix to help solve nonlinear systems of
-equations, similarly to the the solution method used by the software package used in the study.
+In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface the ``points'' in the minimum direction. While we've adopted the terminology of solid mechanics, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmisability matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
-\subsubsection{What is a Tangent-stiffness Matrix}
-\label{tsmat}
+While, for simplicity, the examples shown in the sequel refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of some residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent, hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorthmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method so attractive for this class of problems.  Again, in the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when these models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.
 
-It is important to identify what a tangent-stiffness matrix is and what it is used for to help show
-the motivation for the work discussed here. It is helpful to begin with the thought that a
-tangent-stiffness matrix is a type of slope for vector valued functions of vector variables at
-a single point in the space of the vector valued variable. A tangent-stiffness matrix is similar to the
-"$m$" in the function $y = mx + b$, except that $y$, $x$ and $b$ are vectors while $m$ is
-a matrix. \\
 
-In detail, a tangent-stiffness matrix can be described as a collection of the first
-order partial derivatives of a vector valued function w.r.t each degree of freedom of the vector
-valued function for a given value of the vector variable.  The tangent-stiffness matrix comprises a
-linear operator that can be used to transform a difference in the vector variable into a difference
-in the value of the vector valued function via an inner product between the tangent-stiffness matrix
-and the vector variable.  As an example in a solid mechanics system, suppose some dependent
-variables represented force components of force vectors at nodes of discretization, and independent
-variables represented displacement components for those same nodes. Suppose that as is possible in
-peridynamic nodes each dependent variable is a function of all of the independent variables. For
-this situation, the tangent-stiffness matrix would be the first derivatives of every force component
-variable with respect to every displacement component variable, with the rows corresponding to the force
-components and the columns corresponding to the displacement components.  \\
+In detail, a tangent-stiffness matrix can be described as a collection of the first-order partial derivatives of a vector valued function with respect to each independent vector component of the function for a given vector.   A general mathematical formula for a tangent-stiffness matrix, $K_{ij}$,
+can be expressed in indicial notation as 
+%
+\begin{equation} 
+  K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0}
+\end{equation}
+%
+Where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to an (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using the any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
 
-How is a tangent-stiffness matrix computed? The mathematical formula for a tangent stiffness matrix
-can be expressed in indicial notation as: 
-
-\begin{equation} \frac{\partial F_i}{\partial X_j}\mid_{X_0,...,X_n} \end{equation}
-
-Where $F_i$ is the i'th component of the vector valued function, $X_j$ is the j'th component of the
-vector variable, and a particular value of the vector variable is chosen $X_0,...,X_n$. One then
-evaluates the expression for each combination $i, j$ corresponding to an element at $row, column$ in
-the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be
-estimated using the CTSE, AD and finite-difference techniques for functions $F:R^1 \rightarrow R^1$,
-since taking partial derivatives entails holding all but a single independent variable of the
-function constant, and each component of a vector valued function can be evaluated independently of
-the other components. \\
-
-\subsubsection{Calculating Tangent-stiffness Matrices with Each Method}
+\subsubsection{Differencing formulas for tangent-stiffness matrix evaluation with each method.}
 For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
 central-difference and forward-difference will be shown and explained. The expressions for AD,
 central-difference and forward-difference are taken from \cite{ref-Adaggio}, while the expression
@@ -789,7 +624,6 @@ implementation may make it more viable fo rthat application.
 This work was funded in part by grants from the United States Air Force Office of Scientific
 Research grant number XXXX and National Energy Technology Laboratory grant number XXXXX. 
 \label{sec:ack}
-
 %% References
 %%
 %% Following citation commands can be used in the body text:
@@ -806,6 +640,151 @@ Research grant number XXXX and National Energy Technology Laboratory grant numbe
 %% Authors are advised to submit their bibtex database files. They are
 %% requested to list a bibtex style file in the manuscript if they do
 %% not want to use elsarticle-num.bst.
+\appendix
+\renewcommand*{\thesection}{\Alph{section}}
+%
+\section{Complex-Step Example}
+\label{sec:appendixA}
+%
+Using $f(x) = \cos(x)$, we have
+%
+\[
+f (x + i h) = \cos(x + i h),
+\]
+%
+or through trigonometric identities equivalently
+%
+\[
+f(x + i h) = \cos(x) \cosh(h) - i \sin(x) \sinh(h),
+\]
+%
+Applying equation (\ref{eqn:complexFirstDeriv})
+\[
+\frac{\partial f(x)}{\partial x} = - \frac{\sin(x) \sinh(h)}{h},
+\]
+Since $h$ is arbitrary we desire it to be as small as possible or
+\[
+\frac{\partial f(x)}{\partial x} = \lim_{h \to 0} - \frac{\sin(x) \sinh(h)}{h},
+\]
+using L'H\^opital's rule
+\[
+\frac{\partial f(x)}{\partial x} = \lim_{h \to 0} - \frac{\sin(x) \cosh(h)}{1},
+\]
+of course, as $h \to 0$ then $\cosh(h) \to 1$ thereby recovering the exact derivative
+\[
+\frac{\partial f(x)}{\partial x} =-\sin(x).
+\]
+
+\section{AD Example}
+\label{sec:appendixB}
+
+\begin{enumerate}
+%Set up example problem. The example is meant to walk the reader through the forward AD algorithm
+%while encouraging them to rely on their understanding of the chain rule
+\item Take an example composition function $f(x) = (sin(cos(x)))^2$\\
+
+\item Suppose we want to know $\frac{df}{dx} \mid_{x_0}$ where $x_0$ is a particular value of $x$. \\
+
+\begin{enumerate}
+%This first block of subitems is meant to establish that the values of x that the user cares about
+%about evaluating functions for are included within the set of numbers that functions g,h,k are allowed 
+%to deal with, and that nested functions can take each other as input, where s may not necessarily equal
+%x.
+\item Given that: \\
+\label{given}
+\begin{enumerate}
+\item $S \in R^1$ 
+\item $X \in S$ 
+\item $g, h, k \in H: S \rightarrow S$ 
+\item $\forall s \in S : g(s) = {s}^2$, $h(s) = sin(s)$, $k(s) = cos(s)$ 
+\item
+\label{composition}
+$\forall x \in X : f(x) = g(h(k(x)))$ \\
+\end{enumerate}
+
+\item Given that the computer is programmed with some mathematical definitions:\\
+\begin{enumerate}
+\item
+\begin{enumerate}
+\item
+%The computer has at least definitions for these functions and variables
+$u, v, w \in H: R^3 \rightarrow R^1$ \\
+\item
+$s,a,b,x \in R^1$\\
+\end{enumerate}
+
+\item
+%AD doesn't return symbolic epressions for derivitives that can be re-evaluated.
+%Instead, generic versions of functions and evaluations of their partials are defined together.
+particular values can be identified: \\
+$s = s_0,..,s_n,...s_{\infty} \mid n=[0,\infty)$ \\ 
+and similarly for the other variables $a,b,x$ \\
+\item
+functions $u,v,w$ and their partial derivatives w.r.t $s$ are defined such that: \\
+\begin{tabular}{l | l}
+\multicolumn{2}{c}{for $a, b, s$ equal to $a_n, b_n, s_n$:} \\ \hline
+$u \mid _{a_n, b_n, s_n} = a_n \cdot s_n^{b_n}$ & $\frac{\partial{u}}{\partial{s}} \mid _{a_n, b_n, s_n} = a_n \cdot b_n \cdot s_n^{b_n - 1}$ \\
+$v \mid _{a_n, b_n, s_n} = a_n \cdot sin(b_n \cdot s_n)$ & $\frac{\partial{v}}{\partial{s}} \mid _{a_n, b_n, s_n} = a_n \cdot b_n \cdot cos(b_n \cdot s_n)$\\ 
+$w \mid _{a_n, b_n, s_n} = a_n \cdot cos(b_n \cdot s_n)$ & $\frac{\partial{w}}{\partial{s}} \mid _{a_n, b_n, s_n} = -a_n \cdot b_n \cdot sin(b_n \cdot s_n)$\\
+\end{tabular} 
+\end{enumerate}
+%a comment
+\item 
+\label{abcvalues}
+%General definitions of functions are specialized by arguments. 
+Given that it is possible to describe $f(x) = (sin(cos(x)))^2$ in terms the computer understands by inputting
+$f(x)$ such that the computer stores an equivalent statement $f(x) = u(a, b, s) \mid_{arguments}$,
+iff the arguments of $u,v,w$ are chosen such that $u,v,w$ approximate $g,h,k$ as follows:\\
+\begin{tabular}{l l l l | c}
+	Function & a & b & s & Approximates Function\\ \hline 
+	$u$ & $1$ & $2$ & $v$ & $g$\\ \hline 
+	$v$ & $1$ & $1$ & $w$ & $h$\\ \hline 
+	$w$ & $1$ & $1$ & $x$ & $k$\\ \hline 	
+\end{tabular}
+\end{enumerate} 
+
+\item 
+\label{differentiation}
+%AD is eqivalent to the chain rule, when the computer has definitions for functions and partials
+%that can be adapted to match the compostition function.
+It follows from \ref{composition} that we can evaluate $\frac{d}{d x}f(x) \mid_{x_0}$ with the chain rule: \\ \\
+$\frac{d}{d x}f(x) = \frac{d}{d x} \cdot g(h(k(x))) \mid_{x_0}$ \\
+$\frac{d}{d x}f(x) =  \frac{d{g}}{d{h}} \cdot \frac{d{h}}{d{k}}
+\cdot \frac{d{k}}{d{x}}\mid_{x_0}$ \\ \\
+From the rest of \ref{given} it follows that we can approximate  $\frac{d}{d x}f(x) \mid_{x_0}$ by
+specializing the computer's general forms of $u, v, w$ 
+according to \ref{abcvalues}, with parameters $a, b$ chosen for each function and held as constant, and
+evaluating, such that the total derivative our original function w.r.t $x$ where $x = x_0$ is approximated
+by the partial derivative of our equivalent statement, $f(x) = u(a, b, s) \mid_{arguments}$,  w.r.t $s$ 
+where $s = x_0$. \\
+
+\end{enumerate}
+\label{doingthework}
+%This shows how information flows through the nested functions in one expression, like a table of contents
+For completeness we write out the computer's steps to evaluate \ref{differentiation} under the conditions of
+\ref{abcvalues} with a particular value of $s = x_0$, in equation format: \\ \\
+$\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot \frac{ds}{dx}$\\ \\
+Repeating above in tabular format: \\ \\
+%This shows the same information but is ordered to show progression, like chapters
+\begin{tabular}{l l l}
+Current Evaluation & $s$ Value & Partial Derivative \\ \hline
+$w(a, b, s)\mid_{1, 1, s}$ & $x_0$ & $\frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0}$ \\
+$v(a, b, s)\mid_{1, 1, s}$ & $w(a, b, s)\mid_{1, 1, x_0}$ & $\frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0}$ \\
+$u(a, b, s)\mid_{1, 2, s}$ & $v(a, b, s)\mid_{1, 1, w(a, b, s)\mid_{1, 1, x_0}}$ & $\frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot 1$ \\
+\end{tabular} \\ \\
+%This explains what the equation and table above mean.
+Because the computer knew the analytical forms of the partial derivatives of each of $u,v,w$ beforehand,
+all it needed to do was:
+\begin{enumerate}
+\item to evaluate each of $u,v,w$ according to \ref{abcvalues}, in order from $w \rightarrow
+v \rightarrow u$, 
+\item to remember the values for $x_0$ and the output of each function evaluation besides  $u$, 
+\item then to use $x_0$ and the output of the function evaluations as input for the corresponding partial
+derivative function  evaluations, and
+\item store the individual partials.
+\end{enumerate}
+Lastly, to compute the partial derivative of the entire composition function, the computer multiplies
+the individual partials together in observance of the chain-rule.  
 
 \end{document}
 %%
