@@ -220,21 +220,18 @@ can be expressed in indicial notation as
 %
 Where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using the any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
 
-\subsubsection{Differencing formulas for tangent-stiffness matrix evaluation with each method.}
-For reference, expressions for calculating tangent stiffness matrices with CTSE, AD,
-central-difference and forward-difference will be shown and explained. The expressions for AD,
-central-difference and forward-difference are taken from \cite{ref-Adaggio}, while the expression
-for CTSE is original. 
+\subsubsection{Differencing formulas for tangent-stiffness matrix evaluation.}
+
+For reference, expressions for calculating tangent stiffness matrices with complex-step, automatic differentiation, central-difference and forward-difference will be presented and explained. 
 
 When the using the forward-difference technique the formula for calculating a tangent-stiffness
-matrix is:
-
-\begin{equation} K_{ij} = \frac{\partial F_i^{int}(x + \delta e_j) - F_i^{int}(x)}{\delta}
+matrix is
+%
+\begin{equation} 
+  K_{ij} = \frac{\partial F_i^{int}(x + h e_j) - F_i^{int}(x)}{h}
 \end{equation}
-
-Where $K_{ij}$ is the index notation representation of an element of the tangent-stiffness matrix at
-row $i$, column $j$. The expression says that the partial derivative of the $i$'th component of $F$
-w.r.t the $j$'th component of $x$ is equal to the quotient of the partial difference of two terms
+%
+Where $K_{ij}$ is the indicial notation representation of an element of the tangent-stiffness matrix at row $i$, column $j$. The expression says that the partial derivative of the $i$'th component of $F$ with respect the $j$'th component of $x$ is equal to the quotient of the partial difference of two terms
 and a denomenator. The first of the 'two terms' is $F_i$ evaluated at $x$ where
 the $j$'th component of $x$ has been perturbed by an very small amount in the direction of the
 positive $x_j$ axis. The second of the 'two terms' is $F_I$ evaluated at an unperturbed $x$. The
