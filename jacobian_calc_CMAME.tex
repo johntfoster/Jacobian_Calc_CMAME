@@ -194,7 +194,7 @@ Now we can take the imaginary part of both sides of equation (\ref{eqn:complexTa
 \label{eqn:complexFirstDeriv}
 \end{equation}
 %
-This shows that an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter up the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite-differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustraties the use of the complex-step method for derivative calculation of a function. 
+This shows that an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter up the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite-differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustrates the use of the complex-step method for derivative calculation of a function. 
 
 
 \subsubsection{Differentiation Technique: Automatic-differentiation} 
@@ -208,49 +208,41 @@ The way an AD system works is by first evaluating the innermost function of the 
 
 In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While we've adopted the terminology of solid mechanics, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmisability matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
-While, for simplicity, the examples shown in the sequel refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of some residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent, hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorthmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method so attractive for this class of problems.  Again, in the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when these models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.
+While, for simplicity, the examples shown in the sequel refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of some residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent, hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorithmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method so attractive for this class of problems.  Again, in the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when these models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.
 
 
 In detail, a tangent-stiffness matrix can be described as a collection of the first-order partial derivatives of a vector valued function with respect to each independent vector component of the function for a given vector.   A general mathematical formula for a tangent-stiffness matrix, $K_{ij}$,
 can be expressed in indicial notation as 
 %
 \begin{equation} 
-  K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0}
+  K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0},
 \end{equation}
 %
-Where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
+where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
 
 \subsubsection{Differencing formulas for tangent-stiffness matrix evaluation.}
 
-When using the forward-difference technique the formula for calculating a tangent-stiffness
-matrix is:
+The \emph{forward-difference} (FD) formula for calculating a tangent-stiffness matrix in the setting of a solid structural mechanics problem is
 %
 \begin{equation} 
-  K_{ij} = \frac{\partial F_i^{int}(x + h e_j) - F_i^{int}(x)}{h}
+  K_{ij} = \frac{\partial F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u})}{h},
 \end{equation}
 %
-Where $K_{ij}$ is the indicial notation representation of an element of the tangent-stiffness matrix at row $i$, column $j$. The expression says that the partial derivative of the $i$'th component of $F$ with respect the $j$'th component of $x$ is equal to the quotient of the partial difference of two terms
-and a denomenator. The first of the 'two terms' is $F_i$ evaluated at $x$ where
-the $j$'th component of $x$ has been perturbed by an very small amount in the direction of the
-positive $x_j$ axis. The second of the 'two terms' is $F_I$ evaluated at an unperturbed $x$. The
-denominator is the magnitude of perturbation called "probe distance" \cite{ref-Adaggio}.
+Where $K_{ij}$ is the indicial notation representation of an element of the tangent-stiffness matrix at row $i$, column $j$. The first of the two terms in the numerator is the internal force, $F_i^{int}$ evaluated in the current deformed configuration, $\vec{u}$,  plus a small perturbation $h$ in the direction $\hat{e}_j$ where $\hat{e}_j$ represents a unit-vector corresponding to the $j^{\mbox{th}}$ degree-of-freedom. The second of the two terms is $F_i^{int}$ evaluated in the current configuration. The denominator is the magnitude of perturbation called \emph{probe-distance}.
 
-When using the central-difference technique the formula for calculating a tangent-stiffness matrix
-is:
+The \emph{central-difference} (CD) formula for calculating a tangent-stiffness matrix is
+%
+\begin{equation} 
+  K_{ij} = \frac{\partial F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u} - h \hat{e}_j)}{2 h}.
+\end{equation}
+%
+Together, the FD and CD methods, are sometimes termed \emph{finite-difference probing} techniques for tangent-stiffness calculation in literature \cite{ref-Adaggio}.
 
-\begin{equation} K_{ij} = \frac{\partial F_i^{int}(x + \delta e_j) - F_i^{int}(x - \delta
-e_j)}{2\delta} \end{equation}
-
-The distiction between the central difference-method and the forward-difference method
-tangent-stiffness calculation formula is that the partial difference is now between two perturbed
-function evaluations, rather than between an unperturbed and perturbed function evaluation as in
-forward-difference. Additionally, the minuend involves a perturbation of $x$ in the direction opposite to
-the direction of the $j$'th component of $x$. 
-
-When using the comple-step technique, which is based on CTSE, the formula for calculating a
-tangent-stiffness matrix is:
-
-\begin{equation} K_{ij} = \frac{imag(F_i^{int}(x + \delta e_j^{imag}))}{\delta} \end{equation}
+The complex-step (CS) formula for calculating a tangent-stiffness matrix is
+%
+\begin{equation} 
+  K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h \hat{e}_j))}{h}
+\end{equation}
 
 Where our model $F$ is treated as function of complex variables and $x$ is treated as a vector of
 complex values. The expression says that the real valued partial derivative of the $i$'th component of $F$
