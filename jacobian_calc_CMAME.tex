@@ -180,6 +180,7 @@ The aim of this paper is not only to introduce the new complex-step method in th
 This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since first-order finite difference techniques are considered well known, they are not described here. Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
 \subsubsection{The ``complex-step'' method.}  
+\label{sec:CSmethod}
 It is possible to approximate derivatives quite accurately with a technique based on a complex variable Taylor series expansion of a function.  This method was first described by Lyness and Moler \cite{lyness1967numerical, lyness1968differentiation} and has more recently been rediscovered \cite{squire1998using, voorhees2011complex, al2010complex} for use in engineering analysis.  The basic idea is that a model parameter can be be made to be complex and expanded in a Taylor series about a small perturbation in the imaginary plane by some arbitrary value $h$ as follows
 %
 \begin{equation}
@@ -218,14 +219,14 @@ can be expressed in indicial notation as
   K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0},
 \end{equation}
 %
-where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $i, j$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
+where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector is chosen to linearize about $\vec{X}_0$. One then evaluates the expression for each combination $(i, j)$ corresponding to a (row, column) location in the tangent-stiffness matrix. By inspection, the elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
 
 \subsubsection{Differencing formulas for tangent-stiffness matrix evaluation.}
 
 The \emph{forward-difference} (FD) formula for calculating a tangent-stiffness matrix in the setting of a solid structural mechanics problem is
 %
 \begin{equation} 
-  K_{ij} = \frac{\partial F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u})}{h},
+  K_{ij} = \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u})}{h},
 \end{equation}
 %
 Where $K_{ij}$ is the indicial notation representation of an element of the tangent-stiffness matrix at row $i$, column $j$. The first of the two terms in the numerator is the internal force, $F_i^{int}$ evaluated in the current deformed configuration, $\vec{u}$,  plus a small perturbation $h$ in the direction $\hat{e}_j$ where $\hat{e}_j$ represents a unit-vector corresponding to the $j^{\mbox{th}}$ degree-of-freedom. The second of the two terms is $F_i^{int}$ evaluated in the current configuration. The denominator is the magnitude of perturbation called \emph{probe-distance}.
@@ -233,7 +234,7 @@ Where $K_{ij}$ is the indicial notation representation of an element of the tang
 The \emph{central-difference} (CD) formula for calculating a tangent-stiffness matrix is
 %
 \begin{equation} 
-  K_{ij} = \frac{\partial F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u} - h \hat{e}_j)}{2 h}.
+  K_{ij} = \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u} - h \hat{e}_j)}{2 h}.
 \end{equation}
 %
 Together, the FD and CD methods, are sometimes termed \emph{finite-difference probing} techniques for tangent-stiffness calculation in literature \cite{ref-Adaggio}.
@@ -241,21 +242,14 @@ Together, the FD and CD methods, are sometimes termed \emph{finite-difference pr
 The complex-step (CS) formula for calculating a tangent-stiffness matrix is
 %
 \begin{equation} 
-  K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h \hat{e}_j))}{h}
+  K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h \hat{e}_j))}{h},
 \end{equation}
+%
+where the internal force, $F^{int}$ is now treated as function of complex vectors,  $\vec{u}$. The small perturbation, $h$, is now carried out on the imaginary axis and only the real coefficient to the imaginary part of the vector returned by $F^{int}$ is kept, hence the $\mbox{Im}(\cdot)$ operation. As highlighted in Section~\ref{sec:CSmethod}, notice there is no subtraction operation taking place; therefore $h$ can be made very small to yield highly accurate derivatives.
 
-Where our model $F$ is treated as function of complex variables and $x$ is treated as a vector of
-complex values. The expression says that the real valued partial derivative of the $i$'th component of $F$
-w.r.t the $j$'th component of $x$ is equal to the imaginary component of $F_i$ evaluated at $x$
-where $x$ is perturbed by a very small amount in the direciton of the imaginary axis corresponding
-to the $j$'th component of $x$ all divided by the magnitude of the perturbation. There is no partial
-notation because a partial difference is not taken.
+When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD system. The formula is just as expected:
 
-When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to
-follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD
-system. The formula is just as expected:
-
-\begin{equation} K_{ij} = \frac{\partial F_i^{int}}{\partial x_j} \end{equation}
+\begin{equation} K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j} \end{equation}
 
 \subsubsection{Solve a Nonlinear System with a Tangent-stiffness Matrix} \label{solve_a_system}
 The reader is referred to a succinct explanation of the Newton Raphson method, which shows the
