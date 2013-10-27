@@ -48,6 +48,7 @@
 %%\usepackage{color}
 %%\usepackage{tkz-base}
 \usepackage{pgfplots}
+\usepackage{siunitx}
 
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
@@ -105,8 +106,10 @@
 %%
 \author{Michael D. Brothers}
 \author{John T. Foster\corref{cor1}}
-\cortext[cor1]{Corresponding Author: john.foster@utsa.edu}
-\author{Harry R. Millwater}
+\ead{john.foster@utsa.edu}
+\cortext[cor1]{Corresponding Author} 
+
+\author{Harry R. Millwater\corref{}}
 \address{Mechanical Engineering Department, The University of Texas at San Antonio}
 
 %% \ead{email address}
@@ -140,14 +143,15 @@ of the comparative study precede results for clarity. The intended audience of t
 includes researchers, professionals and students, therefore readers are directed to
 selected background sources in the text for well-known concepts while less familiar concepts
 are derived in-paper with an attempt made to lay steps out plainly for those in disparate fields
-or who are new to their studies.  \end{abstract}
+or who are new to their studies.  
+\end{abstract}
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
 Newton's method \sep Newton-Raphson \sep numeric differentiation \sep complex-step \sep finite-difference \sep automatic-differentiation \sep Jacobian \sep tangent-stiffness
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
-\MSC [2010] 65D25 
+%\MSC [2010] 65D25 
 \end{keyword}
 
 \end{frontmatter}
@@ -271,18 +275,7 @@ The CS method was implemented in \emph{Perdigm} in a manner that follows closely
 \subsection{The Comparative Study} 
 \label{tcs}
 
-The methods were compared by running two sets of test problems where each method would solve a
-problem concurrently. Each test problem simulated a $4$ by $.25$ by $.25$ meter block of metal
-undergoing tension along the axis parallel to the long dimension of the block. The test problems
-were set up in \emph{Perdigm} as quasistatic equillibrium problems, where the displacement boundary
-conditions used to apply tension were applied gradually, in 'load steps', and an equilibrium
-solution for each load step was achieved before applying the next load step. The purpose of applying
-the load in gradual steps is a widely used technique to ensure the Newton-Raphson method is always
-guessing near the actual solution. The material properties of the model were set at $8.0E-9$ $ metric
-tonne/ mm^3$ density, $1.515E4$ $MPa$ bulk modulus, and $7.813E4$ $MPa$ shear modulus. The peridynamic
-horizon used in a test problem was three times the node spacing for the corrisponding model mesh.
-This value for horizon was chosen out of experience to insure that every node could have at least
-one nonlocal connection along the diagonal of the node grid.
+The methods were compared by running two sets of test problems where each method would solve a problem concurrently. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.25}{\meter}$ by $\SI{0.25}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equillibrium problems, where the displacement boundary conditions used to apply tension were applied gradually, in `load steps', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The material properties of the model were meant to replicate a typical metal and had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretiztion scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an opitimal node numbering scheme).
 
 A series of nine of these single core test problems were run, with the mesh discretization used in
 the model finer and finer with every test in the series. The aim of increasing the mesh complexity
