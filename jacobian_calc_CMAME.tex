@@ -188,14 +188,14 @@ This section contains background information on the differentiation techniques u
 It is possible to approximate derivatives quite accurately with a technique based on a complex variable Taylor series expansion of a function.  This method was first described by Lyness and Moler \cite{lyness1967numerical, lyness1968differentiation} and has more recently been rediscovered \cite{squire1998using, voorhees2011complex, al2010complex} for use in engineering analysis.  The basic idea is that a model parameter can be be made to be complex and expanded in a Taylor series about a small perturbation in the imaginary plane by some arbitrary value $h$ as follows
 %
 \begin{equation}
-f ( \beta_n + i h ) = f (\beta_n) + \frac{\partial f( \beta_n )}{\partial \beta_n} \frac{i h}{1!} + \frac{\partial f^2(\beta_n)}{\partial \beta_n^2} \frac{(i h)^2}{2!} + \frac{\partial f^3(\beta_n)}{\partial \beta_n^3} \frac{(i h)^3}{3!} + \cdots
+f ( x + i h ) = f (x) + \frac{\partial f(x)}{\partial x} \frac{i h}{1!} + \frac{\partial f^2(x)}{\partial x^2} \frac{(i h)^2}{2!} + \frac{\partial f^3(x)}{\partial x_n^3} \frac{(i h)^3}{3!} + \cdots
 \label{eqn:complexTaylor}
 \end{equation}
 %
 Now we can take the imaginary part of both sides of equation (\ref{eqn:complexTaylor}) and solve for the first derivative ignoring terms of $\mathcal{O}\left ( h^2 \right)$ to yield an the estimate
 %
 \begin{equation}
- \frac{\partial f( \beta_n )}{\partial \beta_n} \approx \frac{\mbox{Im} \left( f (\beta_n + i h) \right)}{h}.
+ \frac{\partial f( x )}{\partial x} \approx \frac{\mbox{Im} \left( f (x + i h) \right)}{h}.
 \label{eqn:complexFirstDeriv}
 \end{equation}
 %
@@ -275,38 +275,17 @@ The CS method was implemented in \emph{Perdigm} in a manner that follows closely
 \subsection{The Comparative Study} 
 \label{tcs}
 
-The methods were compared by running two sets of test problems where each method would solve a problem concurrently. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.25}{\meter}$ by $\SI{0.25}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equillibrium problems, where the displacement boundary conditions used to apply tension were applied gradually, in `load steps', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The material properties of the model were meant to replicate a typical metal and had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretiztion scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an opitimal node numbering scheme).
+The methods were compared by running two sets of test problems where each method would solve a problem concurrently. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.25}{\meter}$ by $\SI{0.25}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equillibrium problems, where the displacement boundary conditions used to apply tension were applied gradually, in `load steps', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The material properties of the model were meant to replicate a typical metal and had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus\note[JTF]{Micheal, are these numbers correct?}. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretiztion scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an opitimal node numbering scheme).
 
-A series of nine of these single core test problems were run, with the mesh discretization used in
-the model finer and finer with every test in the series. The aim of increasing the mesh complexity
-was to see if possible differences between the methods in terms of accuracy and speed would arise
-and trend based on model complexity. This series would comprise the single core runs. The specific
-parameters of these tests can be found in \emph{Peridigm} input xml files included in the archive
-for this paper which can be found in the corresponding author's website. These xml files allow users
-with appropriately modified versions of \emph{Peridigm} to reproduce the results found in this
-paper.
+A series of nine single compute core (i.e. serial) test problems were run with the discretization level being refined with every test in the series. The aim of increasing the refinement was to see if possible differences between the methods in terms of accuracy and speed would arise. This series would comprise the single core runs. The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the archive for this paper which can be found in the corresponding author's website. These {\tt xml} files allow users with appropriately modified versions of \emph{Peridigm} to reproduce the results found in this paper.
 
-Another series of four test problems were run, however this time the number of cores used to solve
-the problem was varied from test to test rather than the mesh refinement. While mesh refinement was
-not varied from test to test, it was set at a somewhat high $1E6$ perdidynamic nodes of
-discretization. This allowed the simulation computer to be challenged sufficiently that the effect
-of varying the number of cores on speed and accuracy between the methods used could be more clearly
-seen. The specific parameters of these tests can be found in \emph{Perdigm} input xml files also
-included in the archive for this paper on the corresponding author's website.
+Another series of four test problems were simulated, however this time the number of compute cores used to solve the problem was increased from test to test while the discretization level was held constant at 1 million computational nodes (3 million degrees of freedom). This allowed for sufficient computational nodes per core even at the highest level of parallelization such that message passing compunication did not overwhelm the simulation.   The specific parameters of these tests can be found in \emph{Perdigm} input {\tt xml} files also included in the archive for this paper on the corresponding author's website.
 
-What was recorded during the test runs as experimental data is the subject the following
-subsubsection. 
+\subsubsection{Quantities of interested} 
+\label{JGAM} 
+As stated in the Introduction a goal of the study was to rank CS against FD and CD on the basis of accuracy. AD was ommited from the comparison because it served as the standard of accuracy for the other methods in the absence of appropriate analaytical forms for the Jacobian associated with the system solved in the study. The assumption that AD is accurate enough to serve as a standard is supported by ADs implementation as a computerized chain rule as explained in Section~\ref{ADsubsection}.
 
-\subsubsection{Justification: Goals, Assumptions, and Metrics} \label{JGAM} As stated in the
-previous section a goal of the study was to rank complex-step against forward-difference and central
-difference on the basis of accuracy. AD was ommited from the comparison because it served as the
-standard of accuracy for the other methods in the absence of appropriate analaytical forms for the
-Jacobian associated with the nonlinear system solved in the study. The assumption that AD is
-accurate enough to serve as a standard is supported by AD's implementation as a computerized chain
-rule as explained in \ref{ADsubsection}.
-
-Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps
-that started with difference guesses, or from different iterations, it was necessary to solve one
+Because it makes no sense to compare tangent-stiffness matrices from different problems, load steps that started with difference guesses, or from different iterations, it was necessary to solve one
 load step and conclude each iteration within that load step by updating the displacement guess only
 from the results of the AD method and to subsequently feed all four methods the same updated guess
 the following iteration. This decision precluded a comparison of convergence rate, since if the
