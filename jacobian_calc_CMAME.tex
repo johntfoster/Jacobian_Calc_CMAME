@@ -164,7 +164,7 @@ Newton's method \sep Newton-Raphson \sep numeric differentiation \sep complex-st
 %\subsection{Motivation}
 \label{sec:intro} 
 
-In order to maintain the quadratic convergence properties of the first-order Newton's method in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
+In order to maintain the quadratic convergence properties of the first-order Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
 
 A goal of this study was to develop and evaluate a new, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This new method is based on a complex number Taylor series expansion and referred to as CTSE or the ``complex-step'' method.  The
 distinction of `accurate' is defined by comparison of the new method to popular finite differencing techniques used for computing tangent-stiffness matrices and with the exact algorithmically consistent derivatives computed with \emph{automatic differentiation}.
@@ -177,7 +177,7 @@ The aim of this paper is not only to introduce the new complex-step method in th
 
 \subsection{Differentiation Techniques}
 
-This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since first-order finite difference techniques are considered well known, they are not described here. Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
+This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since first-order finite-difference techniques are considered well known, they are not described here. Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
 \subsubsection{The ``complex-step'' method.}  
 \label{sec:CSmethod}
@@ -198,7 +198,7 @@ Now we can take the imaginary part of both sides of equation (\ref{eqn:complexTa
 This shows that an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter up the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite-differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustrates the use of the complex-step method for derivative calculation of a function. 
 
 
-\subsubsection{Differentiation Technique: Automatic-differentiation} 
+\subsubsection{Automatic-differentiation} 
 \label{ADsubsection}
 
 Automatic-differentiation (AD) is a computerized method for computing exact derivatives based the chain-rule from calculus. AD takes advantage of the fact that any mathematical function executed on a computer, no matter how complicated, is a ``composition of simple operations'' (add, multiply, power, transcendental and the like) each having known analytical derivatives \cite{ref-sacado-presentation}. For reference, the AD implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} agile component libraries developed at Sandia National Laboratories \cite{ref-Sacado}.
@@ -210,7 +210,6 @@ The way an AD system works is by first evaluating the innermost function of the 
 In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While we've adopted the terminology of solid mechanics, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmisability matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
 While, for simplicity, the examples shown in the sequel refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of some residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent, hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorithmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method so attractive for this class of problems.  Again, in the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when these models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.
-
 
 In detail, a tangent-stiffness matrix can be described as a collection of the first-order partial derivatives of a vector valued function with respect to each independent vector component of the function for a given vector.   A general mathematical formula for a tangent-stiffness matrix, $K_{ij}$,
 can be expressed in indicial notation as 
@@ -247,49 +246,27 @@ The complex-step (CS) formula for calculating a tangent-stiffness matrix is
 %
 where the internal force, $F^{int}$ is now treated as function of complex vectors,  $\vec{u}$. The small perturbation, $h$, is now carried out on the imaginary axis and only the real coefficient to the imaginary part of the vector returned by $F^{int}$ is kept, hence the $\mbox{Im}(\cdot)$ operation. As highlighted in Section~\ref{sec:CSmethod}, notice there is no subtraction operation taking place; therefore $h$ can be made very small to yield highly accurate derivatives.
 
-When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD system. The formula is just as expected:
+When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD system. The formula is the same as the continuum formula
+%
+\begin{equation} 
+  K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j},
+\end{equation}
+%
+but, with the caveat that $F^{int}$ is evaluated in a way that is algorithmically consistent, and therefore should yield quadratic convergence with Newton's method.
 
-\begin{equation} K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j} \end{equation}
+\section{Description of analysis tools and approach.} 
+%
+\subsection{Peridigm and  peridynamics.}
+%
+Comparisons of the different tangent-stiffness calculation techniques were carried out through code-development and \emph{in situ} instrumentation of the computational peridynamics code \emph{Peridigm} \cite{peridigm}. \emph{Peridigm} is distributed by Sandia National Laboratories as its primary open-source computational peridynamics code. It is a massively-parallel simulation code for implicit and explicit multi-physics simulations primarily used for solid mechanics and material failure. \emph{Peridigm} is a C++ code utilizing agile software components from Sandia's  \emph{Trilinos} project \cite{trilinos}. It's important to note that there is no specialization of the tangent-stiffness calculation methods described previously to this particular code or more generally to a computational peridynamics approach and the analysis carried out in this study should provide insight into the speed and accruacy of these methods when implemented into other computational mechanics analysis tools as well.  \emph{Peridigm} was chosen because of the author's relationship with the code development project and primarily because the FD, CD, and AD methods for tangent-stiffness calculation where areleady implemented in the code, leaving only the CS method to for development. However, because peridynamics is a nonlocal theory, the tangent-stiffness matrices have a much higher bandwidth (i.e. less sparsity) than traditional finite-element tangent-stiffness computations and the time required to construct the tangent-stiffness is a majority of the total computation time in any quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm} development team has an interest in profiling the performance of the tangent-stiffness computation methods.
 
-\subsubsection{Solve a Nonlinear System with a Tangent-stiffness Matrix} \label{solve_a_system}
-The reader is referred to a succinct explanation of the Newton Raphson method, which shows the
-role of a tangent-stiffness matrix or Jacobian in that solution method \cite[chap.
-13]{young2009}. 
+Briefly, peridynamics \cite{silling2000ret, silling:psa, silling2010peridynamic} is a nonlocal reformulation of the partial-differential equations that provide the statement of momentum balance in classical continuum mechanics. Its primary goal is the avoid the use of spatial derivatives in the balance equations or constitutive laws such that discontinuous displacements, i.e. cracks, are mathematically consistent with the governing equations. It has demonstrated great promise in modeling problems with massive pervasive failure \cite{littlewood2010}, interesting phenomenon such as dynamic crack branching \cite{ha2010sod}, and is being extended to multiphyics phenomenon \cite{bobaru2011peridynamic,katiyar2013} and coupling to molecular simulations \cite{seleson2009peridynamics}.
 
-\section{Methods and Materials} 
+\subsubsection{Implementing the complex-step method in Peridigm} 
+%
+The CS method was implemented in \emph{Perdigm} in a manner that follows closely the implementation of the FD technique.  However, because of \emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the \emph{Epetra} package, special steps had to be followed to allow the use of complex number data types.  This is because \emph{Epetra} vectors, which can be thought of as distributed memory parallel cousins to standard C++ STL vectors, are hard coded to be of type {\tt double} and can not be simply be declared as having a complex datatype. Therefore, program methods that were used in the course of applying the FD method were copied, renamed and re-written to follow the CS formula, which involved changing the datatype of intermediate variables which were locally scoped and dynamically casting persistent memory variables to complex datatypes where necessary. We made no atttempt to ``tune'' the CS code in any way for performance, we attempted to implement the algorithm is such as way that it was in one-to-one correspondence with the FD and CD methods; however, it must be noted that the overhead associated with the dynamic casts in the CS method likely hurt its overall performance and this issue could be alleviated by using the next generation templated \emph{TPetra} vectors available in \emph{Trilinos} that are capable of taking an explicit instantiation of any datatype including complex.  There where additional modifications for the purpose instrumenting the code to collect comparitive data and are not specifically part of CS or other methods. The source code patch to \emph{Peridigm} for implementing CS can be found on the corresponding author's website.  
 
-\subsection{Material: Perdynamics Code}
-
-The following subsubsections identify the program modified to run the simulations for the
-comparative study and explain what modifications were necessary.
-
-\subsubsection{\emph{Perdigm} and Peridynamics} 
-\subsubsection{Implementing Complex-Step in \emph{Peridigm}} 
-
-Complex step was implemented in \emph{Perdigm} as follows. First a way of
-persistently allocating memory needed to store imaginary values for nodal
-position and dilatation was determined. Persistent memory allocation is a very
-basic way to improve performance in general for a computer program. The way
-memory was allocated for similar vector and scalar variables used by the prior
-existing forward difference method was copied and new 'field spec' variables
-were added into the 'elastic' material model to store imaginary position
-coordinates and imaginary dilatation. Because of \emph{Peridigm}'s dependence
-on the \emph{Epetra} package of the \emph{Trilinos} library, 'field spec'
-variables could not be simply be declared as having a complex datatype. Program
-methods that were used in the course of applying the forward-difference method
-were copied, renamed and re-written to follow the CTSE formula, which involved
-changing the datatype of intermediate variables which were locally scoped and
-dynamically casting persistent variables, like the 'field spec' variables, to
-complex datatypes where necessary. Additional modifications were for the
-purpose of collecting experimental data and are not part of complex-step
-itself. The source code for implementing complex-step in \emph{Perdigim} can be
-found on the corresponding author's website.  Because \emph{Peridigm} was
-written by computer scientists rather than mechanical engineers primarily, many
-advanced techniques in C++ such as multiple virtual inheritance, pointer
-arithmetic and distributed data structures were used in the basic code and by
-necessity in the modified code.  To see complex-step in a more narrow context,
-it is advised that readers also take a look at the examples of complex-step and
-the other methods provided on the corresponding author's website.
+\emph{Peridigm} was primarily written by expert computational scientists; therefore, many advanced techniques in C++ such as multiple virtual inheritance, pointer arithmetic, and distributed data structures were used in the basic code and by necessity in the modified code.  To see CS and other methods in a more narrow context, it is advised that readers also take a look at the simple examples provided on the corresponding author's website.
 
 \subsection{The Comparative Study} 
 \label{tcs}
@@ -482,7 +459,7 @@ bears mentioning that while visually it may appear that the trend indicated by t
 datapoints on the plot is non-linear, the relationship would be closer to linear. This bodes well
 for the scalability of each of the methods by themselves in \emph{Peridigm}. 
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
   \caption{Serial test series speed measurements.}
@@ -501,7 +478,7 @@ well when additional processors are used. An explanation as to why automatic-dif
 forward-differences swapped places in speed ranking relative to the single core results was not
 determined. 
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
   \caption{Multicore test series speed measurements.}
@@ -522,7 +499,7 @@ magnitude of these differences for any of the methods is relatively small. These
 the experimental data which is available on the corresponding author's website. The effect of these
 accuracy differences on convergence rate directly was not determined.
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/serial_accuracy.pgf}}
   \caption{Serial test series accuracy measurements.}
@@ -534,7 +511,7 @@ The averaged resuts of the accuracy measurements taken for the multicore test se
 axis now indicated number of cores used to solve the test problem. Accuracy trends matched those for
 the single core tests. 
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}}
   \caption{Multicore test series accuracy measurements.}
@@ -550,7 +527,7 @@ yet present decrease in efficiency w.r.t number of nonzero Jacobian elements. Bu
 speed results, this trend in efficiency doesn't appear to have great effect in human terms for the
 mesh densities used in this test series.  
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/serial_speed_rel.pgf}}
   \caption{Serial test series efficiency measurements.}
@@ -566,7 +543,7 @@ efficiency over the last few datapoints in the plot, looking at the raw data con
 what was measured rather than this being an error during data reduction. The reason behind this
 trend was not determined.
 
-\begin{figure}[h]
+\begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_speed_rel.pgf}}
   \caption{Multicore test series efficiency measurements.}
