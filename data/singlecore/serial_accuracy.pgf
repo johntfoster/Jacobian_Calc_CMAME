@@ -2789,7 +2789,7 @@
 \end{pgfscope}%
 \end{pgfscope}%
 \begin{pgfscope}%
-\pgftext[left,bottom,x=-0.208171in,y=0.349495in,rotate=90.000000]{{\rmfamily\fontsize{12.000000}{14.400000}\selectfont L2 norm of difference to AD TS (MPa)}}
+\pgftext[left,bottom,x=-0.208171in,y=0.398729in,rotate=90.000000]{{\rmfamily\fontsize{12.000000}{14.400000}\selectfont \(\displaystyle l^2\) norm of difference to AD TS (MPa)}}
 %
 \end{pgfscope}%
 \begin{pgfscope}%

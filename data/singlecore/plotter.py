@@ -118,7 +118,7 @@ fd2= ax2.scatter(accuracy_averages['FD'][0][:], accuracy_averages['FD'][1][:], m
 plt.xlim(1.e5, 1.e9)
 #plt.xticks(np.arange(1.e-10, 1.0, .25))
 plt.xlabel("Number of nonzero elements in TS")
-plt.ylabel("L2 norm of difference to AD TS (MPa)")
+plt.ylabel("$l^2$ norm of difference to AD TS (MPa)")
 #plt.title("Frobenius norm of difference to AD TS vs.\nnumber of nonzero TS elements")
 plt.legend([cs2, cd2, fd2],['CS', 'CD', 'FD'], scatterpoints = 1, loc='upper left', bbox_to_anchor=(0., .38),
                   fancybox=True, shadow=True, ncol=1)

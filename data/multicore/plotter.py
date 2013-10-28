@@ -75,17 +75,17 @@ cs2= ax2.scatter(accuracy_averages['CS'][0][:], accuracy_averages['CS'][1][:], m
 cd2= ax2.scatter(accuracy_averages['CD'][0][:], accuracy_averages['CD'][1][:], marker='x', c='r', s=64 )
 fd2= ax2.scatter(accuracy_averages['FD'][0][:], accuracy_averages['FD'][1][:], marker='s', c='b', s=64) 
 plt.xlim(24.0, 160.0)
-plt.ylim(1.e-10, 1.0)
+#plt.ylim(1.e-10, 1.0)
 plt.yscale('log')
 plt.xlabel("Number of cores @ 1TB RAM per 32 cores")
-plt.ylabel("L2 norm of difference to AD TS (MPa)")
+plt.ylabel("$l^2$ norm of difference to AD TS (MPa)")
 #plt.title("Frobenius norm of difference to A.D. Jacobian vs. number of cores")
 plt.legend([cs2, cd2, fd2],['CS', 'CD', 'FD', 'AD'], scatterpoints = 1, loc='center left',
                   fancybox=True, shadow=True, ncol=1)
 
 
 plt.xticks(np.arange(0.0, 160.0, 32))
-plt.yticks([1.E-10, 1.E-8, 1.E-6, 1.E-4, 1.E-2, 1.0], [1.E-10, 1.E-8, 1.E-6, 1.E-4, 1.E-2, 1.0])
+plt.yticks([1.E-10, 1.E-7, 1.E-4, 1.E-1, 1.E2], [1.E-10, 1.E-7, 1.E-4, 1.E-1, 1.E2])
 plt.grid(True)
 ax2.grid(which='major', linestyle='--', color='grey')
 

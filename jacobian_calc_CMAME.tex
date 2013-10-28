@@ -51,6 +51,8 @@
 \usepackage{siunitx}
 %\usepackage{hyperref}
 
+\usepackage{array}
+
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
 
@@ -258,7 +260,7 @@ The CS method was implemented in \emph{Perdigm} in a manner that follows closely
 \subsection{The Comparative Study} 
 \label{tcs}
 
-The methods were compared by running two sets of test problems where each method would solve a problem concurrently. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.25}{\meter}$ by $\SI{0.25}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equilibrium problems, where the displacement boundary conditions used to apply tension were applied gradually, in `load steps', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The material properties of the model were meant to replicate a typical metal and had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus\note[JTF]{Michael, are these numbers correct?}. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretization scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an optimal node numbering scheme).
+The methods were compared by running two sets of test problems where each method would solve a problem concurrently. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.25}{\meter}$ by $\SI{0.25}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equilibrium problems, where the displacement boundary conditions used to apply tension were applied gradually, in `load steps', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The fictional material represented in the model had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretization scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an optimal node numbering scheme).
 
 A series of nine single compute core (i.e. serial) test problems were run with the discretization level being refined with every test in the series. The aim of increasing the refinement was to see if possible differences between the methods in terms of accuracy and speed would arise. This series would comprise the single core runs. The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the archive for this paper which can be found in the corresponding author's website. These {\tt xml} files allow users with appropriately modified versions of \emph{Peridigm} to reproduce the results found in this paper.
 
@@ -279,7 +281,7 @@ Once the quantities-of-interest (QoIs) for comparison were determined, the task 
   D = \sqrt{\sum_i \sum_j(K^{AD}_{ij} - K^{M}_{ij})^2}
 \end{equation}
 %
-Where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the AD based method, $M$ is replaced with either CS, FD, or CD depending on the method being compared.  The metric used to compare the speed of the different methods was the time in seconds required to calculate the tangent-stiffness matrix\note[JTF]{Verify the correctness of the this statement.  What was here previously was too wordy}. A final basis of comparison used in the study called \emph{computational efficiency} is based on the ratio of calculation time to the total number of tangent-stiffness matrix elements.
+Where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the AD based method, $M$ is replaced with either CS, FD, or CD depending on the method being compared.  The metric used to compare the speed of the different methods was the time in seconds required to calculate the tangent-stiffness matrix. A final basis of comparison used in the study called \emph{computational efficiency} is based on the ratio of calculation time to the total number of tangent-stiffness matrix elements.
 
 \subsubsection{Computers and other software} 
 %
@@ -288,9 +290,7 @@ Discretization for the test problems run in the study was done using the softwar
 The test problems were run the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at Austin. The single core test series was run using the {\tt normal} queue compute nodes, while the parallel test series was run using one to four {\tt large memory} nodes each having one terabyte of local RAM. This large amount of memory was required for reasons explained in Section~\ref{JGAM}.  
 
 \subsubsection{Data Reduction} 
-The output produced by \emph{Perdigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  Extraneous information was manually deleted from copied versions of the output text files so that they would be regular enough to be easily read by scripts written in \emph{Python}. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem rather than as a function peridynamic node density which was held constant. These data reduction and plotting scripts can be found on the corresponding author's website.
-
-Since samples were not repeated, because there was not resources for it, confidence intervals were not calculated. However, if results of iterations within the same test problem were considered samples of the same thing, then a confidence interval could be calculated. This assumption was only made for the purpose of reporting average values on the plots. But, a cursory review of data showed no range overlap among the methods for accuracy or speed data from any test run of either series. \note[JTF]{Revise this paragraph.}
+The output produced by \emph{Perdigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  Extraneous information was manually deleted from copied versions of the output text files so that they would be regular enough to be easily read by scripts written in \emph{Python}. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem rather than as a function peridynamic node density which was held constant. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found on the corresponding author's website.
 
 \section{Results and Discussion}
 %
@@ -298,29 +298,35 @@ This section contains the average results from the study presented in tabular an
 expression used to calculate the TS matrix elements and the units used to define bulk material properties, mentioned in Section~\ref{tcs}.
 %
 \note[JTF]{Michael, work on cleaning this table up for legibility}
+\note[Michael]{Columns are now separated out and can be fine tuned}
+
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+\newcolumntype{R}[1]{>{\raggedleft\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
+
 \begin{table}    
         \caption{Averaged Results, Each Test} \label{tab:results}   
-    \begin{tabular}{c c c c }
-      Cores & TS Elements & Calc. Time (s) & Accuracy Diff. ($\si{\mega\pascal}$)\\ 
-    \multicolumn{2}{c}{} & CS, CD, FD, AD & CS, CD, FD \\ \hline 
-    1 & $\num{1.99E6}$  & 3.5, 2.7, 1.7, 1.6 & 1.92E-10, 1.21E-4, .137 \\ \hline
-	1 & 4.25E6  & 6.2, 4.9, 3.2, 2.9 & 2.28E-10, 9.94E-4, .148 \\ \hline
-	1 & 7.79E6  & 11.2, 8.9, 5.7, 5.2 & 2.38E-10, 1.59E-4, .145\\ \hline
-	1 & 1.54E7  & 26.7, 21.0, 13.4, 12.2 & 2.33E-10, 4.61E-4, .12 \\ \hline
-	1 & 2.00E7  & 28.1, 22.2, 14.4, 13.1 & 2.76E-10, 1.05E-3, .145 \\ \hline
-	1 & 3.14E7  & 47.6, 37.7, 24.2, 21.9 & 2.64E-10, 1.65E-3, .133 \\ \hline
-	1 & 4.01E7  & 55.6, 44.1, 28.4, 25.9 & 3.03E-10, 1.92E-3, .148 \\ \hline
-	1 & 8.39E7  & 138.9, 109.6, 70.2, 64.0 & 3.63E-10, 1.64E-3, .123 \\ \hline
-	1 & 1.65E8  & 277.3, 218.1, 139.4, 126.5 & 3.26E-10, 2.18E-3, .128 \\ \hline
-	32 & 1.67E10  & 336.1, 277.7, 200.6, 233.1 & 6.21E-10, 1.52E-2, .176 \\ \hline
-	64 & 1.67E10  & 169.9, 140.7, 102.0, 119.7 & 6.20E-10, 1.50E-2, .177 \\ \hline
-	96 & 1.67E10  & 114.7, 95.0, 69.1, 79.7 & 6.18E-10, 1.50E-2, .177 \\ \hline
-	128 & 1.67E10  & 86.4, 71.8, 52.4, 58.8 & 6.16E-10, 1.47E-2, .177 \\ \hline
+       \hskip-2.0cm\begin{tabular}{C{1.5cm} C{1.88cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.5cm} C{1.88cm} C{1.88cm} C{1.5cm}}
+            Cores & TS Elements & Calc. Time (s) & & & & Accuracy Diff. ($\si{\mega\pascal}$) & & \\ 
+        \multicolumn{2}{l}{} & CS & CD & FD & AD & CS & CD & FD \\ \hline 
+        1 & $\num{1.99E6}$  & 3.5 & 2.7 & 1.7 & 1.6 & $\num{1.92E-10}$ & $\num{1.21E-4}$ & .137 \\ \hline
+        1 & $\num{4.25E6}$  & 6.2& 4.9& 3.2& 2.9 & $\num{2.28E-10}$& $\num{9.94E-4}$ & .148 \\ \hline
+        1 & $\num{7.79E6}$  & 11.2& 8.9& 5.7& 5.2 & $\num{2.38E-10}$& $\num{1.59E-4}$ & .145\\ \hline
+        1 & $\num{1.54E7}$  & 26.7& 21.0& 13.4& 12.2 & $\num{2.33E-10}$ & $\num{4.61E-4}$ & .12 \\ \hline
+        1 & $\num{2.00E7}$  & 28.1& 22.2& 14.4& 13.1 & $\num{2.76E-10}$ & $\num{1.05E-3}$ & .145 \\ \hline
+        1 & $\num{3.14E7}$  & 47.6& 37.7& 24.2& 21.9 & $\num{2.64E-10}$ & $\num{1.65E-3}$ & .133 \\ \hline
+        1 & $\num{4.01E7}$  & 55.6& 44.1& 28.4& 25.9 & $\num{3.03E-10}$ & $\num{1.92E-3}$ & .148 \\ \hline
+        1 & $\num{8.39E7}$  & 138.9& 109.6& 70.2& 64.0 & $\num{3.63E-10}$ & $\num{1.64E-3}$ & .123 \\ \hline
+        1 & $\num{1.65E8}$  & 277.3& 218.1& 139.4& 126.5 & $\num{3.26E-10}$ & $\num{2.18E-3}$ & .128 \\ \hline
+        32 & $\num{1.67E10}$  & 336.1& 277.7& 200.6& 233.1 & $\num{6.21E-10}$ & $\num{1.52E-2}$ & .176 \\ \hline
+        64 & $\num{1.67E10}$  & 169.9& 140.7& 102.0& 119.7 & $\num{6.20E-10}$ & $\num{1.50E-2}$ & .177 \\ \hline
+        96 & $\num{1.67E10}$  & 114.7& 95.0& 69.1 & 79.7 & $\num{6.18E-10}$ & $\num{1.50E-2}$ & .177 \\ \hline
+        128 & $\num{1.67E10}$  & 86.4& 71.8& 52.4 &58.8 & $\num{6.16E-10}$ & $\num{1.47E-2}$ & .177 \\ \hline
     \end{tabular}
 \end{table}
 
 \subsection{Speed Data}
-Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS element is plotted as a function of the number of nonzero TS elements.  CS turned out to be the slowest of the four methods, taking the longest average time per iteration,  followed by CD, FD and AD in that order. Because the abscissa of Fig.~\ref{fig:serial_speed} is on a log scale, it bears mentioning that while visually it may appear that the trend indicated by the progression of data points on the plot is non-linear, the relationship would be closer to linear \note[JTF]{??? Revise}. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}. 
+Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS element is plotted as a function of the number of nonzero TS elements.  CS turned out to be the slowest of the four methods, taking the longest average time per iteration,  followed by CD, FD and AD in that order. Calculation time appears to have a linear relationship with problem size, judging by the appearance of the plot shown in Fig.~\ref{fig:serial_speed}. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}. 
 %
 \begin{figure}[tbp]
   \centering
@@ -341,7 +347,7 @@ For the parallel simulations, averaged speed results appear in Fig.~\ref{fig:mul
 A speculative explanation as to why FD and AD have reversed places in the speed tests with respect to the serial results is that the AD data-structures carry a list of partial derivatives of the functional evaluations along side the functional evaluations themselves only to be processed at the end of the tangent-stiffness calculation when the derivatives are requested.  It is likely that the communication cost associated with message passing these extra terms is what causes the AD method to be slower that FD.
 
 \subsection{Accuracy Data}
-Accuracy measurements where taken according to the methods mentioned in Section~\ref{tcs}\note[JTF]{Change L2 to $l^2$ in the figure label}. The averaged results of these accuracy measurements for the serial tests can be seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as $l^2$-norm in the figure labels for conciseness) of the element-wise difference between a given TS matrix and the TS matrix produced by the AD method is plotted as a function of the number of nonzero TS matrix elements. CS was shown to be the most accurate of the methods when compared to AD, CS resulting in several orders of magnitude less difference than resulted from using the CD method and as expected FD method was the least accurate. This accuracy ranking order was maintained for each test in the series. It should be pointed out compared to the $l^2$-norms of any of the TS matrices by themselves, the magnitude of these differences for any of the methods is relatively small. These values appear in the simulation data which is available on the corresponding author's website. The effect of these accuracy differences on convergence rate of the Newton solver was not determined.  Additionally, we must point out that the accuracy of FD and CD could be improved by using a smaller probe distance, $h$; however, if $h$ is too small, then the methods can suffer from severe effects, including solution divergence, of the round-off error associated with subtracting two numbers that are very close to one another.  The value of $h$ used in this study is default value used in \emph{Peridigm} which is heuristically derived based on computational node spacing.  One of the beauties of the CS method is that there is no mystery as how to choose, $h$, it cannot be too small, therefore it can be set to machine epsilon and the analysis performed without the worry of issues associated with round-off error.
+Accuracy measurements where taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these accuracy measurements for the serial tests can be seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as $l^2$-norm in the figure labels for conciseness) of the element-wise difference between a given TS matrix and the TS matrix produced by the AD method is plotted as a function of the number of nonzero TS matrix elements. CS was shown to be the most accurate of the methods when compared to AD, CS resulting in several orders of magnitude less difference than resulted from using the CD method and as expected FD method was the least accurate. This accuracy ranking order was maintained for each test in the series. It should be pointed out compared to the $l^2$-norms of any of the TS matrices by themselves, the magnitude of these differences for any of the methods is relatively small. These values appear in the simulation data which is available on the corresponding author's website. The effect of these accuracy differences on convergence rate of the Newton solver was not determined.  Additionally, we must point out that the accuracy of FD and CD could be improved by using a smaller probe distance, $h$; however, if $h$ is too small, then the methods can suffer from severe effects, including solution divergence, of the round-off error associated with subtracting two numbers that are very close to one another.  The value of $h$ used in this study is default value used in \emph{Peridigm} which is heuristically derived based on computational node spacing.  One of the beauties of the CS method is that there is no mystery as how to choose, $h$, it cannot be too small, therefore it can be set to machine epsilon and the analysis performed without the worry of issues associated with round-off error.
 %
 \begin{figure}[tbp]
   \centering
@@ -350,7 +356,7 @@ Accuracy measurements where taken according to the methods mentioned in Section~
   \label{fig:serial_accuracy}
 \end{figure}
 %
-The averaged results of the accuracy measurements taken for the parallel test series can be seen in Fig.~\ref{fig:multi_accuracy}\note[JTF]{Change L2 to $l^2$ and make the ordinate axis the same scale as Figure 3}. The ordinate axis units remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the absicca now indicates number of compute cores used to solve the test problem. Accuracy trends matched those for the single core tests. 
+The averaged results of the accuracy measurements taken for the parallel test series can be seen in Fig.~\ref{fig:multi_accuracy}. The ordinate axis units remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the absicca now indicates number of compute cores used to solve the test problem. Accuracy trends matched those for the single core tests. 
 %
 \begin{figure}[tbp]
   \centering
