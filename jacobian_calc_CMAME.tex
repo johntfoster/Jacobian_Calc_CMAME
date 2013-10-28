@@ -49,6 +49,7 @@
 %%\usepackage{tkz-base}
 \usepackage{pgfplots}
 \usepackage{siunitx}
+%\usepackage{hyperref}
 
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
@@ -125,25 +126,7 @@
 %% \address[label2]{<address>}
 
 \begin{abstract} %% Text of abstract Shown is a retrospective comparative study of tangent-stiffness
-matrix calculation methods including a newly developed Complex Taylor Series Expansion
-(CTSE)-based ``complex-step'' method alongside established methods: forward-difference,
-central-difference and automatic differentiation.  Tangent-stiffness matrix is a term from
-computational mechanics which here refers to the Jacobian matrix as used in first-order
-Newton-Raphson methods for the solution of non-linear algebraic systems of equations developed
-to describe physical or theoretical systems studied in math, science, engineering and business.
-To perform the comparative study, the above tangent-stiffness calculation methods were applied
-in a massively parallel computational peridynamics code developed at Sandia National Labs,
-called \emph{Peridigm}. In the comparative study, for each datum for each run, complex-step was
-multiple orders of magnitude more accurate the finite-difference methods, according to a common
-comparison made to the automatic-differentiation method datum. However, for the implementation
-contemporary to the study, complex-step was also the slowest method among the four for each
-datum for each run. A mathematical definition of complex-step and
-and automatic differentiation, description of the computer implementations and justification
-of the comparative study precede results for clarity. The intended audience of this paper
-includes researchers, professionals and students, therefore readers are directed to
-selected background sources in the text for well-known concepts while less familiar concepts
-are derived in-paper with an attempt made to lay steps out plainly for those in disparate fields
-or who are new to their studies.  
+In order to maintain the quadratic convergence properties of the first-order Newton's method in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives.  This paper compares four methods of numerical derivative calculation: automatic differentiation, complex-step, forward finite difference, and central finite difference, in the context of tangent-stiffness matrix calculation in a massively parallel computational peridynamics code.  The methods are compared through \emph{in situ} profiling of the code for accuracy, speed, efficiency, and parallel scalability.  The research provides data that can serve as practical guide for code developers and analysts faced with choseing which method best suit the needs of their application code.  Additionally, motivated by the reproducable research movement, all the of the code, examples, and workflow to regenerate the data and figures in this paper are provided open-source.
 \end{abstract}
 
 \begin{keyword}
@@ -337,7 +320,7 @@ expression used to calculate the TS matrix elements and the units used to define
 \end{table}
 
 \subsection{Speed Data}
-Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurments for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS element is plotted against number of nonzero TS elements.  CS turned out to be the slowest of the four methods, taking the longest average time per iteration. The next slowest method was CD, followed by FD and AD. Because the abcissa of Fig.~\ref{fig:serial_speed} is on a log scale, it bears mentioning that while visually it may appear that the trend indicated by the progression of datapoints on the plot is non-linear, the relationship would be closer to linear \note[JTF]{??? Revise}. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}. 
+Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurments for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS element is plotted as a function of the number of nonzero TS elements.  CS turned out to be the slowest of the four methods, taking the longest average time per iteration,  followed by CD, FD and AD in that order. Because the abcissa of Fig.~\ref{fig:serial_speed} is on a log scale, it bears mentioning that while visually it may appear that the trend indicated by the progression of datapoints on the plot is non-linear, the relationship would be closer to linear \note[JTF]{??? Revise}. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}. 
 %
 \begin{figure}[tbp]
   \centering
@@ -346,45 +329,29 @@ Speed measurements were taken according to the methods mentioned in Section~\ref
   \label{fig:serial_speed}
 \end{figure}
 %
-For the parallel simulations, averaged speed results appear in Fig.~\ref{fig:multi_speed}. For this series, rather than varying the number of nonzero TS matrix elements the number of compute cores used to solve the problem is increased, while the number of nonzero TS matrix elements remained constant.  CS again was the slowest method, followed by central-difference, automatic-differentiation and then forward-difference.  There is a somewhat surprisong refersal of FD and AD for these simulations.  Figure~\ref{fig:multi_speed} indicates that when looking at average iteration time, each of the methods scale linearly with the number of cores used for the given conditions of this group of
-tests. Again, these results show that each of the methods as implemented in \emph{Peridigm} scale
-well when additional processors are used. An explanation as to why automatic-differentiation and
-forward-differences swapped places in speed ranking relative to the single core results was not
-determined. 
-
+For the parallel simulations, averaged speed results appear in Fig.~\ref{fig:multi_speed}. For this series, rather than varying the number of nonzero TS matrix elements the number of compute cores used to solve the problem is increased, while the number of nonzero TS matrix elements remained constant.  CS again was the slowest method, followed by central-difference, automatic-differentiation and then forward-difference.  There is a somewhat surprise refersal of FD and AD for these parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking at average iteration time, each of the methods scale linearly with the number of compute cores used for the given conditions of this group of tests. Again, these results show that each of the methods as implemented in \emph{Peridigm} scale well when additional processors are used. 
+%
 \begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
   \caption{Multicore test series speed measurements.}
   \label{fig:multi_speed}
 \end{figure}
+%
+A speculative explaination as to why FD and AD have reversed places in the speed tests with respect to the serial results is that the AD data-structures carry a list of partial derivatives of the functional evaluations along side the functional evaluations themselves only to be processed at the end of the tangent-stiffness calculation when the derivates are requested.  It is likely that the communication cost associated with message passing these extra terms is what causes the AD method to be slower that FD.
 
 \subsection{Accuracy Data}
-Accuracy measurements where taken according to the methods mentioned in \ref{tcs}. The averaged
-results of these accuracy measurements for the single core tests can be seen in
-\ref{fig:serial_accuracy}. Averaged Frobenius norm of the element-wise difference between a given
-Jacobian and the Jacobian produced by the automatic-differentiation method is plotted against number
-of nonzero Jacobian matrix elements. Complex-step was revealed as the most accurate of the methods
-besides automatic-differentiation, complex-step resulting in several orders of magnitude less
-difference than resulted from using the central-difference method and the most inaccurate
-forward-difference method. This accuracy ranking order was mantained for each test in the series. It
-should be pointed out compared to the L2 norms of any of the Jacobian matrices by themselves, the
-magnitude of these differences for any of the methods is relatively small. These values appear in
-the experimental data which is available on the corresponding author's website. The effect of these
-accuracy differences on convergence rate directly was not determined.
-
+Accuracy measurements where taken according to the methods mentioned in Section~\ref{tcs}\note[JTF]{Change L2 to $l^2$ in the figure label}. The averaged results of these accuracy measurements for the serial tests can be seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (refered to as $l^2$-norm in the figure labels for conciseness) of the element-wise difference between a given TS matrix and the TS matrix produced by the AD method is plotted as a function of the number of nonzero TS matrix elements. CS was shown to be the most accurate of the methods when compared to AD, CS resulting in several orders of magnitude less difference than resulted from using the CD method and as expected FD method was the least accurate. This accuracy ranking order was mantained for each test in the series. It should be pointed out compared to the $l^2$-norms of any of the TS matrices by themselves, the magnitude of these differences for any of the methods is relatively small. These values appear in the simulation data which is available on the corresponding author's website. The effect of these accuracy differences on convergence rate of the Newton solver was not determined.  Additionaly, we must point out that the accuracy of FD and CD could be improved by using a smaller probe distance, $h$; however, if $h$ is too small, then the methods can suffer from severe effects, including solution divergence, of the round-off error associated with subtracting two numbers that are very close to one another.  The value of $h$ used in this study is default value used in \emph{Peridigm} which is hueristically derived based on computational node spacing.  One of the beauties of the CS method is that there is no mystery as how to choose, $h$, it cannot be too small, therefore it can be set to machine epsilon and the analysis performed without the worry of issues associated with round-off error.
+%
 \begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/serial_accuracy.pgf}}
   \caption{Serial test series accuracy measurements.}
   \label{fig:serial_accuracy}
 \end{figure}
-
-The averaged resuts of the accuracy measurements taken for the multicore test series can be seen in
-\ref{fig:multi_accuracy}. Y axis units remain unchanged from \ref{fig:serial_accuracy}, but the x
-axis now indicated number of cores used to solve the test problem. Accuracy trends matched those for
-the single core tests. 
-
+%
+The averaged results of the accuracy measurements taken for the parallel test series can be seen in Fig.~\ref{fig:multi_accuracy}\note[JTF]{Change L2 to $l^2$ and make the ordinate axis the same scale as Figure 3}. The ordinate axis units remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the absicca now indicats number of compute cores used to solve the test problem. Accuracy trends matched those for the single core tests. 
+%
 \begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}}
@@ -392,31 +359,20 @@ the single core tests.
   \label{fig:multi_accuracy}
 \end{figure}
 
-\subsection{Efficiency Data}
-A derived measurement was also used to compare the methods. The single core results are shown in
-\ref{fig:serial_efficiency}. Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element 
-was ploted against the number nonzero Jacobian matrix elements. The ranking order of the methods
-matched their speed ranking in \ref{fig:serial_speed}. This plot indicates that there is a small,
-yet present decrease in efficiency w.r.t number of nonzero Jacobian elements. But judging by the
-speed results, this trend in efficiency doesn't appear to have great effect in human terms for the
-mesh densities used in this test series.  
 
+\subsection{Efficiency Data}
+A derived measurement was also used to compare the methods. The single core results are shown in Fig.~\ref{fig:serial_efficiency}. Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element was plotted as a function of the number nonzero TS matrix elements. The ranking order of the methods
+matched their speed ranking in Fig.~\ref{fig:serial_speed}. This plot indicates that there is a small, yet present decrease in efficiency with respect to the number of nonzero TS elements. This trend in efficiency doesn't appear to have great effect in practical terms for the discritizations used in this test series.  
+%
 \begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/serial_speed_rel.pgf}}
   \caption{Serial test series efficiency measurements.}
   \label{fig:serial_efficiency}
 \end{figure}
-
-The multicore efficiency results are shown in \ref{fig:multi_efficiency}. Y axis is average number
-of seconds taken per nonzero Jacobian matrix element times number of cores used to solve the
-problem. The x axis in number of cores used to solve the problem. The multicore efficiency plot
-shows that automatic-differentiation was slower than forward-difference because for the given test
-problem it had a lower efficiency. Strangely automatic-differentiation appeared to gain in
-efficiency over the last few datapoints in the plot, looking at the raw data confirmed that this was
-what was measured rather than this being an error during data reduction. The reason behind this
-trend was not determined.
-
+%
+The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. The parallel efficiency plot shows that AD was slower than FD because for the given test problem it had a lower efficiency. Strangely AD appears to gain in efficiency over the last few datapoints in the plot, looking at the raw data confirmed that this was what was measured rather than this being an error during data reduction. The reason behind this trend was not determined.
+%
 \begin{figure}[tbp]
   \centering
   \scalebox{1.0}{\input{./figs/multi_speed_rel.pgf}}
@@ -424,32 +380,12 @@ trend was not determined.
   \label{fig:multi_efficiency}
 \end{figure}
 
-\section{Conclusions and Further Work}
 
-\subsection{Thoughts on Results} Based on the experimental results, it appears that for users of
-\emph{Peridigm} there is a case to be made for using automatic-differentiation for reasons of
-performance and accuracy. Although, the greater speed of finite-difference for certain multicore
-tests done in this study may give some users pause. While the results showed that complex-step
-produced more accurate tangent-stiffness matrices than central-difference and forward-difference 
-under the parameters of the tests, it was not determined whether or not this is a clear advantage of complex-step over
-finite-difference in terms of accuracy of final predicted node positions and speed of convergence. For other
-simulation software it is obviously necessary to collect the same types measurements as decribed in
-this paper in order to make a design decision. For new developments it is recommended that combined
-accuracy and speed of iteration mesurments be conduted along with entirely separate convergence
-studies. 
+\section{Conclusions}
+%
+Based on the experimental results, it appears that for users of \emph{Peridigm} there is a case to be made for using AD for reasons of performance and accuracy. Although, for certain parallel tests done in this study small perfamance gains over AD where shown with the FD method.  While the results showed that CS produced more accurate tangent-stiffness matrices than CD and FD under the parameters of the tests, it was not determined whether or not this is a clear advantage of CS over FD in terms of accuracy of final predicted displacements and speed of convergence. For other simulation software it is obviously necessary to collect the same types measurements as decribed in this paper in order to make a design decision. For new developments it is recommended that combined accuracy and speed of iteration mesurments be conduted along with entirely separate convergence studies. 
 
-\subsection{Final Thoughts on Complex-Step} Complex-step was shown to be highly accurate in
-calculating tangent-stiffness matrices by the standards of this study, but as it is implemented in
-\emph{Peridigm} may not be any more accurate than AD, and it is almost certainly slower for a naive
-implementation. When looking to the future of \emph{Peridigm}, Complex-step holds the advantage of
-relying on byte-copiable datatypes, while AD requires a complicated serialization and
-deserialization in order to function as byte-copiable. This is fine for copying in between MPI
-processes, but deserialization on an accelerator or GPU is very difficult, as this would require
-compiling a version of the AD library being used that were compatible with the accelerator or GPU
-being used. What this means is that if \emph{Peridigm} or any simulation software were to be
-reformulated to take advantage of accelerators or GPUs, attractive given their performance and power
-efficiency advantages over traditional CPUs, the flexibilty of complex-step owed to its simple
-implementation may make it more viable for that application.
+The CS method was shown to be highly accurate in calculating tangent-stiffness matrices by the standards of this study, and it is slower than other methods for a naive implementation. In the context of future use of CS in \emph{Peridigm}, CS holds the advantage of relying on byte-copiable datatypes, while AD requires a complicated serialization and deserialization in order to function as byte-copiable. This is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very difficult, as this would require compiling a version of the AD library being used that were compatible with the accelerator or GPU being used. What this means is that if \emph{Peridigm} or any simulation software were to be reformulated to take advantage of accelerators or GPUs, attractive given their performance and power efficiency advantages over traditional CPUs, the flexibilty of complex-step owed to its simple implementation may make it more viable for that application given its high accuracy. Additional performance gains may be achieved through the use of the templated \emph{Tpetra} package in \emph{Trilinos} which would allow the use of complex data types natively, and alievate the expense of the dynamic-casts that were utilized in this study.  As a final comment, it should be noted that from a code development, or implementation, perspective the CS method may be the easiest of the methods to implement. It only requires one functional evaluation, there is no hueristic choice of probe distance, and it there is no dependence on an external AD library.  From, this perspective, the method may still be an attractive method for TS matrix evaluation.
 
 
 
@@ -457,9 +393,8 @@ implementation may make it more viable for that application.
 %% appendix sections are then done as normal sections
 
 \section{Acknowledgements}
-This work was funded in part by grants from the United States Air Force Office of Scientific
-Research grant number XXXX and National Energy Technology Laboratory grant number XXXXX. 
 \label{sec:ack}
+This work was funded in part by grants from the United States Air Force Office of Scientific Research grant number XXXX \note[JTF]{Harry: Your grant number here} and National Energy Technology Laboratory grant number XXXX. The authors acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: http://www.tacc.utexas.edu
 %% References
 %%
 %% Following citation commands can be used in the body text:
