@@ -8,12 +8,16 @@ matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 #import mpl_toolkits.axisartist as axisartist
 
+font_size = 8
+fig_width = 3.0
+
 font = {'family':'serif',
 	'serif':['Times'],
-	'size':12}
+	'size':font_size}
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
+plt.rcParams['text.latex.preamble'] = r'\usepackage{siunitx}'
 
 #matplotlib.rc('font', **font)
 
@@ -54,7 +58,7 @@ xmin = 2000.0
 
 marker = ""
 c =""
-fig1= plt.figure(1, figsize=(4,3.7))
+fig1= plt.figure(1, figsize=(fig_width*3.5/3.0,fig_width))
 ax1 = fig1.add_subplot(111)
 
 
@@ -87,16 +91,17 @@ for index, key in enumerate(accuracy_data.master_data_map.keys()):
 
 print "The speed averages are:", speed_averages
 print "The accuracy averages are:", accuracy_averages
-cs = ax1.scatter(speed_averages['CS'][0][:], speed_averages['CS'][1][:], marker='^', c='g', s=64)
-cd = ax1.scatter(speed_averages['CD'][0][:], speed_averages['CD'][1][:], marker='x', c='r', s=64 )
-fd = ax1.scatter(speed_averages['FD'][0][:], speed_averages['FD'][1][:], marker='s', c='b', s=64) 
-ad = ax1.scatter(speed_averages['AD'][0][:], speed_averages['AD'][1][:], marker='o', c='y', s=64)
-plt.xlim(1.e5, 1.e9)
-plt.xlabel("Number of nonzero elements in TS")
-plt.ylabel("Average time to compute TS (s)")
-#plt.title("Average time to compute a Jacobian matrix vs.\nnumber of nonzero Jacobian matrix elements")
+cs = ax1.scatter(speed_averages['CS'][0][:], speed_averages['CS'][1][:], marker='^', c='g', s=24)
+cd = ax1.scatter(speed_averages['CD'][0][:], speed_averages['CD'][1][:], marker='x', c='r', s=24 )
+fd = ax1.scatter(speed_averages['FD'][0][:], speed_averages['FD'][1][:], marker='s', c='b', s=24) 
+ad = ax1.scatter(speed_averages['AD'][0][:], speed_averages['AD'][1][:], marker='o', c='y', s=24)
+plt.xlim(1.e6, 1.e9)
+plt.ylim(1.0, 1000.0)
+plt.xlabel("Number of nonzero elements in TS", fontsize=font_size)
+plt.ylabel("Average time to compute TS (s)", fontsize=font_size)
+#plt.title("Average time to compute a Jacobian matrix vs.number of nonzero Jacobian matrix elements")
 plt.legend([cs, cd, fd, ad],['CS', 'CD', 'FD', 'AD'], scatterpoints = 1, loc='upper left', bbox_to_anchor=(0., 1.),
-                  fancybox=True, shadow=True, ncol=1)
+                  fancybox=True, shadow=True, ncol=1, fontsize=font_size)
 
 plt.xscale('log')
 plt.yscale('log')
@@ -104,31 +109,34 @@ plt.yscale('log')
 plt.grid(True)
 plt.grid(which='major', linestyle='--', color='grey')
 
-plt.yticks([.1,1.0, 10.0, 100.0, 1000.0], [.1, 1.0, 10.0, 100.0, 1000.0])
+plt.yticks([1.0, 10.0, 100.0, 1000.0], ["$10^0$", "$10^1$", "$10^3$", "$10^4$"], fontsize=font_size)
+plt.xticks([1.e6, 1.e7, 1.e8, 1.e9], ["$10^6$", "$10^7$", "$10^8$", "$10^9$"], fontsize=font_size)
 
 fig1.savefig("serial_speed.pgf")
 
-fig2= plt.figure(2, figsize=(4,3.9))
+fig2= plt.figure(2, figsize=(fig_width*3.5/3.0,fig_width))
 ax2 = fig2.add_subplot(111)
 
 
-cs2= ax2.scatter(accuracy_averages['CS'][0][:], accuracy_averages['CS'][1][:], marker='^', c='g', s=64)
-cd2= ax2.scatter(accuracy_averages['CD'][0][:], accuracy_averages['CD'][1][:], marker='x', c='r', s=64 )
-fd2= ax2.scatter(accuracy_averages['FD'][0][:], accuracy_averages['FD'][1][:], marker='s', c='b', s=64) 
+cs2= ax2.scatter(accuracy_averages['CS'][0][:], accuracy_averages['CS'][1][:], marker='^', c='g', s=24)
+cd2= ax2.scatter(accuracy_averages['CD'][0][:], accuracy_averages['CD'][1][:], marker='x', c='r', s=24 )
+fd2= ax2.scatter(accuracy_averages['FD'][0][:], accuracy_averages['FD'][1][:], marker='s', c='b', s=24) 
 plt.xlim(1.e5, 1.e9)
 #plt.xticks(np.arange(1.e-10, 1.0, .25))
-plt.xlabel("Number of nonzero elements in TS")
-plt.ylabel("$l^2$ norm of difference to AD TS (MPa)")
+plt.xlabel("Number of nonzero elements in TS", fontsize=font_size)
+plt.ylabel("$l^2$ norm of difference to AD TS (MPa)", fontsize=font_size)
 #plt.title("Frobenius norm of difference to AD TS vs.\nnumber of nonzero TS elements")
 plt.legend([cs2, cd2, fd2],['CS', 'CD', 'FD'], scatterpoints = 1, loc='upper left', bbox_to_anchor=(0., .38),
-                  fancybox=True, shadow=True, ncol=1)
+                  fancybox=True, shadow=True, ncol=1, fontsize=font_size)
 
 plt.xscale('log')
 plt.yscale('log')
 plt.grid(True)
 plt.grid(which='major', linestyle='--', color='grey')
 
-plt.yticks([1.E-10, 1.E-7, 1.E-4, 1.E-1, 1.E2], [1.E-10, 1.E-7, 1.E-4, 1.E-1,1.E2])
+plt.xticks([1.e5, 1.e6, 1.e7, 1.e8, 1.e9], ["$10^5$", "$10^6$", "$10^7$", "$10^8$", "$10^9$"], fontsize=font_size)
+plt.yticks([1.E-10, 1.E-7, 1.E-4, 1.E-1, 1.E2], ["$10^{-10}$", "$10^{-7}$", "$10^{-4}$", "$10^{-1}$", "$10^{2}$"], fontsize=font_size)
+
 
 beta1, beta0 = np.polyfit(np.log10(np.array(accuracy_averages['CD'][0][:])), np.array(accuracy_averages['CD'][1][:]), 1)
 print accuracy_averages['CD'][1][:]

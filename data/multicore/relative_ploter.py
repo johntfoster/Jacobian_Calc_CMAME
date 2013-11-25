@@ -7,9 +7,12 @@ import matplotlib
 matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 
+font_size = 8
+fig_width = 3.0
+
 font = {'family':'serif',
 	'serif':['Times'],
-	'size':12}
+	'size':font_size }
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
@@ -69,10 +72,10 @@ for index, key in enumerate(accuracy_data.master_data_map.keys()):
 		accuracy_averages[subkey][1].append(np.average(np.copy(subdata)))
 		accuracy_averages[subkey][0].append(float(key.split("_")[1]))
 """
-cs = ax1.scatter(speed_averages['CS'][2][:], speed_per_mat_element['CS'][:], marker='^', c='g', s=64)
-cd = ax1.scatter(speed_averages['CD'][2][:], speed_per_mat_element['CD'][:], marker='x', c='r', s=64 )
-fd = ax1.scatter(speed_averages['FD'][2][:], speed_per_mat_element['FD'][:], marker='s', c='b', s=64) 
-ad = ax1.scatter(speed_averages['AD'][2][:], speed_per_mat_element['AD'][:], marker='o', c='y', s=64)
+cs = ax1.scatter(speed_averages['CS'][2][:], speed_per_mat_element['CS'][:], marker='^', c='g', s=24)
+cd = ax1.scatter(speed_averages['CD'][2][:], speed_per_mat_element['CD'][:], marker='x', c='r', s=24 )
+fd = ax1.scatter(speed_averages['FD'][2][:], speed_per_mat_element['FD'][:], marker='s', c='b', s=24) 
+ad = ax1.scatter(speed_averages['AD'][2][:], speed_per_mat_element['AD'][:], marker='o', c='y', s=24)
 #ax1.set_yscale('log')
 plt.xlim(24.0, 136.0)
 plt.ylim(5.e-10, 1.3e-9)
@@ -86,22 +89,22 @@ plt.grid(True)
 """
 
 
-fig2= plt.figure(2, figsize=(4,3.7))
+fig2= plt.figure(2, figsize=(fig_width*3.5/3.0,fig_width))
 ax2 = fig2.add_subplot(111)
-cs2= ax2.scatter(speed_averages['CS'][2][:], speed_per_nonzero_element['CS'][:], marker='^', c='g', s=64)
-cd2= ax2.scatter(speed_averages['CD'][2][:], speed_per_nonzero_element['CD'][:], marker='x', c='r', s=64 )
-fd2= ax2.scatter(speed_averages['FD'][2][:], speed_per_nonzero_element['FD'][:], marker='s', c='b', s=64) 
-ad2= ax2.scatter(speed_averages['AD'][2][:], speed_per_nonzero_element['AD'][:], marker='o', c='y', s=64)
+cs2= ax2.scatter(speed_averages['CS'][2][:], speed_per_nonzero_element['CS'][:], marker='^', c='g', s=24)
+cd2= ax2.scatter(speed_averages['CD'][2][:], speed_per_nonzero_element['CD'][:], marker='x', c='r', s=24 )
+fd2= ax2.scatter(speed_averages['FD'][2][:], speed_per_nonzero_element['FD'][:], marker='s', c='b', s=24) 
+ad2= ax2.scatter(speed_averages['AD'][2][:], speed_per_nonzero_element['AD'][:], marker='o', c='y', s=24)
 plt.xlim(24.0, 160.0)
 plt.ylim(3.0e-6, 8.e-6)
-plt.xlabel("Cores @ 1TB RAM per 32 cores")
-plt.ylabel("Cores by avg. compute time per nonzero elm.")
+plt.xlabel("Cores at 1TB RAM per 32 cores", fontsize=font_size)
+plt.ylabel("Cores / compute time per TS element ($\\times 10^{-6}$/s)", fontsize=font_size)
 #plt.title("Number of cores times average time to compute a Jacobian \nmatrix per single nonzero matrix element vs. number of cores")
 plt.legend([cs2, cd2, fd2, ad2],['CS', 'CD', 'FD', 'AD'], scatterpoints = 1, loc='upper left', bbox_to_anchor=(0., 1.),
-                  fancybox=True, shadow=True, ncol=2)
+                  fancybox=True, shadow=True, ncol=2, fontsize=font_size)
 
-plt.xticks(np.arange(0.0, 160.0, 32))
-plt.yticks([4.E-6, 5.E-6, 6.E-6, 7.E-6, 8.E-6], [4.E-6, 5.E-6, 6.E-6, 7.E-6, 8.E-6])
+plt.xticks(np.arange(0.0, 160.0, 32), fontsize=font_size)
+plt.yticks([4.E-6, 5.E-6, 6.E-6, 7.E-6, 8.E-6], ["$4$", "$5$", "$6$", "$7$", "$8$"], fontsize=font_size)
 plt.grid(True)
 ax2.grid(which='major', linestyle='--', color='grey')
 

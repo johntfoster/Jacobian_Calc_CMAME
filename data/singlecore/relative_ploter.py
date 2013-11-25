@@ -9,9 +9,12 @@ matplotlib.use('pgf')
 import matplotlib.pyplot as plt
 #import mpl_toolkits.axisartist as axisartist
 
+font_size = 8
+fig_width = 3.0
+
 font = {'family':'serif',
 	'serif':['Times'],
-	'size':12}
+	'size':font_size}
 
 plt.rc('text', usetex=True)
 plt.rc('font', family='serif')
@@ -118,24 +121,25 @@ ax1.grid(which='major', linestyle='--', color='grey')
 """
 
 
-fig2= plt.figure(2, figsize=(4,3.7))
+fig2= plt.figure(2, figsize=(fig_width*3.5/3.0,fig_width))
 ax2 = fig2.add_subplot(111, aspect=4)
 
-cs2= ax2.scatter(speed_averages['CS'][0][:], speed_per_nonzero_element['CS'][:], marker='^', c='g', s=64)
-cd2= ax2.scatter(speed_averages['CD'][0][:], speed_per_nonzero_element['CD'][:], marker='x', c='r', s=64 )
-fd2= ax2.scatter(speed_averages['FD'][0][:], speed_per_nonzero_element['FD'][:], marker='s', c='b', s=64) 
-ad2= ax2.scatter(speed_averages['AD'][0][:], speed_per_nonzero_element['AD'][:], marker='o', c='y', s=64) 
+cs2= ax2.scatter(speed_averages['CS'][0][:], speed_per_nonzero_element['CS'][:], marker='^', c='g', s=24)
+cd2= ax2.scatter(speed_averages['CD'][0][:], speed_per_nonzero_element['CD'][:], marker='x', c='r', s=24 )
+fd2= ax2.scatter(speed_averages['FD'][0][:], speed_per_nonzero_element['FD'][:], marker='s', c='b', s=24) 
+ad2= ax2.scatter(speed_averages['AD'][0][:], speed_per_nonzero_element['AD'][:], marker='o', c='y', s=24) 
 plt.xlim(1.e5, 1.e9)
 plt.ylim(0.0, 2.E-6)
-plt.xlabel("Number of nonzero elements in TS")
-plt.ylabel("Avg. comp time of TS per nonzero element")
+plt.xlabel("Number of TS elements", fontsize=font_size)
+plt.ylabel("Compute time of TS per element ($\\times 10^{-6}$)", fontsize=font_size)
 plt.xscale('log')
 plt.grid(True)
 ax2.grid(which='major', linestyle='--', color='grey')
 
-plt.yticks([0.0, .5E-6, 1.E-6, 1.5E-6, 2.E-6] ,[0.0,.5E-6, 1.E-6,1.5E-6, 2.E-6])
+plt.yticks([ .5E-6, 1.E-6, 1.5E-6, 2.E-6] ,["$0.5$", "$1.0$","$1.5$", "$2.0$"], fontsize=font_size)
+plt.xticks(fontsize=font_size)
 plt.legend([cs2, cd2, fd2, ad2],['CS', 'CD', 'FD', 'AD'], scatterpoints = 1, loc='lower left',
-                  fancybox=True, shadow=True, ncol=2)
+                  fancybox=True, shadow=True, ncol=2, fontsize=font_size)
 
 
 
