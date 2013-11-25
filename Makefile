@@ -4,7 +4,7 @@
 # fix this and the problem will go away.  The -t letter seems to fix this.
 #==============================================================================================
 
-REPORT = transition
+REPORT = jacobian_calc_CMAME
 
 #COMMON_FILES = Introduction Kinematics LinearIsotropicModel PlasticityModel
 
