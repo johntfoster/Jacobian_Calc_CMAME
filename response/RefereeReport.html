@@ -1,0 +1,321 @@
+<html><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head><body>
+<span style="position:absolute; border: gray 1px solid; left:0px; top:50px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:50px;"><a name="1">Page 1</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:139px; top:79px; width:332px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">Computer Methods in Applied Mechanics and Engineering (CMAME)
+<br>Referee Repor t
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:118px; width:468px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">Title: “A comparison of different methods for calculating tangent-stiffness matrices in a massively
+<br>parallel computational peridynamics code”
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:153px; width:270px; height:13px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">Authors: M. D. Brothers, J. T. Foster, and H. R. Millwater
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:173px; width:201px; height:13px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">Manuscript number: CMAME-D-13-01004
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:83px; top:200px; width:66px; height:15px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">A. </span><span style="font-family: DNCBMH+NimbusRomNo9L-Medi; font-size:10px">Summary
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:83px; top:225px; width:456px; height:198px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">This manuscript presents comparisons between different numerical differentiation methods
+<br>for the computation of entries of tangent-stiffness matrices, used in Newton’s method for
+<br>quasi-static nonlinear analysis of solid structures. The methods include: automatic differen-
+<br>tiation (AD), forward ﬁnite difference (FD), centered ﬁnite difference (CD) and complex-step
+<br>(CS). The authors perform the comparisons within the computational peridynamics code
+<br></span><span style="font-family: KRAHPR+NimbusSanL-ReguItal; font-size:9px">Peridigm</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">, where the authors implemented the CS method. Numerical results include com-
+<br>parisons of computational times between all the methods, as well as comparisons of accu-
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">racy between FD, CD, and CS, relative to AD. The results show that AD is the fastest method
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">in serial and FD in parallel, whereas CS is the slowest method. However, the accuracy of
+<br>CS is several orders of magnitude higher than the ﬁnite difference methods (FD and CD).
+<br>Consequently, although AD seems to be the best method in terms of combined speed and
+<br>accuracy, the results suggest that CS may represent a viable alternative for cases where AD
+<br>implementations are not practical.
+<br>B. </span><span style="font-family: DNCBMH+NimbusRomNo9L-Medi; font-size:10px">Evaluation
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:99px; top:433px; width:440px; height:139px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">This manuscript focuses on the CS method. This method and its comparison to other ﬁnite-
+<br>difference methods have been previously presented in the literature. For example, the CS
+<br>method has been described in [1], with a comparison between FD and CS. Applications of
+<br>the CS method to compute tangent matrices appear in [2, 3], with comparisons between
+<br>FD, CD, and CS. In addition, the CS method has been used for sensitivity analysis in [5, 6],
+<br>and in [4], a detailed description of the CS method and comparisons to FD, CD, and AD are
+<br>presented. Fur ther uses of the complex-step method appear in [7, 8, 9], and extensions of
+<br>the CS method are discussed in [10, 11].
+<br>However, this manuscript presents some aspects of the CS method which seem novel.
+<br>These are:
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:108px; top:582px; width:373px; height:48px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">1. comparisons between FD, CD, CS, and AD in terms of computational time,
+<br>2. implementation of the CS method in parallel,
+<br>3. implementation of the CS method within Peridigm.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:99px; top:639px; width:440px; height:85px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">In par ticular, the implementation in Peridigm is of strong interest to researchers working with
+<br>the peridynamic theory of solid mechanics.
+<br>I believe this manuscript is of value to both the computational mechanics community in gen-
+<br>eral, and the peridynamic community in par ticular.
+<br>I suggest it to be considered for pub-
+<br>lication in the Computer Methods in Applied Mechanics and Engineering journal, after the
+<br>issues described below have been properly addressed.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:811px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">1
+<br></span></div><span style="position:absolute; border: black 1px solid; left:72px; top:131px; width:20px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:72px; top:165px; width:37px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:72px; top:188px; width:93px; height:0px;"></span>
+<span style="position:absolute; border: gray 1px solid; left:0px; top:892px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:892px;"><a name="2">Page 2</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:83px; top:926px; width:152px; height:15px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">C. </span><span style="font-family: DNCBMH+NimbusRomNo9L-Medi; font-size:10px">Information to the authors
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:111px; top:954px; width:76px; height:13px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">I. Larger issues
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:108px; top:979px; width:431px; height:568px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">1. Some par ts of the manuscript suggest that the authors introduced a new method,
+<br>i.e., the complex-step (CS) method. For example, in the introduction, they say
+<br>“A goal of this study was to develop and evaluate a new, accurate, and practical
+<br>method ...” Another example appears in page 3, where the authors say “The aim
+<br>of this paper is not only to introduce the new complex-step method in the context
+<br>of evaluating tangent-stiffness matrices ..”. However, the CS method has already
+<br>appeared in many publications since 1998 [1]. Please revise the way you refer to
+<br>the CS method along the manuscript.
+<br>2. The work presented focuses on a parallel computational peridynamic code, and
+<br>uses peridynamic models for mechanics. However, no detailed explanation of the
+<br>equations involved is presented. Although the tangent-stiffness calculations are
+<br>not specialized to Peridigm, the authors should include a shor t section introducing
+<br>the peridynamic theory and the speciﬁc constitutive model used, i.e., the elastic
+<br>peridynamic solid. You may add this to the already included very brief description
+<br>of peridynamics in page 9 (lines 15-26). This will also help to explain the concept
+<br>of the peridynamic horizon in page 10.
+<br>3. The manuscript seems to be written in a language more familiar to computer scien-
+<br>tists. I would encourage the authors to revise cer tain par ts of the manuscript to be
+<br>presented in a language more familiar to the computational mechanics community.
+<br>4. In Section 1.1.1, please include a more comprehensive literature review for the CS
+<br>method, including fur ther references (some of them are listed below).
+<br>In par ticu-
+<br>lar, specify what aspects of the CS method have been investigated in each refer-
+<br>ence. Then, you need to clearly mention your contribution within the CS method,
+<br>in contrast to the other references (some comments in this regard appear in the
+<br>manuscript in page 8).
+<br>5. The comparisons of the different algorithms are only performed with respect to the
+<br>construction of tangent-stiffness matrices. In par ticular, the authors always use the
+<br>solution of AD at each time step to compute the entries of the tangent-stiffness
+<br>matrices, even for the FD, CD, and CS methods. However, the authors need to
+<br>demonstrate the performance of the CS method, in comparison to the other ones,
+<br>with respect to the solution of real, ideally non-linear problems. In other words, how
+<br>the solutions compare in terms of accuracy and speed between the methods when
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">solving given problems? Please include two examples of interest. The authors
+<br>suggest that two examples involving non-linear systems are already included in the
+<br>paper repository.
+<br>The authors say in the Conclusion: “While the results showed that CS produced
+<br>more accurate tangent-stiffness matrices than CD and FD under the parameters
+<br>of the tests, it was not determined whether or not this is a clear advantage of CS
+<br>over FD in terms of accuracy of ﬁnal predicted displacements and speed of conver-
+<br>gence.” This needs to be studied and results in this regard added to this manuscript.
+<br>II. Smaller issues
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:129px; top:1558px; width:410px; height:73px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">1. Pg. 2: In line 14, explain what does the term “algorithmically consistent” mean.
+<br>2. Pg. 2: In line 36, what do you mean by “discrimination”?
+<br>3. Pg. 2: In line 37, explain what do you mean by “in-situ instrumentation”.
+<br>4. Pg. 3: In lines 19-29, specify the sections where each par t of the manuscript is
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">included.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:1653px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">2
+<br></span></div><span style="position:absolute; border: black 1px solid; left:123px; top:969px; width:65px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:123px; top:1546px; width:70px; height:0px;"></span>
+<span style="position:absolute; border: gray 1px solid; left:0px; top:1734px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:1734px;"><a name="3">Page 3</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:129px; top:1770px; width:410px; height:88px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">5. Pg. 3: You may consider including the exact web address of the </span><span style="font-family: KRAHPR+NimbusSanL-ReguItal; font-size:9px">paper repository</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">.
+<br>6. Pg. 3: Please include the forward and centered ﬁnite difference expressions for
+<br>easier comparison with (2); include the truncation error as well. You do not have to
+<br>derive these expressions though.
+<br>7. Pg. 4: In Eq. (1), “ </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">∂ f </span><span style="font-family: PJZRLC+CMR6; font-size:4px">2
+<br></span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">∂x</span><span style="font-family: PJZRLC+CMR6; font-size:4px">2 </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” should be “ </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">∂ </span><span style="font-family: PJZRLC+CMR6; font-size:4px">2 </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">f
+<br>∂x</span><span style="font-family: PJZRLC+CMR6; font-size:4px">2 </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”; similarly, for the third derivative.
+<br>8. Pg. 4: You may consider writing Eq. (2) with the truncation error, i.e.,
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:378px; top:1870px; width:42px; height:18px;"><span style="font-family: IGZSES+CMR10; font-size:7px">+ </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">O</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h</span><span style="font-family: QTFAPE+CMR8; font-size:5px">2 </span><span style="font-family: IGZSES+CMR10; font-size:7px">)</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:527px; top:1876px; width:12px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">(2)
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:308px; top:1870px; width:66px; height:25px;"><span style="font-family: IGZSES+CMR10; font-size:7px">Im(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">f </span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">x </span><span style="font-family: IGZSES+CMR10; font-size:7px">+ </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">ih</span><span style="font-family: IGZSES+CMR10; font-size:7px">))
+<br></span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:123px; top:1870px; width:416px; height:606px;"><span style="font-family: PHFZYP+CMMI10; font-size:7px">∂ f </span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">x</span><span style="font-family: IGZSES+CMR10; font-size:7px">)
+<br>=
+<br></span><span style="font-family: PHFZYP+CMMI10; font-size:7px">∂x
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">In this case, one replaces “</span><span style="font-family: FDPGJH+CMSY10; font-size:13px">≈</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” by “</span><span style="font-family: IGZSES+CMR10; font-size:7px">=</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”.
+<br>9. Pg. 6: In lines 9-11, please add references to the “Poisson problem” and to the
+<br>“mathematical optimization”.
+<br>10. Pg. 7: Should Eqs. (4), (5), and (6) use “</span><span style="font-family: FDPGJH+CMSY10; font-size:13px">≈</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” instead of “</span><span style="font-family: IGZSES+CMR10; font-size:7px">=</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”?
+<br>11. Pg. 7: In line 28, note that </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">(cid:126)u </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is not the current conﬁguration, but the displacement
+<br>ﬁeld. Please revise the sentence.
+<br>12. Pg. 7: Please provide an expression for </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">F </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">int
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">in the model used.
+<br></span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">i
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">13. Pg. 9: In line 26, please add the reference [12] below to “coupling to molecular
+<br>simulations [29].”
+<br>14. Pg. 10: Please add an illustration of the block undergoing tension in Section 2.2,
+<br>for clarity. Also, clarify the displacement boundary conditions; are they applied in a
+<br>volumetric layer?
+<br>15. Pg. 10: In line 40, you mentioned a bandwidth of 7. This seems to be clear in 1D.
+<br>Does this hold in higher dimensions? Please clarify.
+<br>16. Pg. 10: In lines 47-49, you say “The speciﬁc parameters ... can be found ... in the
+<br>paper repository.” It seems a good idea to have the paper repository with ﬁles that a
+<br>user can eventually use. However, the content of the paper should be independent
+<br>of the repository. Please include a table with the parameters used. Similarly, in
+<br>page 11 (lines 11-13).
+<br>17. Pg. 14: In line 55, is there any conclusion you can draw from the power law index
+<br></span><span style="font-family: IGZSES+CMR10; font-size:7px">1</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">.</span><span style="font-family: IGZSES+CMR10; font-size:7px">0 </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">× </span><span style="font-family: IGZSES+CMR10; font-size:7px">10</span><span style="font-family: TMCDBM+CMSY8; font-size:9px">−</span><span style="font-family: QTFAPE+CMR8; font-size:5px">6</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">?
+<br>18. Pgs. 14-: Please clarify the value of the meshsize used on each of the experiments.
+<br>19. Pg. 16: Would it be possible to rescale Fig. 2, so that the dependence of the time
+<br>on the number of cores will look indeed linear?
+<br>20. Pg. 16: In lines 54-56, you say “It should be pointed out that compared to the </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">(cid:96)</span><span style="font-family: QTFAPE+CMR8; font-size:5px">2 </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">-
+<br>norms of any of the TS matrices by themselves, the magnitude of the accuracy
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">metric ... is relatively small.” Please include in the manuscript the explicit informa-
+<br>tion on the relative error.
+<br>It seems that you already have such information in the
+<br>paper repository.
+<br>21. Pg. 17: Include the values of the probe distances </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">used for each method.
+<br>22. Pg. 17: In lines 53-54, you say “Accuracy trends matched those for the single core
+<br>tests.” Indeed, comparing Figs. 3 and 4, the results for FD seem to be quite the
+<br>same in serial and in parallel. For CS the accuracy seems higher in serial. For CD,
+<br>the accuracy is also higher in serial and, in serial, it has a ﬂuctuating behavior. Can
+<br>you comment on these observations?
+<br>23. Pgs. 17-18: What are the units of </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">K </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">? If </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">F </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">int </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">in Eq. (4) etc. is internal force, then </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">K
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">should have units of </span><span style="font-family: EVYQIG+NimbusMonL-Regu; font-size:8px">force/length</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">. However, in Figs. 3 and 4 you use the unit of
+<br>MPa, which is </span><span style="font-family: EVYQIG+NimbusMonL-Regu; font-size:8px">force/length</span><span style="font-family: QTFAPE+CMR8; font-size:5px">2 </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">. Please clarify.
+<br>24. Pg. 19: Are the units of the ver tical axis in Fig. 5 “seconds”, as in Figs. 1 and 2?
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">Please indicate that. Also, is the label of the ver tical axis in Fig. 6 correct?
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:2495px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">3
+<br></span></div><span style="position:absolute; border: black 1px solid; left:234px; top:1838px; width:14px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:317px; top:1838px; width:14px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:264px; top:1884px; width:27px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:308px; top:1884px; width:66px; height:0px;"></span>
+<span style="position:absolute; border: gray 1px solid; left:0px; top:2576px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:2576px;"><a name="4">Page 4</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:105px; top:2612px; width:434px; height:202px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">25. Pg. 20: In lines 32-35, clarify what “byte-copyable” mean and why is that impor tant.
+<br>26. Pg. 21: Please include a section title for the references.
+<br>27. Pg. 24: In line 23, you may add the truncation error </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">O</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h</span><span style="font-family: QTFAPE+CMR8; font-size:5px">2 </span><span style="font-family: IGZSES+CMR10; font-size:7px">) </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">to the expression. Oth-
+<br>erwise, you may need to replace the “</span><span style="font-family: IGZSES+CMR10; font-size:7px">=</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” sign by the “</span><span style="font-family: FDPGJH+CMSY10; font-size:13px">≈</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” sign. However, adding
+<br>the error term would make more clear the limiting expression when </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">→ </span><span style="font-family: IGZSES+CMR10; font-size:7px">0</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">. Also,
+<br>replace the comma by a period.
+<br>28. Pg. 24: Why do we need </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">S </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">and </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">X </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">in Appendix B?
+<br>29. Pgs. 25-26: Are the functions in the second column of the table in 2(c) (page 25)
+<br>approximations? Why do you label the column “Approximates Function”? Simi-
+<br>larly, in line 16 (page 26) you say “approximated by the par tial derivative”; is it an
+<br>approximation?
+<br>30. Pg. 26: Please clarify whether storage is needed in automatic differentiation. For
+<br>example, do we need to store </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">w, v , </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">and </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">u</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">?
+<br>III. Typos/editing suggestions
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:532px; top:2855px; width:7px; height:13px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:123px; top:2825px; width:424px; height:495px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">1. Pg. 1: In line 43, remove “the” in “all the of the code”.
+<br>2. Pg. 1: In line 46, replace “numeric differentiation” by “numerical differentiation”.
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">3. Pg. 2: In line 25, the sentence “The distinction of “accurate” is deﬁned by ...”
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">awkward. Please revise it.
+<br>4. Pg. 2: In lines 32 and 48, “ﬁnite-difference” should be “forward-difference”.
+<br>5. Pg. 2: In lines 33, I believe “aide” should be “aid”.
+<br>6. Pg. 3: In line 12, I would replace “such as required” by “such as those required”.
+<br>7. Pg. 3: In line 22, replace “with each the methods” by “with each of the methods”.
+<br>8. Pg. 3: In line 25, replace “implementing complex-step” by “implementing the complex-
+<br>step method”.
+<br>9. Pg. 3: I would replace the title of Section 1.1, “Differentiation Techniques” by “Dif-
+<br>ferentiation techniques” for consistency, i.e., only capitalize the ﬁrst letter of the ﬁrst
+<br>word. Similarly, for the rest of the section titles.
+<br>10. Pg. 4: In line 10, “be be made complex” should be “be made complex”.
+<br>11. Pg. 4: In Eq. (1), replace comma by period.
+<br>12. Pg. 4: In line 22, you have an extra white space in “</span><span style="font-family: FDPGJH+CMSY10; font-size:13px">O </span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h</span><span style="font-family: QTFAPE+CMR8; font-size:5px">2 </span><span style="font-family: IGZSES+CMR10; font-size:7px">)</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”.
+<br>13. Pg. 4: I would check the proper use of hyphens along the manuscript. For example,
+<br>in the title of Section 1.1.2, I would replace “Automatic-differentiation” by “Automatic
+<br>differentiation” (i.e., no hyphen).
+<br>14. Pg. 4: In line 42, replace “based the chain-rule” by “based on the chain rule”.
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">15. Pg. 4: In lines 45-46, “(add, multiply, power, transcendental and the like)” should
+<br>probably be “(addition, multiplication, exponentiation, and the like)” or similar.
+<br>16. Pg. 4: In line 47, I would replace “used in the study” by “used in this study”. Similarly,
+<br>in other instances of the manuscript.
+<br>17. Pg. 5: In line 39, you may replace “the par tials” by “the par tial derivatives”. Similarly
+<br>in page 26.
+<br>18. Pg. 5: I would replace the title of Section 1.2 “Tangent-stiffness” by “Tangent-stiffness
+<br>matrix”. Similarly, in line 50.
+<br>19. Pg. 6: In line 14, “quasi-Newton’s method’s” should probably be “quasi-Newton
+<br>methods”.
+<br>20. Pg. 6: In line 18, “about about a par ticular” should be “about a par ticular”.
+<br>21. Pg. 6: In line 51, you may replace “argument to </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">F </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” by “argument of </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">F </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”.
+<br>22. Pg. 7: In line 11, you may replace “single independent vector component of the
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">function” by “single independent vector component of the argument of the function”.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:3337px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">4
+<br></span></div><span style="position:absolute; border: black 1px solid; left:123px; top:2816px; width:124px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:399px; top:3056px; width:0px; height:1px;"></span>
+<span style="position:absolute; border: black 1px solid; left:399px; top:3057px; width:3px; height:0px;"></span>
+<span style="position:absolute; border: black 1px solid; left:403px; top:3056px; width:0px; height:1px;"></span>
+<span style="position:absolute; border: gray 1px solid; left:0px; top:3418px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:3418px;"><a name="5">Page 5</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:123px; top:3454px; width:416px; height:708px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">23. Pg. 7: In line 24, replace “Where </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">K</span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">ij </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is” by “where </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">K</span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">ij </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is”.
+<br>24. Pg. 7: In line 40, replace “in literature [19]” by “in the literature [19]”.
+<br>25. Pg. 8: Remove the period at the end of the titles of Sections 2 and 2.1, for consis-
+<br>tency. Similarly, for the rest of the manuscript. Also, use italic font for “Peridigm” in
+<br>the title of </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">§</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">2.1.
+<br>26. Pg. 9: In line 29, replace “</span><span style="font-family: KRAHPR+NimbusSanL-ReguItal; font-size:9px">Perdigm</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” by “</span><span style="font-family: KRAHPR+NimbusSanL-ReguItal; font-size:9px">Peridigm</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”. Similarly in page 13 (line 44).
+<br>27. Pg. 9: In line 37, replace “be simply be declared” by “be simply declared”.
+<br>28. Pg. 9: In line 55, I would replace “computational scientists” by “computer scientists”.
+<br>29. Pg. 10: In line 30, I would replace “The purpose of applying the load” by “Applying
+<br>the load”.
+<br>30. Pg. 13: I would add a comma at the end of Eq. (8), and replace “Where </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">D </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is
+<br>distance” by “where </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">D </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is distance” in line 14.
+<br>31. Pg. 13: In line 15, replace “based method, </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">M </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is” by “based method, and </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">M </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">is”.
+<br>32. Pg. 13: In line 31, replace “correspond to” by “corresponds to”.
+<br>33. Pg. 14: In lines 19-21, you have twice the word “nonzero” in “number of nonzero
+<br>tangent-stiffness (TS) non-zero matrix elements”.
+<br>34. Pg. 14: In lines 22, I would replace “The units for accuracy are derived equation (8)
+<br>and the units used to deﬁne bulk material proper ties, mentioned in Section 2.2.” by
+<br>“The accuracy measure is given by equation (8) and the choice of elastic moduli is
+<br>mentioned in Section 2.2.”
+<br>35. Pg. 15: In line 54, it seems that “yet still fall” should be “yet still falls”.
+<br>36. Pg. 17: In line 45 you say “</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">, cannot be too small,”.
+<br>I understand that you mean
+<br>that you can take </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h </span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">as small as possible. However, the way written may have the
+<br>opposite connotation. I would revise it for clarity.
+<br>37. Pg. 18: In lines 35-36, replace “the number nonzero” by “the number of nonzero”.
+<br>38. Pg. 18: In line 39, replace “the the number of nonzero” by “the number of nonzero”.
+<br>39. Pg. 18: In line 50, I would replace “experimental results,” by “computational experi-
+<br>ments,”. Otherwise, it may give the impression of physical experiments.
+<br>40. Pg. 20: In line 13, is the use of the word “order” in “number of iterations taken order
+<br>to measure” correct?
+<br>41. Pg. 20: In lines 26-27, replace “complex-step all of the methods” by “complex-step
+<br>in all of the methods”.
+<br>42. Pg. 20: In line 50, you may either replace “to implement; It only” by “to implement;
+<br>it only”; or replace the semicolon by a period.
+<br>43. Pgs. 21-23: You may capitalize the ﬁrst letters on the journal names in your refer-
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">ences [9, 20]
+<br>44. Pg. 22: In your reference [10], you may replace “fr ´echet” by “Fr ´echet”.
+<br>45. Pg. 23: Update your reference [21] (see the reference [3] in this repor t). Also,
+<br>update your reference [27].
+<br>46. Pg. 24: In line 18, replace the comma by a period.
+<br>47. Pg. 24: I would replace the comma by a period in line 28, and replace “using
+<br>L’H ˆopital’s rule” by “Using l’H ˆopital’s rule” in line 31.
+<br>48. Pg. 24: I would replace the comma by a period in line 34, and replace “of course,
+<br>as </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">→ </span><span style="font-family: IGZSES+CMR10; font-size:7px">0</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” by “As </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">→ </span><span style="font-family: IGZSES+CMR10; font-size:7px">0</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” in line 37.
+<br>49. Pg. 24: I would replace the title of Appendix B “AD Example” by “Automatic differ-
+<br>entiation example”.
+<br>50. Pg. 24: In line 45, you may replace “</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">sin</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">cos</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">x</span><span style="font-family: IGZSES+CMR10; font-size:7px">))</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” by “</span><span style="font-family: IGZSES+CMR10; font-size:7px">sin(cos(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">x</span><span style="font-family: IGZSES+CMR10; font-size:7px">))</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”. For that, use </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">\</span><span style="font-family: EVYQIG+NimbusMonL-Regu; font-size:8px">sin
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">instead of </span><span style="font-family: EVYQIG+NimbusMonL-Regu; font-size:8px">sin</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">, etc. (similarly in the bottom of the page and in page 25). Also, add
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">a period at the end of the expression.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:4179px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">5
+<br></span></div><span style="position:absolute; border: gray 1px solid; left:0px; top:4260px; width:612px; height:792px;"></span>
+<div style="position:absolute; top:4260px;"><a name="6">Page 6</a></div>
+<div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:123px; top:4291px; width:416px; height:77px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">51. Pg. 25: In line 55, you may remove the “</span><span style="font-family: FDPGJH+CMSY10; font-size:13px">·</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">” symbol in “ </span><span style="font-family: OWRNMZ+CMMI8; font-size:5px">d
+<br>dx </span><span style="font-family: FDPGJH+CMSY10; font-size:13px">· </span><span style="font-family: PHFZYP+CMMI10; font-size:7px">g</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">h</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">k</span><span style="font-family: IGZSES+CMR10; font-size:7px">(</span><span style="font-family: PHFZYP+CMMI10; font-size:7px">x</span><span style="font-family: IGZSES+CMR10; font-size:7px">)))</span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">”.
+<br>52. Pgs. 25 and 26: I would number the table in 2(c) (page 25). Let’s assume the
+<br>number is “2”. Then, in line 13 (page 26), I would replace “chosen for each function
+<br>and held as constant” by “chosen for each function as in Table 2 and held constant”.
+<br>53. Pg. 26: In line 24, add a period at the end of the expression.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:4388px; width:66px; height:18px;"><span style="font-family: DNCBMH+NimbusRomNo9L-Medi; font-size:13px">References
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4419px; width:461px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[1] W. Squire and G. Trapp, Using complex variables to estimate derivatives of real functions,
+<br>SIAM Rev. 40 (1998), pp. 110-112.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4455px; width:461px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[2] A. P ´erez-Foguet, A. Rodr´ıguez-Ferran, A. Huer ta, Numerical differentiation for local and
+<br>global tangent operators in computational plasticity, Comput. Methods Appl. Mech. Engrg.
+<br>189 (2000), pp. 277-296.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4504px; width:461px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[3] A. P ´erez-Foguet, A. Rodr´ıguez-Ferran, A. Huer ta, Numerical differentiation for non-trivial con-
+<br>sistent tangent matrices: an application to the MRS-Lade model, Int. J. Numer. Meth. Engng
+<br></span><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">48 (2000), pp. 159-184.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4554px; width:461px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[4] J. Mar tins, P. Sturdza, J. Alonso, The complex-step derivative approximation, ACM Transac-
+<br>tions on Mathematical Software (TOMS), ISSN 0098-3500, 09/2003, Volume 29, Issue 3, pp.
+<br>245-262.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4604px; width:461px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[5] W. K. Anderson, J. C. Newman, D. L. Whitﬁeld, and E. J. Nielsen, Sensitivity analysis for
+<br>Navier–Stokes equations on unstructured meshes using complex variables, AIAA Journal,
+<br>ISSN 0001-1452, 01/2001, Volume 39, Issue 1, pp. 56-63.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4653px; width:461px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[6] J. C. Newman, W. K. Anderson, and L. D. Whitﬁeld, Multidisciplinary sensitivity derivatives
+<br>using complex variables, Tech. Rep. MSSU-COE-ERC-98-08 (July), Computational Fluid Dy-
+<br>namics Laboratory.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4703px; width:461px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[7] A. H. Al-Mohy and N. J. Higham, The complex step approximation to the Fr ´echet derivative
+<br>of a matrix function, Numer. Algor. 53 (2010), pp.133-148.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4739px; width:461px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[8] W. Jin, B. H. Dennis, and B. P. Wang, Improved sensitivity analysis using a complex variable
+<br>semi-analytical method, Struct. Multidisc. Optim. 41 (2010), pp. 433-439.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:78px; top:4775px; width:461px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[9] A. Voorhees, H. Millwater, and R. Bagley, Finite Elements in Analysis and Design 47 (2011),
+<br>pp. 1146-1156.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:4811px; width:468px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[10] K.-L. Lai and J. L. Crassidis, Extensions of the ﬁrst and second complex-step derivative ap-
+<br>proximations, Journal of Computational and Applied Mathematics 219 (2008), pp. 276-293.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:4847px; width:468px; height:27px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[11] R. Abreu, D. Stich, and J. Morales, On the generalization of the complex step method, Journal
+<br>of Computational and Applied Mathematics 241 (2013), pp. 84-102.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:72px; top:4883px; width:468px; height:40px;"><span style="font-family: MLUFZH+NimbusSanL-Regu; font-size:9px">[12] P. Seleson, M. L. Parks, and M. Gunzburger, Peridynamic state-based models and the
+<br>embedded-atom model. Communications in Computational Physics, 15(1) (2014), pp. 179-
+<br>205.
+<br></span></div><div style="position:absolute; border: textbox 1px solid; writing-mode:lr-tb; left:303px; top:5021px; width:5px; height:13px;"><span style="font-family: OOPQWE+NimbusRomNo9L-Regu; font-size:9px">6
+<br></span></div><span style="position:absolute; border: black 1px solid; left:399px; top:4305px; width:9px; height:0px;"></span>
+<div style="position:absolute; top:0px;">Page: <a href="#1">1</a>, <a href="#2">2</a>, <a href="#3">3</a>, <a href="#4">4</a>, <a href="#5">5</a>, <a href="#6">6</a></div>
+</body></html>

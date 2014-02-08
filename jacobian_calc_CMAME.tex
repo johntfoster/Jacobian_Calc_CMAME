@@ -129,7 +129,25 @@
 %% \address[label2]{<address>}
 
 \begin{abstract} %% Text of abstract Shown is a retrospective comparative study of tangent-stiffness
-In order to maintain the quadratic convergence properties of Newton's method in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. A goal of the study described in this paper was to establish the suitability of an under-explored method for numerical computation of tangent-stiffness operators, referred to as ``complex-step'', and compare the new method with other techniques for numerical derivative calculation: automatic differentiation, forward finite-difference, and central finite-difference. The complex-step method was newly implemented in a massively parallel computational peridynamics code for the purpose of this comparison. The methods were compared through in situ profiling of the code for accuracy, speed, efficiency, and parallel scalability. The research provides data that can serve as practical guide for code developers and analysts faced with choosing which method best suits the needs of their application code. Additionally, motivated by the reproducible research movement, all the of the code, examples, and workflow to regenerate the data and figures in this paper are provided as open source.
+
+In order to maintain the quadratic convergence properties of Newton's method in
+quasi-static nonlinear analysis of solid structures it is crucial to obtain
+accurate, algorithmically consistent tangent-stiffness matrices. A goal of the
+study described in this paper was to establish the suitability of an
+under-explored method for numerical computation of tangent-stiffness operators,
+referred to as ``complex-step'', and compare the \note[Michael]{re: I.1}
+\remove[Michael]{new} method with other techniques for numerical derivative
+calculation: automatic differentiation, forward finite-difference, and central
+finite-difference. The complex-step method was \note[Michael]{re: I.1, could
+suggest claim of novelty} \remove[Michael]{newly} implemented in a massively
+parallel computational peridynamics code for the purpose of this comparison.
+The methods were compared through in situ profiling of the code for accuracy,
+speed, efficiency, and parallel scalability. The research provides data that
+can serve as practical guide for code developers and analysts faced with
+choosing which method best suits the needs of their application code.
+Additionally, motivated by the reproducible research movement, all the of the
+code, examples, and workflow to regenerate the data and figures in this paper
+are provided as open source.
 
 
 \end{abstract}
@@ -154,62 +172,216 @@ Newton's method \sep Newton-Raphson \sep numeric differentiation \sep complex-st
 \section{Introduction}
 %\subsection{Motivation}
 \label{sec:intro} 
-In order to maintain the quadratic convergence properties of the first-order Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
 
-A goal of this study was to develop and evaluate a new, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This new method is based on a complex number Taylor series expansion and referred to as CTSE or the ``complex-step'' method.  The
-distinction of ``accurate'' is defined by comparison of the new method to popular finite differencing techniques used for computing tangent-stiffness matrices and with the exact to machine precision algorithmically consistent derivatives computed with \emph{automatic differentiation}.
+In order to maintain the quadratic convergence properties of the first-order
+Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in
+quasi-static nonlinear analysis of solid structures it is crucial to obtain
+accurate, algorithmically consistent tangent-stiffness matrices. For an
+extremely small class of nonlinear material models, these consistent
+tangent-stiffness operators can be derived analytically; however, most often in
+practice, they are found through numerical approximation of derivatives. 
 
-Comparative data regarding the accuracy and compute cycle timing for the complex step, finite-difference, central-difference, and automatic differentiation methods are included to aide developers and analysts in computational mechanics code design who are faced with implementing a general method for tangent stiffness matrix calculation.  A comparison and discrimination of the methods was achieved through in-situ instrumentation of a massively parallel computational mechanics code.   
+A goal of this study was to develop and evaluate a \note[Michael]{re: I.1}
+\change[Michael]{new}{relatively underexplored}, accurate, and practical method
+for calculating tangent-stiffness matrices against established methods.  This
+new method is based on a complex number Taylor series expansion and referred to
+as CTSE or the ``complex-step'' method.  The distinction of ``accurate'' is
+defined by comparison of the \note[Michael]{re: I.1}\remove[Michael]{new} method to popular finite differencing
+techniques used for computing tangent-stiffness matrices and with the exact to
+machine precision algorithmically consistent derivatives computed with
+\emph{automatic differentiation}.
 
-The scope of the application component of the study was limited to a single material model, an elastic peridynamic solid, implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the new method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of finite-difference, central-difference, and automatic-differentiation methods needed for comparison to the new complex-step method implementation, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters. Agile-components is a software development term meaning to structure a software project for continuous development to respond to evolving specifications by making much use of techniques from object-oriented programming and reusing proven pre-existing code to reduce development time and increase reliability. The modularity of \emph{Peridigm} allowed the adding of new features, such as required by the study.
+Comparative data regarding the accuracy and compute cycle timing for the
+complex step, finite-difference, central-difference, and automatic
+differentiation methods are included to aide developers and analysts in
+computational mechanics code design who are faced with implementing a general
+method for tangent stiffness matrix calculation.  A comparison and
+discrimination of the methods was achieved through in-situ instrumentation of a
+massively parallel computational mechanics code. 
 
-The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques useful for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: A) a description of tangent-stiffness matrices, B) detailed directions for producing tangent-stiffness matrices with each the methods identified above, C) a description and justification of the new complex-step method for calculating tangent-stiffness matrices, D) a description of implementing complex-step in the \emph{Peridigm} software, E) a description of the quantities-of-interest used to rank the methods, F) a presentation and analysis of the results of the comparative study, and G) conclusions and thoughts on potential future work. Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for \emph{Peridigm} C++ source-code and data necessary to reproduce the results presented here. Additionally, included on the website is an example serial C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library. The purpose of the serial C++ library is to demonstrate in a less complex manner than in the \emph{Peridigm} code how one would use automatic-differentiation or complex-step to better encourage their use and discussion. This open source resource will be referred to as the \emph{paper repository} in what follows.
+The scope of the application component of the study was limited to a single
+material model, an elastic peridynamic solid, implemented in the computational
+peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific
+application provided a practical framework for implementing the
+\note[Michael]{re: I.1}\remove[Michael]{new} method and solving engineering
+problems to generate the data needed to compare the methods. In particular,
+\emph{Peridigm} was chosen because it combined several helpful
+characteristics: the utilization of Newton's method and tangent-stiffness
+matrices for solving nonlinear quasi-static problems, prior inclusion of
+finite-difference, central-difference, and automatic-differentiation
+methods needed for comparison to the new complex-step method
+implementation, and being an agile-components code that makes use of
+distributed computing data structures via Trilinos \cite{trilinos} for
+efficient parallelization on large clusters. Agile-components is a software
+development term meaning to structure a software project for continuous
+development to respond to evolving specifications by making much use of
+techniques from object-oriented programming and reusing proven pre-existing
+code to reduce development time and increase reliability. The modularity of
+\emph{Peridigm} allowed the adding of new features, such as required by the
+study.
+
+The aim of this paper is not only to \note[Michael]{re: I.1}\change[Michael]{introduce the new}{study the} complex-step method \change[Michael]{in
+the context of}{of} evaluating tangent-stiffness matrices, but to serve as a review
+for other differentiation techniques useful for solving non-linear systems with
+Newton's method. After presenting background information on the underlying
+methods to be discussed, presented in this paper are: A) a description of
+tangent-stiffness matrices, B) detailed directions for producing
+tangent-stiffness matrices with each of the methods identified above, C) a
+description and justification of the \note[Michael]{re: I.1}\remove[Michael]{new}complex-step method for calculating
+tangent-stiffness matrices, D) a description of implementing complex-step in
+the \emph{Peridigm} software, E) a description of the quantities-of-interest
+used to rank the methods, F) a presentation and analysis of the results of the
+comparative study, and G) conclusions and thoughts on potential future work.
+Finally, in the interest of replicable research, the reader is referred to the
+corresponding author's website for \emph{Peridigm} C++ source-code and data
+necessary to reproduce the results presented here. Additionally, included on
+the website is an example serial C++ library with classes for solving
+non-linear systems using the techniques discussed here, as well as two
+validation and verification example problems which show how to use the library.
+The purpose of the serial C++ library is to demonstrate in a less complex
+manner than in the \emph{Peridigm} code how one would use
+automatic-differentiation or complex-step to better encourage their use and
+discussion. This open source resource will be referred to as the \emph{paper
+repository} in what follows.
 
 \subsection{Differentiation Techniques}
 
 This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since the derivation of first-order finite-difference techniques from Taylor series expansion is considered well known, it is not described here. Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
-\subsubsection{The ``complex-step'' method.}  
-\label{sec:CSmethod}
-It is possible to approximate derivatives quite accurately with a technique based on a complex variable Taylor series expansion of a function.  This method was first described by Lyness and Moler \cite{lyness1967numerical,lyness1968differentiation} and has more recently been rediscovered \cite{squire1998using,voorhees2011complex,al2010complex,martins2000automated} for use in engineering analysis.  The basic idea is that a model parameter can be be made complex and expanded in a Taylor series about a small perturbation along the imaginary axis by some arbitrary value $h$ as follows
+\subsubsection{The ``complex-step'' method.}  \label{sec:CSmethod} It is
+possible to approximate derivatives quite accurately with a technique based on
+a complex variable Taylor series expansion of a function.  This method was
+first described by Lyness and Moler
+\cite{lyness1967numerical,lyness1968differentiation} and has more recently been
+rediscovered
+\cite{squire1998using,voorhees2011complex,al2010complex,martins2000automated}
+for use in engineering analysis.  The basic idea is that a model parameter can
+be be made complex and expanded in a Taylor series about a small perturbation
+along the imaginary axis by some arbitrary value $h$ as follows
 %
-\begin{align}
-f ( x + i h ) =& f(x) + \frac{\partial f(x)}{\partial x} \frac{i h}{1!}  \notag \\
-               &+ \frac{\partial f^2(x)}{\partial x^2} \frac{(i h)^2}{2!} + \frac{\partial f^3(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots,
-\label{eqn:complexTaylor}
-\end{align}
+\begin{align} f ( x + i h ) =& f(x) + \frac{\partial f(x)}{\partial x} \frac{i
+h}{1!}  \notag \\ &+ \frac{\partial f^2(x)}{\partial x^2} \frac{(i h)^2}{2!} +
+\frac{\partial f^3(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots,
+\label{eqn:complexTaylor} \end{align}
 %
-Taking the imaginary part of both sides of equation (\ref{eqn:complexTaylor}) and solving for the first derivative and ignoring terms of $\mathcal{O}\left ( h^2 \right)$ yields an estimate
+Taking the imaginary part of both sides of equation (\ref{eqn:complexTaylor})
+and solving for the first derivative and ignoring terms of $\mathcal{O}\left (
+h^2 \right)$ yields an estimate
 %
-\begin{equation}
- \frac{\partial f( x )}{\partial x} \approx \frac{\mbox{Im} \left( f (x + i h) \right)}{h}.
-\label{eqn:complexFirstDeriv}
-\end{equation}
+\begin{equation} \frac{\partial f( x )}{\partial x} \approx \frac{\mbox{Im}
+\left( f (x + i h) \right)}{h}.  \label{eqn:complexFirstDeriv} \end{equation}
 %
-Thus, an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter along the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite-differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustrates the use of the complex-step method for the derivative calculation of a function. 
-
+Thus, an estimate of the first derivative of a function can be made by only
+utilizing one functional evaluation of a perturbed model parameter along the
+imaginary axis.  The step-size $h$ is arbitrary and can be made as small as
+practical (even to machine precision without the dangers of roundoff error as
+in finite-differences) to yield an accurate estimate of this derivative.  The
+only disadvantage of this technique is the necessity of requiring the functions
+to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a
+simple example that illustrates the use of the complex-step method for the
+derivative calculation of a function. 
 
 \subsubsection{Automatic-differentiation} 
 \label{ADsubsection}
 
-Automatic-differentiation (AD) is a computerized method for computing exact derivatives based the chain-rule from calculus. AD takes advantage of the fact that any mathematical function executed on a computer, no matter how complicated, is a ``composition of simple operations'' (add, multiply, power, transcendental and the like) each having known analytical derivatives \cite{ref-sacado-presentation}. For reference, the AD implementation used in the study is part of the \emph{Sacado} package from the \emph{Trilinos} agile-component libraries developed at Sandia National Laboratories \cite{ref-Sacado}.
+Automatic-differentiation (AD) is a computerized method for computing exact
+derivatives based the chain-rule from calculus. AD takes advantage of the fact
+that any mathematical function executed on a computer, no matter how
+complicated, is a ``composition of simple operations'' (add, multiply, power,
+transcendental and the like) each having known analytical derivatives
+\cite{ref-sacado-presentation}. For reference, the AD implementation used in
+the study is part of the \emph{Sacado} package from the \emph{Trilinos}
+agile-component libraries developed at Sandia National Laboratories
+\cite{ref-Sacado}.
 
-An AD system evaluates composition functions in the expected manner: it works by first evaluating the innermost function of the composition, then presenting that function's output as input to the next level function until all levels are complete, observing commonly expected order of operations. However, an AD system does additional work during a function evaluation in that as each nested function is evaluated, the function's partial derivative with respect to the designated variables of the given input is also calculated.  This is possible because the elementary math functions are hard-coded into the AD source-code along with their analytical derivatives, and linked by special instructions, so that when the elementary math functions are called upon for computation, their partial derivatives may be computed and stored in a sequence. The AD system then multiplies the final sequence of partial derivatives together to produce the exact equivalent to taking a partial derivative of the corresponding composition function with respect to a designated variable at a particular value. It is obvious, but bears mentioning, that the AD system could simply store one value for partial derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence. This is significant because modifying a single value rather than keeping a list of values corresponding to
-every level of a composition function, which itself may not be the sole one needing to be evaluated, represents a savings in memory usage, which at large scales is an active concern. In the literature, the AD scheme described here is called \emph{forward automatic-differentiation}. Only forward AD will be covered here since it is the implementation used in \emph{Sacado} and therefore in this study; however, the reader is referred to the introduction section of \cite{ref-AD-methods} and its citations for further information on AD, and particularly \cite{ref-on-AD} which is foundational.  Appendix~\ref{sec:appendixB} includes an example that walks the reader through the process a computer uses to compute derivatives via AD.  Some things to note about AD are that no approximation of derivatives is being made because the analytical forms of the partials of the elementary math functions are defined alongside them. The accuracy of AD is then limited by the precision of the AD system's definition of the elementary math functions and their partial derivatives.
+An AD system evaluates composition functions in the expected manner: it works
+by first evaluating the innermost function of the composition, then presenting
+that function's output as input to the next level function until all levels are
+complete, observing commonly expected order of operations. However, an AD
+system does additional work during a function evaluation in that as each nested
+function is evaluated, the function's partial derivative with respect to the
+designated variables of the given input is also calculated.  This is possible
+because the elementary math functions are hard-coded into the AD source-code
+along with their analytical derivatives, and linked by special instructions, so
+that when the elementary math functions are called upon for computation, their
+partial derivatives may be computed and stored in a sequence. The AD system
+then multiplies the final sequence of partial derivatives together to produce
+the exact equivalent to taking a partial derivative of the corresponding
+composition function with respect to a designated variable at a particular
+value. It is obvious, but bears mentioning, that the AD system could simply
+store one value for partial derivatives, modifying it as appropriate for every
+function evaluation rather than keeping a sequence. This is significant because
+modifying a single value rather than keeping a list of values corresponding to
+every level of a composition function, which itself may not be the sole one
+needing to be evaluated, represents a savings in memory usage, which at large
+scales is an active concern. In the literature, the AD scheme described here is
+called \emph{forward automatic-differentiation}. Only forward AD will be
+covered here since it is the implementation used in \emph{Sacado} and therefore
+in this study; however, the reader is referred to the introduction section of
+\cite{ref-AD-methods} and its citations for further information on AD, and
+particularly \cite{ref-on-AD} which is foundational.
+Appendix~\ref{sec:appendixB} includes an example that walks the reader through
+the process a computer uses to compute derivatives via AD.  Some things to note
+about AD are that no approximation of derivatives is being made because the
+analytical forms of the partials of the elementary math functions are defined
+alongside them. The accuracy of AD is then limited by the precision of the AD
+system's definition of the elementary math functions and their partial
+derivatives.
  
 \subsection{Tangent-stiffness} 
 
-In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While the terminology of solid mechanics is used here, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmissibility matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
+In solid and structural computational mechanics the tangent-stiffness matrix is
+a linearization operator that describes the stiffness of a system in response
+to small displacements imposed upon the current configuration of the system.
+Mathematically speaking, the tangent-stiffness represents the gradient of a
+high-dimensional energy surface that ``points'' in the minimum direction. While
+the terminology of solid mechanics is used here, it's important to note that
+these operators appear in other physical settings and are known by other names,
+e.g. a \emph{transmissibility matrix} in the context of a Poisson problem or,
+more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
-While, for simplicity, the examples shown in the following refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton's method's are used in the minimization of a given residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system about about a particular configuration.  It has been shown \cite{hughes1978consistent,hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorithmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method attractive for this class of problems.  In the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when general models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.  
+While, for simplicity, the examples shown in the following refer only to linear
+problems, tangent-stiffness matrices generally arise in the context of
+non-linear analysis where Newton's method or quasi-Newton's method's are used
+in the minimization of a given residual function.  In this context, the
+tangent-stiffness matrix can be thought of as the linearization of the system
+about about a particular configuration.  It has been shown
+\cite{hughes1978consistent,hughes1978unconditionally} that in order to preserve
+the quadratic convergence properties of the Newton's methods, it is necessary
+that this linearization is carried out in a manner that is \emph{consistent}
+with the algorithmic constraint equations used when computing the internal
+forces that arise due to deformations.  An example of these constraint
+equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in
+integration of a flow rule for plasticity modeling.  If the continuum
+tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic
+tangent moduli} in the solution of a non-linear solid mechanics problem,
+convergence may still be achieved, but not in the quadratic manner that makes
+Newton's method attractive for this class of problems.  In the setting of
+non-linear solid mechanics, there is a very small class of material model
+algorithms in which consistent tangent-stiffness operators can be derived
+analytically.  Perfect plasticity and plasticity with isotropic hardening used
+in combination with a general nearest-point projection or \emph{radial return
+algorithm} are a few examples.  Therefore, when general models (and certainly
+more complex ones) are implemented into a general purpose computational
+mechanics code, the tangent-stiffness operators are typically defined via a
+numerical approximation.  
 
-A general mathematical formula for a tangent-stiffness matrix, $K_{ij}$, can be expressed in indicial notation as 
+A general mathematical formula for a tangent-stiffness matrix, $K_{ij}$, can be
+expressed in indicial notation as 
 %
-\begin{equation} 
-  K_{ij} = \left. \frac{\partial F_i}{\partial X_j}\right|_{\vec{X}_0},
-\end{equation}
+\begin{equation} K_{ij} = \left. \frac{\partial F_i}{\partial
+X_j}\right|_{\vec{X}_0}, \end{equation}
 %
-where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function, $X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a particular value of the vector, $\vec{X}_0$ is chosen as the linearization point. One then evaluates the expression for each combination $(i, j)$ corresponding to a (row, column) location in the tangent-stiffness matrix. The elements of a tangent-stiffness matrix can be estimated using any of the complex-step, AD, or common finite-difference techniques for functions $F:R^1 \rightarrow R^1$, since taking partial derivatives entails holding all but a single independent vector component of the function constant, and each element of the function can be evaluated independently of the others. \\ 
+where $F_i$ is the $i^{\mbox{th}}$ component of the vector valued function,
+$X_j$ is the $j^{\mbox{th}}$ component of the vector argument to $F$, and a
+particular value of the vector, $\vec{X}_0$ is chosen as the linearization
+point. One then evaluates the expression for each combination $(i, j)$
+corresponding to a (row, column) location in the tangent-stiffness matrix. The
+elements of a tangent-stiffness matrix can be estimated using any of the
+complex-step, AD, or common finite-difference techniques for functions $F:R^1
+\rightarrow R^1$, since taking partial derivatives entails holding all but a
+single independent vector component of the function constant, and each element
+of the function can be evaluated independently of the others. \\ 
 
 \subsubsection{Differencing formulas for tangent-stiffness matrix evaluation.}
 
@@ -231,69 +403,262 @@ Together, the FD and CD methods, are sometimes termed \emph{finite-difference pr
 
 The complex-step (CS) formula for calculating a tangent-stiffness matrix is
 %
-\begin{equation} 
-  K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h \hat{e}_j))}{h},
-\end{equation}
+\begin{equation} K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h
+\hat{e}_j))}{h}, \end{equation}
 %
-where the internal force, $F^{int}$ is now treated as function of complex vectors,  $\vec{u}$. The small perturbation, $h$, is now carried out on the imaginary axis and only the real coefficient to the imaginary part of the vector returned by $F^{int}$ is kept, hence the $\mbox{Im}(\cdot)$ operation. As highlighted in Section~\ref{sec:CSmethod}, notice that there is no subtraction operation taking place; therefore $h$ can be made very small to yield highly accurate derivatives. It should be mentioned that using complex-step to compute tangent-stiffness matrices was done in \cite{perez2000numerical,perez2012numerical}, but those references did not investigate the performance of complex-step in a massively parallel setting nor make comparisons to AD. 
+where the internal force, $F^{int}$ is now treated as function of complex
+vectors,  $\vec{u}$. The small perturbation, $h$, is now carried out on the
+imaginary axis and only the real coefficient to the imaginary part of the
+vector returned by $F^{int}$ is kept, hence the $\mbox{Im}(\cdot)$ operation.
+As highlighted in Section~\ref{sec:CSmethod}, notice that there is no
+subtraction operation taking place; therefore $h$ can be made very small to
+yield highly accurate derivatives. It should be mentioned that using
+complex-step to compute tangent-stiffness matrices was done in
+\cite{perez2000numerical,perez2012numerical}, but those references did not
+investigate the performance of complex-step in a massively parallel setting nor
+make comparisons to AD. 
 
-When using automatic-differentiation to calculate a tangent-stiffness matrix, one only needs to follow the definition of the tangent-stiffness matrix and issue the correct commands to the AD system. The formula is the same as the continuum formula
+When using automatic-differentiation to calculate a tangent-stiffness matrix,
+one only needs to follow the definition of the tangent-stiffness matrix and
+issue the correct commands to the AD system. The formula is the same as the
+continuum formula
 %
-\begin{equation} 
-  K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j},
+\begin{equation} K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j},
 \end{equation}
 %
-but, with the caveat that $F^{int}$ is evaluated in a way that is algorithmically consistent, and therefore should yield quadratic convergence with Newton's method.
+but, with the caveat that $F^{int}$ is evaluated in a way that is
+algorithmically consistent, and therefore should yield quadratic convergence
+with Newton's method.
 
 \section{Description of analysis tools and approach.} 
 %
 \subsection{\emph{Peridigm} and  peridynamics.}
 %
-Comparisons of the different tangent-stiffness calculation techniques were carried out through code-development and \emph{in situ} instrumentation of the computational peridynamics code \emph{Peridigm} \cite{peridigm}. \emph{Peridigm} is distributed by Sandia National Laboratories as its primary open-source computational peridynamics code. It is a massively parallel simulation code for implicit and explicit multi-physics simulations primarily used for solid mechanics and material failure. \emph{Peridigm} is a C++ code utilizing agile software components from Sandia's  \emph{Trilinos} project \cite{trilinos}. It's important to note that there is no specialization of the tangent-stiffness calculation methods described previously to this particular code or more generally to a computational peridynamics approach and the analysis carried out in this study should provide insight into the speed and accuracy of these methods when implemented into other computational mechanics analysis tools as well.  \emph{Peridigm} was chosen primarily because the FD, CD, and AD methods for tangent-stiffness calculation where already implemented in the code, leaving only the CS method for development. Also, because peridynamics is a nonlocal theory, the tangent-stiffness matrices have a much higher bandwidth (i.e. less sparsity) than traditional finite-element tangent-stiffness computations and the time required to construct the tangent-stiffness is a majority of the total computation time in any quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm} development team has an interest in profiling the performance of the tangent-stiffness computation methods.
+Comparisons of the different tangent-stiffness calculation techniques were
+carried out through code-development and \emph{in situ} instrumentation of the
+computational peridynamics code \emph{Peridigm} \cite{peridigm}.
+\emph{Peridigm} is distributed by Sandia National Laboratories as its primary
+open-source computational peridynamics code. It is a massively parallel
+simulation code for implicit and explicit multi-physics simulations primarily
+used for solid mechanics and material failure. \emph{Peridigm} is a C++ code
+utilizing agile software components from Sandia's  \emph{Trilinos} project
+\cite{trilinos}. It's important to note that there is no specialization of the
+tangent-stiffness calculation methods described previously to this particular
+code or more generally to a computational peridynamics approach and the
+analysis carried out in this study should provide insight into the speed and
+accuracy of these methods when implemented into other computational mechanics
+analysis tools as well.  \emph{Peridigm} was chosen primarily because the FD,
+CD, and AD methods for tangent-stiffness calculation where already implemented
+in the code, leaving only the CS method for development. Also, because
+peridynamics is a nonlocal theory, the tangent-stiffness matrices have a much
+higher bandwidth (i.e. less sparsity) than traditional finite-element
+tangent-stiffness computations and the time required to construct the
+tangent-stiffness is a majority of the total computation time in any
+quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm}
+development team has an interest in profiling the performance of the
+tangent-stiffness computation methods.
 
-Briefly, peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic} is a nonlocal reformulation of the partial-differential equations that provide the statement of momentum balance in classical continuum mechanics. Its primary goal is to avoid the use of spatial derivatives in the balance equations or constitutive laws such that discontinuous displacements, i.e. cracks, are mathematically consistent with the governing equations. It has demonstrated great promise in modeling problems with pervasive failure \cite{littlewood2010}, interesting phenomenon such as dynamic crack branching \cite{ha2010sod}, and is being extended to multiphyics phenomena \cite{bobaru2011peridynamic,katiyar2013} and the problem of multi-scale coupling to molecular simulations \cite{seleson2009peridynamics}.
+Briefly, peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
+is a nonlocal reformulation of the partial-differential equations that provide
+the statement of momentum balance in classical continuum mechanics. Its primary
+goal is to avoid the use of spatial derivatives in the balance equations or
+constitutive laws such that discontinuous displacements, i.e. cracks, are
+mathematically consistent with the governing equations. It has demonstrated
+great promise in modeling problems with pervasive failure
+\cite{littlewood2010}, interesting phenomenon such as dynamic crack branching
+\cite{ha2010sod}, and is being extended to multiphyics phenomena
+\cite{bobaru2011peridynamic,katiyar2013} and the problem of multi-scale
+coupling to molecular simulations \cite{seleson2009peridynamics}.
 
 \subsubsection{Implementing the complex-step method in Peridigm} 
 %
-The CS method was implemented in \emph{Perdigm} in a manner that follows closely the implementation of the FD technique.  However, because of \emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the \emph{Epetra} package, special steps had to be followed to allow the use of complex number data types.  This is because \emph{Epetra} vectors, which can be thought of as distributed memory parallel cousins to standard C++ STL vectors, are hard coded to be of type {\tt double} and can not be simply be declared as having a complex data type. Therefore, program methods that were used in the course of applying the FD method were copied, renamed and re-written to follow the CS formula. This involved changing the data type of intermediate variables which were locally scoped, and dynamically casting persistent memory variables to complex data types where necessary. No attempt was made to ``tune'' the CS code in any way for performance. The algorithm  was implemented in such as way that it was in one-to-one correspondence with the FD and CD methods; however, it must be noted that the overhead associated with the dynamic casts in the CS method likely hurts its overall performance and this issue could be alleviated by using the next generation of templated \emph{TPetra} vectors available in \emph{Trilinos} that are capable of taking an explicit instantiation of any data type including {\tt complex}. The version of \emph{Peridigm} modified to implement CS can be found in the paper repository.  
+The CS method was implemented in \emph{Perdigm} in a manner that follows
+closely the implementation of the FD technique.  However, because of
+\emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the
+\emph{Epetra} package, special steps had to be followed to allow the use of
+complex number data types.  This is because \emph{Epetra} vectors, which can be
+thought of as distributed memory parallel cousins to standard C++ STL vectors,
+are hard coded to be of type {\tt double} and can not be simply be declared as
+having a complex data type. Therefore, program methods that were used in the
+course of applying the FD method were copied, renamed and re-written to follow
+the CS formula. This involved changing the data type of intermediate variables
+which were locally scoped, and dynamically casting persistent memory variables
+to complex data types where necessary. No attempt was made to ``tune'' the CS
+code in any way for performance. The algorithm  was implemented in such as way
+that it was in one-to-one correspondence with the FD and CD methods; however,
+it must be noted that the overhead associated with the dynamic casts in the CS
+method likely hurts its overall performance and this issue could be alleviated
+by using the next generation of templated \emph{TPetra} vectors available in
+\emph{Trilinos} that are capable of taking an explicit instantiation of any
+data type including {\tt complex}. The version of \emph{Peridigm} modified to
+implement CS can be found in the paper repository.  
 
-\emph{Peridigm} was primarily written by computational scientists; therefore, many advanced techniques in C++ such as multiple virtual inheritance, pointer arithmetic, and distributed data structures were used in the basic code and by necessity in the modified code.  To see CS and other methods in a more narrow context, it is advised that readers also take a look at the simple examples provided on the corresponding author's website.
+\emph{Peridigm} was primarily written by computational scientists; therefore,
+many advanced techniques in C++ such as multiple virtual inheritance, pointer
+arithmetic, and distributed data structures were used in the basic code and by
+necessity in the modified code.  To see CS and other methods in a more narrow
+context, it is advised that readers also take a look at the simple examples
+provided on the corresponding author's website.
 
 \subsection{The Comparative Study} 
 \label{tcs}
 
-The methods were compared by running two sets of test problems where each method would solve a problem concurrently. In this context, concurrently means successively, drawing from the same independent variables, yet within the same computational process; this definition is characterized in further detail in Section~\ref{JGAM}. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.5}{\meter}$ by $\SI{0.5}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Perdigm} as quasistatic equilibrium problems, where the displacement boundary conditions used to apply tension were applied gradually in ``load steps'', and an equilibrium solution for each load step was achieved before applying the next load step. The purpose of applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge. The fictional material represented in the model had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness in the computation, used in the test problems was always set to three times the nominal discretization size (i.e. node spacing in the particle discretization scheme). This results in a minimum tangent-stiffness matrix bandwidth of 7 (for an optimal node numbering scheme).
+The methods were compared by running two sets of test problems where each
+method would solve a problem concurrently. In this context, concurrently means
+successively, drawing from the same independent variables, yet within the same
+computational process; this definition is characterized in further detail in
+Section~\ref{JGAM}. Each test problem simulated a $\SI{4}{\meter}$ by
+$\SI{0.5}{\meter}$ by $\SI{0.5}{\meter}$ meter block of a material undergoing
+tension along the axis parallel to the long dimension of the block. The test
+problems were set up in \emph{Perdigm} as quasistatic equilibrium problems,
+where the displacement boundary conditions used to apply tension were applied
+gradually in ``load steps'', and an equilibrium solution for each load step was
+achieved before applying the next load step. The purpose of applying the load
+in gradual steps is a widely used technique to ensure the Newton's method is
+always initialized near the actual solution and therefore likely to converge.
+The fictional material represented in the model had values of
+$\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$
+for shear modulus. The peridynamic horizon, a length scale that effectively
+sets the bandwidth of tangent-stiffness in the computation, used in the test
+problems was always set to three times the nominal discretization size (i.e.
+node spacing in the particle discretization scheme). This results in a minimum
+tangent-stiffness matrix bandwidth of 7 (for an optimal node numbering scheme).
 
-A series of nine single compute core (i.e. serial) test problems were run with the discretization size being refined with every test in the series. The aim of increasing the refinement was to examine differences between the methods in terms of accuracy and speed. This series would comprise the single core runs. The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the paper repository. These {\tt xml} files allow users with the appropriately modified version of \emph{Peridigm} to reproduce the results found in this paper.
+A series of nine single compute core (i.e. serial) test problems were run with
+the discretization size being refined with every test in the series. The aim of
+increasing the refinement was to examine differences between the methods in
+terms of accuracy and speed. This series would comprise the single core runs.
+The specific parameters of these tests can be found in \emph{Peridigm} input
+{\tt xml} files included in the paper repository. These {\tt xml} files allow
+users with the appropriately modified version of \emph{Peridigm} to reproduce
+the results found in this paper.
 
-Another series of four test problems were simulated, however this time the number of compute cores used to solve the problem was increased from test to test while the discretization level was held constant at 1 million computational nodes (3 million degrees of freedom). This allowed for sufficient computational nodes per core even at the highest level of parallelization such that message passing computation did not overwhelm the simulation.   The specific parameters of these tests can be found in \emph{Perdigm} input {\tt xml} files also included in the paper repository.
+Another series of four test problems were simulated, however this time the
+number of compute cores used to solve the problem was increased from test to
+test while the discretization level was held constant at 1 million
+computational nodes (3 million degrees of freedom). This allowed for sufficient
+computational nodes per core even at the highest level of parallelization such
+that message passing computation did not overwhelm the simulation.   The
+specific parameters of these tests can be found in \emph{Perdigm} input {\tt
+xml} files also included in the paper repository.
 
-\subsubsection{Quantities of interest} 
-\label{JGAM} 
-As stated in the Introduction, a goal of the study was to compare CS, FD, and CD on the basis of accuracy. AD was omitted from the comparison because it served as the standard of accuracy for the other methods in the absence of appropriate analytical forms for the tangent-stiffness matrix associated with the system solved in the study. The assumption that AD is accurate enough to serve as a standard is supported by ADs implementation as a computerized chain rule as explained in Section~\ref{ADsubsection}.
+\subsubsection{Quantities of interest} \label{JGAM} 
 
-It would be a poor comparative study to compare tangent-stiffness matrices from different problems, load steps that start with different current configurations, or from different iterations; because of this, it was necessary to solve one
-load step and conclude each Newton iteration within that load step by updating the displacement iterate with only the results of the AD method and to subsequently feed all four methods the same updated displacement in the following iteration. This decision precluded a comparison of Newton iteration convergence rate, since if the methods were allowed to solve a problem at their individual pace, differences in accuracy would produce differences in guess updates and therefore the number and nature of Newton iterations performed (e.g. lower accuracy predictions of the algorithmically correct tangent-stiffness could cause a loss of quadratic convergence).  Different guesses from iterations started with different previous guesses could not be data for a valid comparison of tangent-stiffness accuracy between methods.  Additionally, having each of the methods physically operate in the same process, serial or one of associated parallel, allowed the comparison of tangent-stiffness matrix calculation time as cached from random access memory rather than from the hard-disk.  Caching from RAM gives the benefit of vastly greater speed and simpler programming compared to some other solution speculatively involving dynamic file management on files which for one of the components of the study would be on the order of a terabyte in size. However, the price of running the methods together in the same process and avoiding the use of the hard-disk was that at least two tangent-stiffness matrices had to be stored in RAM during the simulation, which meant that special high-memory compute nodes were needed for the 1 million peridynamic node test series.
+As stated in the Introduction, a goal of the study was to compare CS, FD, and
+CD on the basis of accuracy. AD was omitted from the comparison because it
+served as the standard of accuracy for the other methods in the absence of
+appropriate analytical forms for the tangent-stiffness matrix associated with
+the system solved in the study. The assumption that AD is accurate enough to
+serve as a standard is supported by ADs implementation as a computerized chain
+rule as explained in Section~\ref{ADsubsection}.
 
-The other goal was to compare the four methods, including AD, on the basis of speed. Speed is defined as the total compute-time of one iteration of a Newton step which includes the tangent-stiffness calculation and parallel assembly. The speed of iteration was measured because it could be so done at the same time as accuracy was being measured given a single tangent-stiffness calculation.  It was assumed that the order that each method was evaluated in parallel was unimportant, that evaluating each method successively within each solver iteration did not affect their performance individually and that speed of computation did not change with time. These assumptions allowed the test program to run the same problem with each of the methods at effectively the same time and generate an equal volume of data from each method. It was also assumed that the tangent-stiffness matrix calculation time for each of the methods did not vary based on the current configuration, as it changes slightly from iteration to iteration as the Newton solution iterate is updated.  This assumption allowed calculation time measurements to be averaged over all iterations within a single load step. The purpose of averaging calculation time measurements was to informally address the extraneous variables of parallel evaluation order and computer system load due to system processes not associated with the study. While not part of the study, the example programs available in the paper repository allow the reader to make a comparison of the methods for themselves on the basis of accuracy and convergence rate for two example nonlinear systems. In these examples, one will notice that the finite difference methods will lose quadratic convergence when the step size selected is too large such that accuracy relative to AD is decreased.
+It would be a poor comparative study to compare tangent-stiffness matrices from
+different problems, load steps that start with different current
+configurations, or from different iterations; because of this, it was necessary
+to solve one load step and conclude each Newton iteration within that load step
+by updating the displacement iterate with only the results of the AD method and
+to subsequently feed all four methods the same updated displacement in the
+following iteration. This decision precluded a comparison of Newton iteration
+convergence rate, since if the methods were allowed to solve a problem at their
+individual pace, differences in accuracy would produce differences in guess
+updates and therefore the number and nature of Newton iterations performed
+(e.g. lower accuracy predictions of the algorithmically correct
+tangent-stiffness could cause a loss of quadratic convergence).  Different
+guesses from iterations started with different previous guesses could not be
+data for a valid comparison of tangent-stiffness accuracy between methods.
+Additionally, having each of the methods physically operate in the same
+process, serial or one of associated parallel, allowed the comparison of
+tangent-stiffness matrix calculation time as cached from random access memory
+rather than from the hard-disk.  Caching from RAM gives the benefit of vastly
+greater speed and simpler programming compared to some other solution
+speculatively involving dynamic file management on files which for one of the
+components of the study would be on the order of a terabyte in size. However,
+the price of running the methods together in the same process and avoiding the
+use of the hard-disk was that at least two tangent-stiffness matrices had to be
+stored in RAM during the simulation, which meant that special high-memory
+compute nodes were needed for the 1 million peridynamic node test series.
 
-The goals of collecting accuracy and speed measurements were achieved by developing and implementing metrics within the simulation program used in the study. The metric used to measure the accuracy of a tangent-stiffness matrix was the Frobenius norm (analogous to an $l^2$-norm except defined on a matrix) of the element-wise difference between the tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix produced by the AD based method (i.e., the \emph{exact} derivatives), given that both methods were set upon the same problem. The lower the value of this metric, the more accurate the method. The expression for the accuracy metric was
+The other goal was to compare the four methods, including AD, on the basis of
+speed. Speed is defined as the total compute-time of one iteration of a Newton
+step which includes the tangent-stiffness calculation and parallel assembly.
+The speed of iteration was measured because it could be so done at the same
+time as accuracy was being measured given a single tangent-stiffness
+calculation.  It was assumed that the order that each method was evaluated in
+parallel was unimportant, that evaluating each method successively within each
+solver iteration did not affect their performance individually and that speed
+of computation did not change with time. These assumptions allowed the test
+program to run the same problem with each of the methods at effectively the
+same time and generate an equal volume of data from each method. It was also
+assumed that the tangent-stiffness matrix calculation time for each of the
+methods did not vary based on the current configuration, as it changes slightly
+from iteration to iteration as the Newton solution iterate is updated.  This
+assumption allowed calculation time measurements to be averaged over all
+iterations within a single load step. The purpose of averaging calculation time
+measurements was to informally address the extraneous variables of parallel
+evaluation order and computer system load due to system processes not
+associated with the study. While not part of the study, the example programs
+available in the paper repository allow the reader to make a comparison of the
+methods for themselves on the basis of accuracy and convergence rate for two
+example nonlinear systems. In these examples, one will notice that the finite
+difference methods will lose quadratic convergence when the step size selected
+is too large such that accuracy relative to AD is decreased.
+
+The goals of collecting accuracy and speed measurements were achieved by
+developing and implementing metrics within the simulation program used in the
+study. The metric used to measure the accuracy of a tangent-stiffness matrix
+was the Frobenius norm (analogous to an $l^2$-norm except defined on a matrix)
+of the element-wise difference between the tangent-stiffness matrix produced by
+the method being evaluated and the tangent-stiffness matrix produced by the AD
+based method (i.e., the \emph{exact} derivatives), given that both methods were
+set upon the same problem. The lower the value of this metric, the more
+accurate the method. The expression for the accuracy metric was
 %
-\begin{equation} 
-  D = \sqrt{\sum_i \sum_j(K^{AD}_{ij} - K^{M}_{ij})^2}
-  \label{eqn:accuracy}
-\end{equation}
+\begin{equation} D = \sqrt{\sum_i \sum_j(K^{AD}_{ij} - K^{M}_{ij})^2}
+\label{eqn:accuracy} \end{equation}
 %
-Where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the AD based method, $M$ is replaced with either CS, FD, or CD depending on the method being compared.  The metric used to compare the speed of the different methods was the time in seconds required to calculate the tangent-stiffness matrix. A final basis of comparison used in the study called \emph{computational efficiency} is based on specific calculation time per tangent-stiffness matrix element.
+Where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the
+AD based method, $M$ is replaced with either CS, FD, or CD depending on the
+method being compared.  The metric used to compare the speed of the different
+methods was the time in seconds required to calculate the tangent-stiffness
+matrix. A final basis of comparison used in the study called
+\emph{computational efficiency} is based on specific calculation time per
+tangent-stiffness matrix element.
 
 \subsubsection{Computers and other software} 
 %
-Discretization for the test problems run in the study was done using the software package \emph{Cubit} developed at Sandia National Laboratories \cite{ref-Cubit}. \emph{Cubit} generates a finite element mesh that is internally converted to a ``particle'' discretization internally when calling \emph{Peridigm}. The number of computational nodes in \emph{Peridigm} correspond to the number of finite elements in the discretization, not the number of finite element nodes.  An example journal script can be found on the corresponding author's website. 
+Discretization for the test problems run in the study was done using the
+software package \emph{Cubit} developed at Sandia National Laboratories
+\cite{ref-Cubit}. \emph{Cubit} generates a finite element mesh that is
+internally converted to a ``particle'' discretization internally when calling
+\emph{Peridigm}. The number of computational nodes in \emph{Peridigm}
+correspond to the number of finite elements in the discretization, not the
+number of finite element nodes.  An example journal script can be found on the
+corresponding author's website. 
 
-The test problems were run on the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at Austin. The single core test series was run using the {\tt normal} queue compute nodes, while the parallel test series was run using one to four {\tt large memory} nodes each having one terabyte of local RAM. This large amount of memory was required for reasons explained in Section~\ref{JGAM}.  
+The test problems were run on the \emph{Stampede} HPC cluster computer housed
+at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at
+Austin. The single core test series was run using the {\tt normal} queue
+compute nodes, while the parallel test series was run using one to four {\tt
+large memory} nodes each having one terabyte of local RAM. This large amount of
+memory was required for reasons explained in Section~\ref{JGAM}.  
 
 \subsubsection{Data Reduction} 
-The output produced by \emph{Perdigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  \emph{Python} scripts were then used to post-process and plot the data. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found on the corresponding author's website.
+
+The output produced by \emph{Perdigm} including the additional accuracy and
+speed measurements was redirected from the console to text files by the
+resource manager, \emph{SLURM} (Simple Linux User Resource Manager).
+Directories and filenames were chosen so that data would be easy to sort by
+individual test run.  \emph{Python} scripts were then used to post-process and
+plot the data. These scripts averaged accuracy or speed data for a tests
+corresponding to a particular peridynamic node density over all iterations for
+that run, and then plotted this averaged data  as a function of peridynamic
+node density as it varied from test to test in the series.  Similarly, for the
+parallel tests, the data was averaged and plotted in much the same way, but as
+a function of number of compute cores used to solve the problem. Confidence
+intervals were not calculated on the measurements. The main reason is that
+network traffic from other users makes running tests on the HPC cluster a time
+varying process. These data reduction and plotting scripts can be found on the
+corresponding author's website.
 
 \section{Results and Discussion}
 %
@@ -325,47 +690,99 @@ Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-
     \end{tabular}
 \end{table*}
 
-\subsection{Speed Data}
-Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS matrix is plotted as a function of the number of nonzero TS elements.  CS was the slowest of the four methods, taking the longest average time per iteration,  followed by CD, FD and AD in that order. Calculation time has a power-law relationship with problem size, with a power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}.
+\subsection{Speed Data} Speed measurements were taken according to the methods
+mentioned in Section~\ref{tcs}. The averaged results of these speed
+measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.
+Average time in seconds to compute a TS matrix is plotted as a function of the
+number of nonzero TS elements.  CS was the slowest of the four methods, taking
+the longest average time per iteration,  followed by CD, FD and AD in that
+order. Calculation time has a power-law relationship with problem size, with a
+power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes
+well for the scalability of each of the methods by themselves in
+\emph{Peridigm}.
 %
-\begin{figure}[tbp]
-  \centering
-  \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
-  \caption{Serial test series speed measurements.}
-  \label{fig:serial_speed}
+\begin{figure}[tbp] \centering \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
+\caption{Serial test series speed measurements.} \label{fig:serial_speed}
 \end{figure}
 %
-For the parallel simulations, averaged speed results appear in Fig.~\ref{fig:multi_speed}. For this series, rather than varying the number of nonzero TS matrix elements, the number of compute cores used to solve the problem is increased, while the number of nonzero TS matrix elements remained constant at $\num{1.67E9}$ .  CS again was the slowest method, followed by CD, AD and then FD.  There is a somewhat surprise reversal of FD and AD for these parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking at average iteration time, the factor of speed improvement scales linearly with the number of compute cores used for the given conditions of this group of tests. Looking at Fig.~\ref{fig:multi_speed}, the reader can see that when core count doubles, compute time halves, for each method. Again, these results show that each of the methods as implemented in \emph{Peridigm} scale well when additional processors are used. 
+For the parallel simulations, averaged speed results appear in
+Fig.~\ref{fig:multi_speed}. For this series, rather than varying the number of
+nonzero TS matrix elements, the number of compute cores used to solve the
+problem is increased, while the number of nonzero TS matrix elements remained
+constant at $\num{1.67E9}$ .  CS again was the slowest method, followed by CD,
+AD and then FD.  There is a somewhat surprise reversal of FD and AD for these
+parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking
+at average iteration time, the factor of speed improvement scales linearly with
+the number of compute cores used for the given conditions of this group of
+tests. Looking at Fig.~\ref{fig:multi_speed}, the reader can see that when core
+count doubles, compute time halves, for each method. Again, these results show
+that each of the methods as implemented in \emph{Peridigm} scale well when
+additional processors are used. 
 %
-\begin{figure}[tbp]
-  \centering
-  \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
-  \caption{Multicore test series speed measurements.}
-  \label{fig:multi_speed}
+\begin{figure}[tbp] \centering \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
+\caption{Multicore test series speed measurements.} \label{fig:multi_speed}
 \end{figure}
 %
-A speculative explanation as to why FD and AD have reversed places in the speed tests with respect to the serial results is that the AD data-structures carry a list of partial derivatives of the functional evaluations along side the functional evaluations themselves only to be processed at the end of the tangent-stiffness calculation when the derivatives are requested. This represents additional load on the hardware memory subsystem, such that may exceed that of FD yet still fall under a supposed memory bandwidth threshold during serial operation. Cores within a multicore processor use the same shared bus to access memory, such that cores compete for memory access. Supposing that exceeding the memory bandwidth threshold penalizes additional requested bandwidth, it is likely that the decrease in available memory bandwidth per core caused by parallel operation coupled with AD's additional resource requirements causes the AD method to be slower than FD. 
+A speculative explanation as to why FD and AD have reversed places in the speed
+tests with respect to the serial results is that the AD data-structures carry a
+list of partial derivatives of the functional evaluations along side the
+functional evaluations themselves only to be processed at the end of the
+tangent-stiffness calculation when the derivatives are requested. This
+represents additional load on the hardware memory subsystem, such that may
+exceed that of FD yet still fall under a supposed memory bandwidth threshold
+during serial operation. Cores within a multicore processor use the same shared
+bus to access memory, such that cores compete for memory access. Supposing that
+exceeding the memory bandwidth threshold penalizes additional requested
+bandwidth, it is likely that the decrease in available memory bandwidth per
+core caused by parallel operation coupled with AD's additional resource
+requirements causes the AD method to be slower than FD. 
 
 \subsection{Accuracy Data}
-Data for accuracy measurements were taken according to the methods mentioned in Section~\ref{tcs}, and reduced using equation~(\ref{eqn:accuracy}). The averaged results of these accuracy measurements for the serial tests can be seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as $l^2$-norm in the figure labels for conciseness) of the element-wise difference between a given TS matrix and the TS matrix produced by the AD method is plotted as a function of the number of nonzero TS matrix elements. CS was shown to be the most accurate of the methods when compared to AD and was roughly \emph{$6$ orders of magnitude more accurate than CD} and \emph{$9$ orders of magnitude more accurate than FD}. This accuracy ranking order was maintained for each test in the series. It should be pointed out that compared to the $l^2$-norms of any of the TS matrices by themselves, the magnitude of the accuracy metric calculated with Eqn.~\ref{eqn:accuracy} for any of the methods is relatively small. These values for the $l^2$-norms of the TS matrices appear in the simulation data which is available in the paper repository. The effect of these accuracy differences on convergence rate of the Newton solver was not determined.  
+
+Data for accuracy measurements were taken according to the methods mentioned in
+Section~\ref{tcs}, and reduced using equation~(\ref{eqn:accuracy}). The
+averaged results of these accuracy measurements for the serial tests can be
+seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as
+$l^2$-norm in the figure labels for conciseness) of the element-wise difference
+between a given TS matrix and the TS matrix produced by the AD method is
+plotted as a function of the number of nonzero TS matrix elements. CS was shown
+to be the most accurate of the methods when compared to AD and was roughly
+\emph{$6$ orders of magnitude more accurate than CD} and \emph{$9$ orders of
+magnitude more accurate than FD}. This accuracy ranking order was maintained
+for each test in the series. It should be pointed out that compared to the
+$l^2$-norms of any of the TS matrices by themselves, the magnitude of the
+accuracy metric calculated with Eqn.~\ref{eqn:accuracy} for any of the methods
+is relatively small. These values for the $l^2$-norms of the TS matrices appear
+in the simulation data which is available in the paper repository. The effect
+of these accuracy differences on convergence rate of the Newton solver was not
+determined.  
 %
-The accuracy of FD and CD could be improved by using a smaller probe distance, $h$; however, if $h$ is too small, then the methods can suffer from severe effects, including solution divergence, of the round-off error associated with subtracting two numbers that are very close to one another.  The value of $h$ used in this study is the default value used in \emph{Peridigm} which is heuristically derived based on computational node spacing.  One of the beauties of the CS method is that since dependence on $h$ decreases for small $h$, which a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$, cannot be too small, therefore it can be set to machine epsilon and the analysis performed without the issues associated with round-off error. The value chosen for $h$ for CS used in this study was $\num{1.E-100}$ to demonstrate this.
+The accuracy of FD and CD could be improved by using a smaller probe distance,
+$h$; however, if $h$ is too small, then the methods can suffer from severe
+effects, including solution divergence, of the round-off error associated with
+subtracting two numbers that are very close to one another.  The value of $h$
+used in this study is the default value used in \emph{Peridigm} which is
+heuristically derived based on computational node spacing.  One of the beauties
+of the CS method is that since dependence on $h$ decreases for small $h$, which
+a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$,
+cannot be too small, therefore it can be set to machine epsilon and the
+analysis performed without the issues associated with round-off error. The
+value chosen for $h$ for CS used in this study was $\num{1.E-100}$ to
+demonstrate this.
 %
-\begin{figure}[tbp]
-  \centering
-  \scalebox{1.0}{\input{./figs/serial_accuracy.pgf}}
-  \caption{Serial test series accuracy measurements.}
-  \label{fig:serial_accuracy}
-\end{figure}
+\begin{figure}[tbp] \centering
+\scalebox{1.0}{\input{./figs/serial_accuracy.pgf}} \caption{Serial test series
+accuracy measurements.} \label{fig:serial_accuracy} \end{figure}
 %
-The averaged results of the accuracy measurements taken for the parallel test series can be seen in Fig.~\ref{fig:multi_accuracy}. The ordinate axis units remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the abscissa now indicates number of compute cores used to solve the test problem. Accuracy trends matched those for the single core tests. 
+The averaged results of the accuracy measurements taken for the parallel test
+series can be seen in Fig.~\ref{fig:multi_accuracy}. The ordinate axis units
+remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the abscissa now
+indicates number of compute cores used to solve the test problem. Accuracy
+trends matched those for the single core tests. 
 %
-\begin{figure}[tbp]
-  \centering
-  \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}}
-  \caption{Multicore test series accuracy measurements.}
-  \label{fig:multi_accuracy}
-\end{figure}
+\begin{figure}[tbp] \centering
+\scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} \caption{Multicore test
+series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
 
 
 \subsection{Efficiency Data}
@@ -391,9 +808,49 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
 
 \section{Conclusions}
 %
-Based on the experimental results, it appears that for users of \emph{Peridigm} there is a case to be made for using AD for reasons of performance and accuracy. However, certain parallel tests done in this study showed a small performance gain over AD with the FD method.  While the results showed that CS produced more accurate tangent-stiffness matrices than CD and FD under the parameters of the tests, it was not determined whether or not this is a clear advantage of CS over FD in terms of accuracy of final predicted displacements and speed of convergence. The reader is reminded that the time required to complete an iteration must be considered along with the total number of iterations taken order to measure speed of convergence. The goal of the comparative study was to benchmark single iteration performance and not convergence rate. For new developments it is recommended that combined accuracy and speed of iteration measurements be conducted along with entirely separate convergence studies. It should be mentioned that a related work, \cite{perez2012numerical}, compares the speed and accuracy of complex-step to finite difference for producing tangent-stiffness matrices in solid mechanics simulations using complex inelastic material model, where the researchers similarly found CS to be accurate yet relatively computationally expensive compared to FD and CD. In that work, full convergence studies were also done and indicated that quadratic convergence could be achieved with complex-step all of the methods \cite[p.28]{perez2012numerical}.
+Based on the experimental results, it appears that for users of \emph{Peridigm}
+there is a case to be made for using AD for reasons of performance and
+accuracy. However, certain parallel tests done in this study showed a small
+performance gain over AD with the FD method.  While the results showed that CS
+produced more accurate tangent-stiffness matrices than CD and FD under the
+parameters of the tests, it was not determined whether or not this is a clear
+advantage of CS over FD in terms of accuracy of final predicted displacements
+and speed of convergence. The reader is reminded that the time required to
+complete an iteration must be considered along with the total number of
+iterations taken order to measure speed of convergence. The goal of the
+comparative study was to benchmark single iteration performance and not
+convergence rate. For new developments it is recommended that combined accuracy
+and speed of iteration measurements be conducted along with entirely separate
+convergence studies. It should be mentioned that a related work,
+\cite{perez2012numerical}, compares the speed and accuracy of complex-step to
+finite difference for producing tangent-stiffness matrices in solid mechanics
+simulations using a complex inelastic material model, where the researchers
+similarly found CS to be accurate yet relatively computationally expensive
+compared to FD and CD. In that work, full convergence studies were also done
+and indicated that quadratic convergence could be achieved with complex-step
+\remove[Michael]{all of the methods} \cite[p.28]{perez2012numerical}.
 
-The CS method was shown to be highly accurate in calculating tangent-stiffness matrices by the standards of this study, and it is slower than other methods for a naive implementation. In the context of future use of CS in \emph{Peridigm}, CS holds the advantage of relying on byte-copyable data types, while AD requires a complicated serialization and deserialization in order to function as byte-copyable. This is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very difficult, as this would require compiling a version of the AD library being used that were compatible with the accelerator or GPU being used. What this means is that if \emph{Peridigm} or any simulation software were to be reformulated to take advantage of accelerators or GPUs, the flexibility of complex-step owed to its simple implementation may make it more viable for that application given its high accuracy. Additional performance gains may be achieved through the use of the templated \emph{Tpetra} package in \emph{Trilinos} which would allow the use of complex data types natively, and alleviate the expense of the dynamic-casts that were utilized in this study.  As a final comment, it should be noted that from a code development perspective the CS method may be the easiest of the methods to implement; It only requires one functional evaluation, there is no heuristic choice of probe distance, and there is no dependence on an external AD library.  From this perspective, the method may still be an attractive method for TS matrix evaluation.
+The CS method was shown to be highly accurate in calculating tangent-stiffness
+matrices by the standards of this study, and it is slower than other methods
+for a naive implementation. In the context of future use of CS in
+\emph{Peridigm}, CS holds the advantage of relying on byte-copyable data types,
+while AD requires a complicated serialization and deserialization in order to
+function as byte-copyable. This is fine for copying in between MPI processes,
+but deserialization on an accelerator or GPU is very difficult, as this would
+require compiling a version of the AD library being used that were compatible
+with the accelerator or GPU being used. What this means is that if
+\emph{Peridigm} or any simulation software were to be reformulated to take
+advantage of accelerators or GPUs, the flexibility of complex-step owed to its
+simple implementation may make it more viable for that application given its
+high accuracy. Additional performance gains may be achieved through the use of
+the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
+use of complex data types natively, and alleviate the expense of the
+dynamic-casts that were utilized in this study.  As a final comment, it should
+be noted that from a code development perspective the CS method may be the
+easiest of the methods to implement; It only requires one functional
+evaluation, there is no heuristic choice of probe distance, and there is no
+dependence on an external AD library.  From this perspective, the method may
+still be an attractive method for TS matrix evaluation.
 
 
 
