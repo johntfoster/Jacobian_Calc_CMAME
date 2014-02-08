@@ -432,7 +432,7 @@ with Newton's method.
 
 \section{Description of analysis tools and approach.} 
 %
-\subsection{\emph{Peridigm} and  peridynamics.}
+\subsection{\emph{Peridigm} and peridynamics.}
 %
 Comparisons of the different tangent-stiffness calculation techniques were
 carried out through code-development and \emph{in situ} instrumentation of the
@@ -458,7 +458,7 @@ quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm}
 development team has an interest in profiling the performance of the
 tangent-stiffness computation methods.
 
-Briefly, peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
+\note[Michael]{re: I.2}\change[Michael]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
 is a nonlocal reformulation of the partial-differential equations that provide
 the statement of momentum balance in classical continuum mechanics. Its primary
 goal is to avoid the use of spatial derivatives in the balance equations or
@@ -468,7 +468,30 @@ great promise in modeling problems with pervasive failure
 \cite{littlewood2010}, interesting phenomenon such as dynamic crack branching
 \cite{ha2010sod}, and is being extended to multiphyics phenomena
 \cite{bobaru2011peridynamic,katiyar2013} and the problem of multi-scale
-coupling to molecular simulations \cite{seleson2009peridynamics}.
+coupling to molecular simulations \cite{seleson2009peridynamics}. The related mathematical
+definitions and parts of peridynamic theory especially relevant to the present
+work are explained in the sequel. 
+
+\subsubsection{Vector states for state-based peridynamic theory.}
+
+\subsubsection{The state-based peridynamic equation of motion.}
+
+\subsubsection{State-based consitutive models.}
+
+\subsubsection{The linear peridynamic solid.}
+
+\subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simualtion.}
+The tangent stiffness matrix is the frechet derivative of the residual wrt the
+deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
+equilibrium version of the peridynamic equation of motion. The internal force
+density is computed in the peridynamic equation of motion by computing the
+volume integral over the whole body of the Frechet derivative of the 
+strain energy state wrt to the deformed configuration inner product with the deformation state, per node,
+for each of the three directions in the original reference frame.
+
+For the finite-difference type methods in \emph{Peridigm}, the perturbation method is employed
+by probing the deformed configuration one degree of freedom at a time and so allowing the
+sensitivity of the force density state wrt the deformation state for all nodes to be computed.
 
 \subsubsection{Implementing the complex-step method in Peridigm} 
 %
