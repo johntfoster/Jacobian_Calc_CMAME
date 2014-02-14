@@ -458,7 +458,7 @@ quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm}
 development team has an interest in profiling the performance of the
 tangent-stiffness computation methods.
 
-\note[Michael]{re: I.2, John I think you better handle expanding this section,
+\note[Michael]{re: I.2, John I think you would better handle expanding this section,
 I was going to essentially copy silling:psa.}\change[Michael]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
 is a nonlocal reformulation of the partial-differential equations that provide
 the statement of momentum balance in classical continuum mechanics. Its primary
@@ -504,10 +504,11 @@ volume integral over, a horizon, of the Frechet derivative of the
 strain energy state wrt to the deformed configuration inner product with the deformation state, per node,
 for each of the three directions in the original reference frame.
 
-For the finite-difference type methods in \emph{Peridigm}, the perturbation method is employed
-by probing the deformed configuration one degree of freedom at a time and so allowing the
-sensitivity of the force density state wrt the deformation state for all nodes to be computed.
-}
+For the finite-difference type methods in \emph{Peridigm}, the perturbation
+method is employed by probing the deformed configuration one degree of freedom
+at a time and so allowing the sensitivity of the force density state wrt the
+deformation state for all nodes to be computed.  }
+
 \subsubsection{Implementing the complex-step method in Peridigm} 
 %
 The CS method was implemented in \emph{Perdigm} in a manner that follows
@@ -515,28 +516,60 @@ closely the implementation of the FD technique.  However, because of
 \emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the
 \emph{Epetra} package, special steps had to be followed to allow the use of
 complex number data types.  This is because \emph{Epetra} vectors, which can be
-thought of as distributed memory parallel cousins to standard C++ STL vectors,
-are hard coded to be of type {\tt double} and can not be simply be declared as
-having a complex data type. Therefore, program methods that were used in the
-course of applying the FD method were copied, renamed and re-written to follow
-the CS formula. This involved changing the data type of intermediate variables
-which were locally scoped, and dynamically casting persistent memory variables
-to complex data types where necessary. No attempt was made to ``tune'' the CS
-code in any way for performance. The algorithm  was implemented in such as way
-that it was in one-to-one correspondence with the FD and CD methods; however,
-it must be noted that the overhead associated with the dynamic casts in the CS
-method likely hurts its overall performance and this issue could be alleviated
-by using the next generation of templated \emph{TPetra} vectors available in
-\emph{Trilinos} that are capable of taking an explicit instantiation of any
-data type including {\tt complex}. The version of \emph{Peridigm} modified to
-implement CS can be found in the paper repository.  
+thought of as distributed memory parallel cousins to standard C++
+\change[Michael]{STL}{Standard Template Library} vectors, are hard coded to be
+of type {\tt double} and can not be simply be declared as having a complex data
+type. \note[Michael]{re: I.3}\add[Michael]{For the reader's convenience,
+    \emph{Epetra} vectors and STL vectors are what are known as 'container
+    classes', whose purpose in object oriented computer programming is to
+    automate the creation, accessing, modification and destruction of the
+    underlying contained data. Templated container classes allow for user
+    choice in what properties that underlying data exihibits.  For example, in
+    this work, complex arithmetic cannot be performed on the data contained
+    within an \emph{Epetra} vector because that data, of type {\tt double} does
+    not have the property of following the rules of complex arithmetic. The
+    reason the non-templated \emph{Epetra} vector could not be dispensed with
+    for the purposes of this work is because the \emph{Epetra} vector was
+tightly integrated with \emph{Peridigm's} parallel communication strategy and
+linear algebra code.} Program methods that were used in the course of applying
+the FD method were copied, renamed and re-written to follow the CS formula.
+Because of restrictions imposed by the container class being used, this
+involved changing the data type of intermediate variables which were locally
+scoped, and dynamically casting persistent memory variables to complex data
+types where necessary. \note[Michael]{re: I.3}\add[Michael]{For the reader's
+convenience, 'locally scoped' in the C++ programming language refers to
+data which is created within a context more specific than the context of
+the entire program, or 'translation unit'.  Most data created this way is
+destroyed when that specific context is left. The topic of contexts in C++
+is very broad, so for the purposes of this work context refers to a program
+method or function that begins, concludes and yields a result, also
+destroying locally scoped data. Dynamic casting for the purposes of this
+work refers to copying the value of data contained within an \emph{Epetra}
+vector into locally scoped data that has the property of following the rules of
+complex arithmetic, where a mapping called 'type casting' allows the
+translation of data between different types.} No attempt was made to ``tune''
+the CS code in any way for performance. The algorithm  was implemented in such
+as way that it was in one-to-one correspondence with the FD and CD methods;
+however, it must be noted that the overhead associated with the dynamic casts
+in the CS method likely hurts its overall performance and this issue could be
+alleviated by using the next generation of templated \emph{TPetra} vectors
+available in \emph{Trilinos} that are capable of taking an explicit
+instantiation of any data type including {\tt complex}. \note[Michael]{re:
+I.3}\add[Michael]{For the purposes of this work, an explicit instantiation
+refers to requesting the creation of an object, or instance, of a templated
+class or container class that holds data which has the property of
+following desired mathematic or logic rules.} The version of \emph{Peridigm}
+modified to implement CS can be found in the paper repository.  
 
 \emph{Peridigm} was primarily written by computational scientists; therefore,
 many advanced techniques in C++ such as multiple virtual inheritance, pointer
-arithmetic, and distributed data structures were used in the basic code and by
-necessity in the modified code.  To see CS and other methods in a more narrow
-context, it is advised that readers also take a look at the simple examples
-provided on the corresponding author's website.
+arithmetic, and distributed data structures, \note[Michael]{re:
+I.3}\add[Michael]{for example \emph{Epetra} vectors, were used in the basic
+    code and by necessity in the modified code. These concepts are not vital to
+understanding the complex step method iteself, but may be necessary to understand complex
+step in \emph{Peridigm}.} To see CS and other methods in a more narrow context,
+it is advised that readers also take a look at the simple examples provided on
+the corresponding author's website.
 
 \subsection{The Comparative Study} 
 \label{tcs}
@@ -576,9 +609,32 @@ number of compute cores used to solve the problem was increased from test to
 test while the discretization level was held constant at 1 million
 computational nodes (3 million degrees of freedom). This allowed for sufficient
 computational nodes per core even at the highest level of parallelization such
-that message passing computation did not overwhelm the simulation.   The
+that message passing computation did not overwhelm the simulation.  The
 specific parameters of these tests can be found in \emph{Perdigm} input {\tt
-xml} files also included in the paper repository.
+xml} files also included in the paper repository. \note[Michael]{re:
+I.3}\add[Michael]{For the purposes of this work message passing is what
+synchronizes multiple computers that each are working on a separate section
+of the problem domain. This operation involves the time-consuming use of
+the data network. To reduce the proportion of simulation time spent on
+message passing, good practice is to maximize the amount of information
+contained within a subdomain solely managed by a single computer, relative
+to the amount of information shared accross multiple subdomains and
+therefor multiple computers. A useful experiment to illustrate this idea
+concretely would be to implement a code to solve a 2D Laplace equation for
+simulating a simple heat condution problem on two processors. Use the
+textbook finite difference method, which in this case does not refer just
+to the differentiation technique.  First decompose the domain into two
+contiguous chunks, having one shared border, and distribute these chunks,
+or subdomains to the two processors. Perfom the simulation a multitude of
+times to calculate an average runtime.  Next implement the solution a
+different way, instead partitioning the problem domain into many narrow,
+alternating strips, and distribute those to again two processors, where adjacent
+strips in the graph of the domain should be sent to different processors. This way
+of decomposing the domain will cause much overlap between the subdomains
+managed by the two processors and much time will be spent synchronzing the
+subdomain overlap or 'ghost nodes' between the processors. Run the modified
+simulation a multitude of times and take the average runtime. The larger
+the unpartitioned domain, the worse the discrepancy should be.}
 
 \subsubsection{Quantities of interest} \label{JGAM} 
 
@@ -678,7 +734,7 @@ at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at
 Austin. The single core test series was run using the {\tt normal} queue
 compute nodes, while the parallel test series was run using one to four {\tt
 large memory} nodes each having one terabyte of local RAM. This large amount of
-memory was required for reasons explained in Section~\ref{JGAM}.  
+memory was required for reasons explained in Section~\ref{JGAM}, second paragraph.  
 
 \subsubsection{Data Reduction} 
 
@@ -876,12 +932,38 @@ while AD requires a complicated serialization and deserialization in order to
 function as byte-copyable. This is fine for copying in between MPI processes,
 but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used. What this means is that if
-\emph{Peridigm} or any simulation software were to be reformulated to take
-advantage of accelerators or GPUs, the flexibility of complex-step owed to its
-simple implementation may make it more viable for that application given its
-high accuracy. Additional performance gains may be achieved through the use of
-the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
+with the accelerator or GPU being used. \note[Michael]{re:
+I.3}\add[Michael]{For the reader's convenience, a collection of contiguously
+stored data elements are said to be 'byte-copiable' when the the interval
+in bytes of memory spanned by a data element in the collection is constant
+throughout the collection. Suppose 'contiguously stored' means, stored in
+memory with a minimum of unrelated infomation stored in between data
+elements in the collection. Complicated objects, such as AD datatype
+elements, do not have the same size in memory as other objects even of that
+same class, for the reason that they themselves contain an uncertain
+ammount of state data according to their design and work done in the
+program. This means that a collection of such objects, even if they are
+contiguously stored in memory, will not be alligned according to a constant
+interval, such that elements within a collection cannot be located by
+coordinates consisting of the location of the beginning of the first
+element in the collection and an interval multiplied by a natural number.
+This method of locating is integral to the serialized communication
+implemented by MPI the libraries as well as CUDA, OpenCL, and others,
+which allow only the transmission of collections of byte-copiable datatypes
+(that is 'primitive datatypes'). A common method of bypassing this
+limitation for communication purposes is to write the complicated data to a
+'character buffer', and transmit the byte-copiable character buffer,
+however this is useless unless the recipient device of the communication
+can recover the original data and process it, which is impossible if the
+recipient device only can work with a subset of the programming language
+that the sending device must use, such as in a communication between a CPU
+running C++ and a GPU running C (such as in CUDA programs), where the gap in
+sophistication contains the features of the "complicated" datatype.} What this means is
+that if \emph{Peridigm} or any simulation software were to be reformulated to
+take advantage of accelerators or GPUs, the flexibilty of complex-step owed to
+its simple implementation may make it more viable for that application given
+its high accuracy. Additional performance gains may be achieved through the use
+of the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
 use of complex data types natively, and alleviate the expense of the
 dynamic-casts that were utilized in this study.  As a final comment, it should
 be noted that from a code development perspective the CS method may be the
