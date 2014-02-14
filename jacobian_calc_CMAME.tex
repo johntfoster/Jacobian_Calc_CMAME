@@ -458,7 +458,8 @@ quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm}
 development team has an interest in profiling the performance of the
 tangent-stiffness computation methods.
 
-\note[Michael]{re: I.2}\change[Michael]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
+\note[Michael]{re: I.2, John I think you better handle expanding this section,
+I was going to essentially copy silling:psa.}\change[Michael]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
 is a nonlocal reformulation of the partial-differential equations that provide
 the statement of momentum balance in classical continuum mechanics. Its primary
 goal is to avoid the use of spatial derivatives in the balance equations or
@@ -484,8 +485,8 @@ possible to give a more precise definition of the tangent stiffness matrix for
 the problem being discussed in this work. The following discussion is largely
 taken from \cite{silling:psa}, but reproduced here fo clarity.
 
+\note[Michael]{re: I.2. John, this was to be the skeleton for the new sections on peridynamics.}
 \subsubsection{Vector states for state-based peridynamic theory.}
-
 
 \subsubsection{The state-based peridynamic equation of motion.}
 
@@ -493,19 +494,20 @@ taken from \cite{silling:psa}, but reproduced here fo clarity.
 
 \subsubsection{The linear peridynamic solid.}
 
+\note[Michael]{re: I.2} \add[Michael]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simualtion.}
 The tangent stiffness matrix is the frechet derivative of the residual wrt the
 deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
 equilibrium version of the peridynamic equation of motion. The internal force
 density is computed in the peridynamic equation of motion by computing the
-volume integral over the whole body of the Frechet derivative of the 
+volume integral over, a horizon, of the Frechet derivative of the 
 strain energy state wrt to the deformed configuration inner product with the deformation state, per node,
 for each of the three directions in the original reference frame.
 
 For the finite-difference type methods in \emph{Peridigm}, the perturbation method is employed
 by probing the deformed configuration one degree of freedom at a time and so allowing the
 sensitivity of the force density state wrt the deformation state for all nodes to be computed.
-
+}
 \subsubsection{Implementing the complex-step method in Peridigm} 
 %
 The CS method was implemented in \emph{Perdigm} in a manner that follows
