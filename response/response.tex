@@ -56,7 +56,7 @@
         uses peridynamic models for mechanics. However, no detailed explanation of the
         equations involved is presented. Although the tangent-stiffness calculations are
         not specialized to Peridigm, the authors should include a short section introducing
-        the peridynamic theory and the speciﬁc constitutive model used, i.e., the elastic
+        the peridynamic theory and the specific constitutive model used, i.e., the elastic
         peridynamic solid. You may add this to the already included very brief description
         of peridynamics in page 9 (lines 15-26). This will also help to explain the concept
         of the peridynamic horizon in page 10.
@@ -64,7 +64,7 @@
 {\color{red}
   \begin{itemize}
     \item 
-        We have revised the brief desciption of peridynamics in page 9 to be more complete:
+        We have revised the brief description of peridynamics in page 9 to be more complete:
     \item
         Material from silling2007 is interpreted including: the definition of vector states,
         the derivation of conservation laws in terms of state-based peridynamics, the definition
@@ -74,10 +74,30 @@
         in the peridynamic models for mechanics, used in relation to the peridynamics code
         studied in the work. 
 
-
   \end{itemize}}
+    \item 
+        The manuscript seems to be written in a language more familiar to computer scientists. 
+        I would encourage the authors to revise certain parts of the manuscript to be
+        presented in a language more familiar to the computational mechanics community.
 
-
+{\color{red}
+  \begin{itemize}
+    \item 
+        We have revised certain parts of the manuscript for clarity, adding additional information for the reader's
+        convenience:
+    \item
+        In subsection 'Implementing the complex-step method in Peridigm', explanation of what is meant by datatype,
+        container class, template, scope and instantiation are included since these concepts may be unfamiliar to
+        a computational mechanics audience at least as denoted by these terms. 
+    \item 
+        In subsection 'The Comparative Study', the way message passing computations can slow runtime is explained
+        by an analogy to an experiment given as an exercise for the reader. 
+    \item 
+        In section 'Conclusions', the term byte-copiable is explained. 
+    \item 
+        It is the authors' opinion that the above revisions to the language of the manuscript allow the intended audience
+        to follow the discussion where concepts from computer science are relevant.
+  \end{itemize}}
 
 
 \end{document}
