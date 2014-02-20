@@ -430,6 +430,8 @@ but, with the caveat that $F^{int}$ is evaluated in a way that is
 algorithmically consistent, and therefore should yield quadratic convergence
 with Newton's method.
 
+\note[Michael]{re: I.5, this is taken from the thesis.}
+\add[Michael]{
 \section{Working examples of CS, AD and FD for Newton's method}
 \label{sec:WorkingExamples}
 In order to illustrate the complex-step technique in a simpler form than it
@@ -524,7 +526,8 @@ collected included number of iterations to converge summed over all load-steps
 and final displacement, D, after the final load-step. Additionally
 finite-difference step-size was varied in order to measure the impact on each
 of the Jacobian calculation methods. Naturally, varying step size does not
-affect AD or the analytically derived Jacobian. The accuracy results for
+affect AD or the analytically derived Jacobian since those are not functions
+of step size. The accuracy results for
 verifying the Jacobian calculation methods are summarized in Table
 \ref{tab:ConvergenceStudy}. 
 
@@ -553,7 +556,7 @@ subtractive cancellation. However, since there is no accuracy reason for
 choosing an extremely small step size, each of the methods can be used to
 produce acceptable solutions to the nonlinear truss system. Table
 \ref{tab:ConvergenceStudy} shows the total number of iterations taken over all
-load-steps for each of the methods.
+load-steps for each of the methods. 
 
 \begin{table*}[!ht]    
   \centering
@@ -577,17 +580,18 @@ analytically derived Jacobian, a minimum number of iterations is achieved
 corresponding to a maximum convergence rate. CS and FD are similarly affected
 by a grossly large step-size, while subtractive cancellation invalidates the
 results for FD for very small step-sizes. Inaccuracy for large step-sizes is is
-predicted by the FD and CS formulas, which are contingent upon a small
+predicted by the FD and CS formulas, which require a small
 step-size to allow the neglect of higher order 12 terms. The results of this
 test show that step-size selection is not unimportant when using FD, but when
 properly configured any of the methods may return the same maximum convergence
-rate for this problem.  Overall conclusions regarding the methods that may be
-kept in mind for problems besides this example are that the accuracy of the
-Jacobian should not be confused with the accuracy of the equi- librium
+rate for this problem.  Overall conclusions regarding the methods that the accuracy of the
+Jacobian should not be confused with the accuracy of the equilibrium
 solution, since each of the methods discussed here may be equally capable given
-enough iterations. Additionally, while the accuracy of the Jacobian may
-strongly affect convergence rates, this relationship was not quantified here.
-
+enough iterations. Numerical measurements of accuracy besides number of iterations taken
+are not possible here because there is not basis for comparison, as the methods are solving
+the problem separately and producing difference Newton iterates. Additionally, while the inaccuracy of the Jacobian may
+strongly affect convergence rates, this relationship was not precisely quantified here.
+}
 
 \section{Description of analysis tools and approach.} 
 %
@@ -1058,31 +1062,226 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
   \label{fig:multi_efficiency}
 \end{figure}
 
+\note[Michael]{Re: I.5}
+\add[Michael]{
+\section{Convergence and displacement accuracy studies} 
+\label{sec:PeridigmConvergenceStudy}
+%
+While the previous sections profiled the per-iteration performance of each of
+the methods, it was necessary to conduct convergence rate studies in order to
+get a complete picture. It is necessary for an analyist to know if the
+accuracy differences measured in the per-iteration tests would amount to
+differences in convergence rates among the methods if they were allowed to solve problems
+normally. The question is posed, given that step-size $h$ is heuristically
+selected by \emph{Perdigm} for the finite difference methods and presumable
+makes a good choice, do the single-iteration Jacobian accuracy results predict
+the ranking of the methods in terms of convergence rate for a given study? For
+brevity, convergence rate was measured for each of the methods in solving just
+the largest problem of the single-core test series. As was seen in the per-iteration results,
+Jacobian accuracy did not vary greatly from test to test, such that any pair of tests
+from the two series could have been considered reasonably representative. As in
+the validation problem shown in ~\ref{subsec:Validation}, would each of the methods return an
+equal convergence rate so long as $h$ were optimally selected? 
+
+The results shown in Table ~\ref{tab:ConvergenceStudy2} indicate that this was the case. 
+The difference in Jacobian accuracy between the methods seen in the per-iteration tests
+was not sufficient to lead to differences in the convergence rate of the methods.
+
+\begin{table*}[!ht]   
+    \centering \caption{Average iterations/ load-step} 
+    \label{tab:ConvergenceStudy2}   
+    \begin{tabular}{c c c c c}
+    \toprule Test type & AD & CS & CD & FD\\
+        \midrule 
+        single-core & 63 & " & " & "\\ 
+        multi-core  & 63 & " & " & "\\ 
+\bottomrule \end{tabular} \end{table*}
+
+The end displacement results shown in ~\ref{subsec:Validation} indicated that up to a certain precision the
+solutions produced by each of the methods were identical. It was examined if this was the case for the 
+solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the 
+methods were compared to the AD produced solutions, under the assumption that the AD produced solutions
+would be closest to the solution produced by using an 'exact' Jacobian. Table ~\ref{tab:PeridigmSolutionAccuracy} shows that the methods
+did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders 
+of magnitude smaller than the force density value at the node where the difference was detected.
+
+\begin{table*}[!ht]   
+    \centering \caption{Nodal force density maximum difference} 
+    \label{tab:PeridigmSolutionAccuracy}   
+    \begin{tabular}{c c c c}
+    \toprule  & CS & CD & FD\\
+        \midrule  Order of magnitude & $\num{1.E-8}$ & $\num{1.E-8}$ & $\num{1.E-5}$ \\ 
+\bottomrule \end{tabular} \end{table*}
+
+The solution accuracy results do follow the same ranking seen in the Jacobian accuracy results, however,
+again as in the validation problem the results differ only slightly. Speculatively this degree of error
+may be important to those running probabilistic simulations such that the propagation of error may be 
+a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material 
+properties or loading conditions, it may have a greater impact on simulations involving very low
+force densities such as for small displacements or very lax materials. In this case it could be recommended
+that forward-difference be avoided. 
 
 \section{Conclusions}
 %
-Based on the experimental results, it appears that for users of \emph{Peridigm}
-there is a case to be made for using AD for reasons of performance and
-accuracy. However, certain parallel tests done in this study showed a small
-performance gain over AD with the FD method.  While the results showed that CS
-produced more accurate tangent-stiffness matrices than CD and FD under the
-parameters of the tests, it was not determined whether or not this is a clear
-advantage of CS over FD in terms of accuracy of final predicted displacements
-and speed of convergence. The reader is reminded that the time required to
-complete an iteration must be considered along with the total number of
-iterations taken order to measure speed of convergence. The goal of the
-comparative study was to benchmark single iteration performance and not
-convergence rate. For new developments it is recommended that combined accuracy
-and speed of iteration measurements be conducted along with entirely separate
-convergence studies. It should be mentioned that a related work,
-\cite{perez2012numerical}, compares the speed and accuracy of complex-step to
-finite difference for producing tangent-stiffness matrices in solid mechanics
-simulations using a complex inelastic material model, where the researchers
-similarly found CS to be accurate yet relatively computationally expensive
-compared to FD and CD. In that work, full convergence studies were also done
-and indicated that quadratic convergence could be achieved with complex-step
-\remove[Michael]{all of the methods} \cite[p.28]{perez2012numerical}.
+\subsection{For further studies of Jacobian accuracy in Newton's method}
+\label{subsec:FurtherStudies}
+The question is raised; what is the significance of Jacobian estimation
+accuracy to the convergence of Newton's method?  The per-iteration and even
+convergence studies shown here indicate the effect of Jacobian accuracy for
+only a single datum, a very accurate Jacobian estimate, while the validation
+problem indicates the effect of using a grossly inaccurate Jacobian. The results here show that
+for very small Jacobian estimate inaccuracies, convergence rate is not
+affected, while for grossly inaccurate Jacobians Newton's method fails. 
+Is it worthwhile then to investigate the effect of using moderately inaccurate Jacobians, 
+produced deliberately or otherwise, on the convergence rate of Newton's method?
 
+The answer may be no at least unless a more highly non-linear class of problem
+is selected for study or a controllable method of producing a moderately
+inaccurate Jacobian is found along with a reason for using it. While it is possible
+to incorrectly apply finite-differencing and CS by choosing an inappropriate
+step-size, there is no reason that this should be done. The experiments show
+that step-size $h$ can be properly selected and that the methods are capable of
+producing accurate Jacobians. It should be noted that the model used to perform
+the simulation could always be substituted for a more highly non-linear one and
+perhaps this would somewhat increase the importance of Jacobian accuracy. The
+study presented here failed to pose the question of how wrong a correctly
+implemented Jacobian calculation scheme could go for plastic or otherwise
+non-linear material models, here instead non-linearity was imposed by the
+nonlocal interaction between material points essential to peridynamic models,
+like the linear model used in the study. 
+
+Nevertheless, Newton's method is not defined for using an inaccurate or 'wrong'
+Jacobian, so using an inaccurate Jacobian is failing to perform Newton's method
+by definition. But it is also true that it should not be expected that every
+differentiation technique performs flawlessly under all situations. The
+pragmatic strategy to study this may be to compare a prospective method's
+Jacobian accuracy to that produced by AD and develop a rule of thumb based on
+observed convergence rates from prior simulations as they relate to the percent
+difference of the prospective and AD produced Jacobians. Also it is possible to
+calculate a sensitivity of Jacobian error to step-size alongside a sensitivity
+of convergence rate to step-size, and then to relate these two quantities as a
+map of Jacobian error to convergence rate change from ideal. Additionally it is
+still possible to look at the convergence conditions for Newton's method and
+suggest a relationship between Jacobian accuracy and convergence rate in a
+theoretical manner. To this point, there are a set of convergence conditions derived in
+\cite[Chap. 2, p.41]{burkeLectures} which relate quality of Jacobian inverse approximations
+to convergence rate classification, here reproduced,
+%
+\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq K,
+\end{equation}
+
+for worse than linear convergence,
+
+\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq \Theta_{1}^{k}K; \Theta_{1} \in (0,1),
+\end{equation}
+
+for linear convergence,
+
+\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{2} \mid \mid x_{k} - x_{k-1} \mid \mid, K}; M_{2} > 0
+\end{equation}
+
+for two step quadratic,
+
+\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{3} \mid \mid r(x_{k}) \mid \mid, K}; M_{3} > 0
+\end{equation}
+
+and lastly for quadratic convergence. Here $r \prime$ is the true system
+Jacobian and $J$ is the approximation. Essentially the conditions measure how
+well the difference of the true Jacobian inverse and approximation works as
+a contraction map within the closure of a radius of convergence about the true
+solution. This property is necessary for the solution method using the
+approximation to converge rather than to diverge, as is true of the exact Newton
+method.
+
+It may be interesting to artificially perturb the Jacobian calculations with
+random error in order to better control experimentally the onset of inaccuracy
+to develop a sensitivity of convergence rate to this type of error. Perhaps an
+analyst could use this knowledge to devise an adaptive differentiation
+technique selection method which economizes on accuracy until a significant
+Jacobian error is measured during a special doubly calculated iteration.
+
+Additionally, there are Quasi-Newton methods such as Broyden's method which
+uses an approximate inverse Jacobian and updates it with information from the 
+iterate and residual \cite{dennis1971convergence}. A method called
+Incomplete Jacobian Newton's method may the closest to the idea of deliberately
+making use of an inaccurate Jacobian in the sense that arbitrary elements of
+the full Jacobian are set to zero to reduce computational effort
+\cite{liu2008incomplete}. The Quasi-Newton methods represent a compromise of
+Newton's method for the promise of faster iterations in exchange for a lower
+convergence rate. For both of these methods, the iterate and residual are
+computed as in Newton's method. As to the question of algorithmic consistency,
+these numerical methods evaluate the same linearized constitutive law and
+governing equation as for the exact Newton's method which in the case of a
+plastic simulation are involved in iteratively determining algorithmic tangent moduli. 
+In fact, a secant equation based method is appropriate for Newton's method with algorithmic
+tangent moduli since the Jacobian ought only depend on known converged
+values such that the Newton iterate could not artificially drive the plasticity
+of the model \cite[Chap. 6]{belytschko1999nonlinear}. It should be noted that
+constraints or a line search algorithm to minimize the residual are necessary
+whereas the pure secant method does not return unique solutions in
+multi-dimensions.
+%
+
+\subsection{Grain of salt for speed results}
+The per-iteration speed results shown here indicate that the AD method is
+faster than CD or FD.  While this may be the case for the implementation in the
+stock version of \emph{Peridigm} this is not reflective of any limitation of
+these methods. In a side experiment, the finite-difference code in
+\emph{Peridigm} was re-written to take advantage of the benefits of storing the
+results of duplicated intermediate calculations. These modifications were 
+general, low memory footprint and could be adopted in any numerical simulation
+simulation software as good practice. An informal performance test was done
+using a personal AMD Phenom-2 X4 workstation using GCC 4.7 compilers rather than a
+Intel Xeon E5 node with Intel Cluster Studio 13.0 compilers as provided by TACC. The problem
+being run was the largest single core test from the main study, instead run on four 
+compute cores. Table ~\ref{tab:PerformanceMod} shows the timing
+results for AD as reference along with an unmodified CD, and then modified CD
+and FD.
+
+\begin{table*}[!ht]   
+\centering \caption{Total time spent computing Jacobian} 
+\label{tab:PerformanceMod}   
+\begin{tabular}{c c c c c}
+\toprule & AD & CD & Modded CD & Modded FD\\
+\midrule  Total seconds & $~430$ & $~570$ & $~430$ &$~320$ \\ 
+\bottomrule \end{tabular} \end{table*}
+
+The results indicated that in exchange for a modest programming effort, a
+performance increase of around a quarter was available for the
+finite-difference methods and that FD could eclipse AD. What allowed the performance modifications to
+enhance the finite-difference methods was their lack of sophistication
+compared to AD in that their explicitly laid out and
+repetitive code could be readily optimized. 
+
+\subsection{Remarks}
+Based on the experimental results, it appears that for users of \emph{Peridigm}
+there is a case to be made for using AD for reasons of speed. However, certain
+parallel tests done in this study showed a small performance gain over AD with
+the FD method.  The results showed that CS produced more accurate
+tangent-stiffness matrices than CD and FD under the parameters of the tests,
+however it was determined that this difference in accuracy was not sufficient
+to alter convergence rate for a test problem. In order for Jacobian accuracy to
+have an impact on convergence rate, and therefor serve as a predictor of
+convergence rate in per-iteration results, the amount of error detected between
+a supposed perfectly accurate Jacobian and the test Jacobian needs to be
+greater than allowed by the conditions seen in \cite{burkeLectures}, 
+reproduced in \ref{sec:FurtherStudies}. 
+
+It should be mentioned that another work, \cite{perez2012numerical}, compares
+the speed and accuracy of complex-step to finite difference for producing
+tangent-stiffness matrices in solid mechanics simulations using the 'MRS-Lade'
+material model, where the researchers similarly found CS to be accurate yet
+relatively computationally expensive compared to FD and CD. In that work, full
+convergence studies were also done and indicated that quadratic convergence was
+achieved with the methods \cite[p.28]{perez2012numerical}.
+
+However, at least for the models producing the results shown here, each of the
+methods returned quadratic convergence, indicating each was sufficiently
+accurate. 'Marching orders' for the analyst would be to select the swiftest
+method, while it would seem accuracy above what is adequate does not enhance
+the convergence rate or iteration speed until either classical Newton's convergence
+conditions or the approximate case conditions are violated. 
+}
 The CS method was shown to be highly accurate in calculating tangent-stiffness
 matrices by the standards of this study, and it is slower than other methods
 for a naive implementation. In the context of future use of CS in
@@ -1129,8 +1328,13 @@ be noted that from a code development perspective the CS method may be the
 easiest of the methods to implement; It only requires one functional
 evaluation, there is no heuristic choice of probe distance, and there is no
 dependence on an external AD library.  From this perspective, the method may
-still be an attractive method for TS matrix evaluation.
-
+still be an attractive method for TS matrix evaluation. \add[Michael]{However, at least for 
+the models producing the results shown here, each of the
+methods returned quadratic convergence, indicating each was sufficiently
+accurate. 'Marching orders' for the analyst would be to select the swiftest
+method, while it would seem accuracy above what is adequate does not enhance
+the convergence rate or iteration speed until either classical Newton's convergence
+conditions or the approximate case conditions are violated.} 
 
 
 \section{Acknowledgements}
