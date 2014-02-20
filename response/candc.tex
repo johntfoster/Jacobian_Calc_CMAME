@@ -1,0 +1,354 @@
+\documentclass[10pt,letterpaper,draft]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\author{Michael D. Brothers}
+\title{Comparing and contrasting with prior work in the field}
+\begin{document}
+\section{Abstract of the reviewed work}
+
+In order to maintain the quadratic convergence properties of Newton's method in
+quasi-static non-linear analysis of solid structures it is crucial to obtain
+accurate, algorithmically consistent tangent-stiffness matrices. A goal of the
+study described in this paper was to establish the suitability of an
+under-explored method for numerical computation of tangent-stiffness operators,
+referred to as ``complex-step'', and compare the method with other techniques
+for numerical derivative calculation: automatic differentiation, forward
+finite-difference, and central finite-difference. The complex-step method was
+implemented in a massively parallel computational peridynamics code for the
+purpose of this comparison.  The methods were compared through invasive
+profiling of the code for accuracy, speed, efficiency, and parallel
+scalability. The research provides data that can serve as practical guide for
+code developers and analysts faced with choosing which method best suits the
+needs of their application code.  Additionally, motivated by the reproducible
+research movement, all the of the code, examples, and workflow to regenerate
+the data and figures in this paper are provided as open source.
+
+\section{Re: W. Squire and G. Trapp (1998)}
+\subsection{Abstract of prior work in field}
+
+A method to approximate derivatives of real functions using complex variables
+which avoids the subtractive cancellation errors inherent in the classical
+derivative approximations is described. Numerical examples illustrating the
+power of the approximation are presented.
+
+\subsection{Aspects of CS investigated}
+
+Establishing the accuracy of the method for computing first derivatives of
+real functions through empirical tests, versus forward and central difference 
+methods.
+
+\subsection{Similarities with review work}
+
+The reviewed work uses the numerical differentiation method as shown in the
+prior work. The accuracy of CS demonstrated in the prior work served as encouragement
+for investigating CS further.
+
+\subsection{Differences with review work}
+
+In the reviewed work the CS method is used to compute derivatives of a
+non-linear vector function of vector variables wrt the components of the vector
+variables, an extension of the method shown in the prior work.
+Additionally, automatic differentiation is compared to CS. Beyond that, not
+only is the accuracy of the method measured, but its impact as part of a Newton
+Raphson solution scheme for a Peridynamics simulation run on a parallel
+computer is investigated.
+
+\subsection{Novelty of reviewed work}
+The reviewed work examines applications of the CS method beyond taking derivatives alone,
+whereas the prior work does not. 
+
+\section{Re: A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta \emph{n.d. for local...} (2000)}
+\subsection{Abstract of prior work in field}
+
+In this paper, numerical differentiation is applied to integrate plastic
+constitutive laws and to compute the corresponding consistent tangent
+operators. The derivatives of the constitutive equations are approximated by
+means of difference schemes. These derivatives are needed to achieve quadratic
+convergence in the integration at Gauss-point level and in the solution of the
+boundary value problem.  Numerical differentiation is shown to be a simple,
+robust and competitive alternative to analytical derivatives. Quadratic
+convergence is maintained, provided that adequate schemes and stepsizes are
+chosen. This point is illustrated by means of some numerical examples.
+
+\subsection{Aspects of CS investigated}
+
+The prior work applies CS in computing derivatives needed for integrating
+plastic stress, obtaining algorithmically consistent elastoplastic modulii, and
+obtaining the Jacobian of the residual, for FEA simulations of two plastic
+material models.
+
+\subsection{Similarities with review work}
+
+First order CS is being used to compute the Jacobian of the residual in a solid mechanics.
+
+\subsection{Differences with review work}
+
+The prior work demonstrates CS on a serial computer, and with a classical solid mechanics
+formulation. Automatic differentiation is not investigated, and speed measurements are
+not taken. Scalability studies with a variety of equivalent, progressively more refined meshes
+are not done. Scalability as a function of distributed system size is not investigated.
+
+\subsection{Novelty of reviewed work}
+
+While the prior work does apply CS to computing Jacobians of the residual, and further applies CS
+to computing elastoplastic modulii, the reviewed work is novel by contrast in offering discussion
+of CS as applied to Peridynamics on a parallel computer, a larger range of problem parameters, 
+CPU time data, and comparison to automatic differentiation as a competing method. 
+
+\section{Re: A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta \emph{n.d. for nontrivial...}(2000)}
+\subsection{Abstract of prior work in field}
+
+In Reference [1] the authors have shown that numerical differentiation is a
+competitive alternative to analytical derivatives for the computation of
+consistent tangent matrices. Relatively simple models were treated in that
+reference. The approach is extended here to a complex model: the MRS-Lade model
+[2,3]. This plastic model has a cone-cap yield surface and exhibits strong
+coupling between the flow vector and the hardening moduli. Because of this,
+derivating these quantities with respect to stresses and internal variables
+—the crucial step in obtaining consistent tangent matrices— is rather involved.
+Numerical differentiation is used here to approximate these derivatives. The
+approximated derivatives are then used 1) to compute consistent tangent
+matrices (global problem) and 2) to integrate the constitutive equation at each
+Gauss point (local problem) with the Newton-Raphson method. The choice of the
+stepsize (i.e. the perturbation in the approximation schemes), based on the
+concept of relative stepsize, poses no difficulties. In contrast to previous
+approaches for the MRS-Lade model, quadratic convergence is achieved, for both
+the local and the global problems. The computational efficiency (CPU time) and
+robustness of the proposed approach is illustrated by means of several
+numerical examples, where the major relevant topics are discussed in detail.
+
+\subsection{Aspects of CS investigated}
+
+The prior work applies CS in computing derivatives needed for integrating
+plastic stress, obtaining algorithmically consistent elastoplastic modulii, and
+obtaining the Jacobian of the residual, for FEA simulations of the MRS-Lade material
+model.
+
+\subsection{Similarities with review work}
+
+CS is used to compute the Jacobian of the residual. CPU runtime is measured.
+
+\subsection{Differences with review work}
+
+The prior work demonstrates CS on a serial computer, and with a classical solid
+mechanics formulation. Automatic differentiation is not investigated.
+Scalability studies with a variety of equivalent, progressively more refined
+meshes are not done. Scalability as a function of distributed system size is
+not investigated.
+
+\subsection{Novelty of reviewed work}
+
+While the prior work does apply CS to computing Jacobians of the residual, and further applies CS
+to computing elastoplastic modulii, the reviewed work is novel by contrast in offering discussion
+of CS as applied to Peridynamics on a parallel computer, a larger range of problem parameters, 
+and comparison to automatic differentiation as a competing method. 
+
+
+\section{Re: J. Martins, P. Sturdza, J. Alonso (2003)}
+\subsection{Abstract of prior work in field}
+
+The complex-step derivative approximation and its application to numerical
+algorithms are presented. Improvements to the basic method are suggested that
+further increase its accuracy and robustness and unveil the connection to
+algorithmic differentiation theory. A general procedure for the implementation
+of the complex-step method is described in detail and a script is developed
+that automates its implementation. Automatic implementations of the
+complex-step method for Fortran and C/C++ are presented and compared to
+existing algorithmic differentiation tools. The complex-step method is tested
+in two large multidisciplinary solvers and the resulting sensitivities are
+compared to results given by finite differences. The resulting sensitivities
+are shown to be as accurate as the analyses. Accuracy, robustness, ease of
+implementation and maintainability make these complex-step derivative
+approximation tools very attractive options for sensitivity analysis.
+
+\subsection{Aspects of CS investigated}
+
+The prior work demonstrates that the CS method can be performed by using complex
+datatypes for the variables of functions comprising an analysis code. The analysis code
+can comprise a simulation or similar, and derivatives of response variables called
+sensitivities can be computed. The accuracy of this approach is compared to automatic 
+differentiation.
+
+\subsection{Similarities with review work}
+
+CS is used to compute derivatives.
+
+\subsection{Differences with review work}
+
+The prior work mentions employing CS within an iterative solver code for a sensitivity analysis, but
+does not mention if CS is also used by the iterative solver itself. 
+
+\subsection{Novelty of reviewed work}
+
+\section{Re: W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen (2001)}
+\subsection{Abstract of prior work in field}
+
+The use of complex variables for determining sensitivity derivatives for
+turbulent flows is examined. Although a step size parameter is required, the
+numerical derivatives are not subject to subtractive cancellation errors and,
+therefore, exhibit true second-order accuracy as the step size is reduced. As a
+result, this technique guarantees two additional digits of accuracy each time
+the step size is reduced one order of magnitude. This behavior is in contrast
+to the use of finite differences, which suffer from inaccuracies due to
+subtractive cancellation errors. In addition, the complex-variable procedure is
+easily implemented into existing codes.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{A. H. Al-Mohy and N. J. Higham (2010)}
+\subsection{Abstract of prior work in field}
+
+We show that the Fréchet derivative of a matrix function f at A in the
+direction E, where A and E are real matrices, can be approximated by Im f (A +
+ihE)/ h for some suitably small h. This approximation, requiring a single
+function evaluation at a complex argument, generalizes the complex step
+approximation known in the scalar case. The approximation is proved to be of
+second order in h for analytic functions f and also for the matrix sign
+function. It is shown that it does not suffer the inherent cancellation that
+limits the accuracy of finite difference approximations in floating point
+arithmetic. However, cancellation does nevertheless vitiate the approximation
+when the underlying method for evaluating f employs complex arithmetic.  The
+ease of implementation of the approximation, and its superiority over finite
+differences, make it attractive when specialized methods for evaluating the
+Fréchet derivative are not available, and in particular for condition number
+estimation when used in conjunction with a block 1-norm estimation algorithm.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{W. Jin, B. H. Dennis, and B. P. Wang (2010)}
+\subsection{Abstract of prior work in field}
+
+The semi-analytical method (SAM) is a computationally efficient and easy to
+implement approach often used for the sensitivity analysis of finite element
+models.  However, it is known to exhibit serious inaccuracy for shape
+sensitivity analysis for structures modeled by beam, frame, plate, or shell
+elements. In the present paper, we use a semi-analytical approach based on
+complex variables (SACVM) to compute the sensitivity of finite element mod- els
+composed of beam and plate elements. The SACVM combines the complex variable
+method (CVM) with the semi-analytical method (SAM) to obtain the response
+sensitivity accurately and efficiently. The current approach maintains the
+computational efficiency of the semi-analytical method but with higher
+accuracy. In addition, the current approach is insensitive to the choice of
+step size, a feature that simplifies its use in practical problems. The method
+is applicable to any structural elements including beam, frame, plate, or shell
+elements and only requires minor modifications to existing finite element
+codes.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{A. Voorhees, H. Millwater, and R. Bagley (2011)}
+\subsection{Abstract of prior work in field}
+
+Shape sensitivity analysis of finite element models is useful for structural
+optimization and design modifications. Complex variable methods for shape
+sensitivity analysis have some potential advantages over other methods. In
+particular, for first order sensitivities using the complex Taylor series
+expansion method (CTSE), the implementation is straightforward, only requiring
+a perturbation of the finite element mesh along the imaginary axis. That is,
+the real valued coordinates of the mesh are unaltered and no other
+modifications to the software are required. Fourier differentiation (FD)
+provides higher order sensitivities by conducting an FFT analysis of multiple
+complex variable analyses around a sampling radius in the complex plane.
+Implementation of complex variable sensitivity methods requires complex
+variable finite element software such that complex nodal coordinates can be
+used to implement a perturbation in the shape of interest in the complex
+domain. All resulting finite element outputs such as displacements, strains and
+stresses become complex and accurate derivatives of all finite element outputs
+with respect to the shape parameter of interest are available. The
+methodologies are demonstrated using two-dimensional finite element models of
+linear elasticity problems with known analytical solutions. It is found that
+the error in the sensitivities is primarily defined by the error in the finite
+element solution not the error in the sensitivity method. Hence, more accurate
+sensitivities can be obtained through mesh refinement.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{K.-L. Lai and J. L. Crassidis (2008)}
+\subsection{Abstract of prior work in field}
+
+A general framework for the first and second complex-step derivative
+approximation to compute numerical derivatives is presented.  For first
+derivatives the complex-step approach does not suffer roundoff errors as in
+standard numerical finite-difference approaches.  Therefore, since an
+arbitrarily small step size can be chosen, the complex-step approach can
+achieve near analytical accuracy.  However, for second derivatives straight
+implementation of the complex-step approach does suffer from roundoff errors.
+Therefore, an arbitrarily small step size cannot be chosen. In this paper the
+standard complex-step approach is expanded by using general complex-step sizes
+to provide a wider range of accuracy for both the first- and second-derivative
+approximations. Even higher accuracy formulations are obtained by repetitively
+applying Richardson extrapolations. The new extensions can allow the use of one
+step size to provide optimal accuracy for both derivative approximations.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{R. Abreu, D. Stich, and J. Morales (2013)}
+\subsection{Abstract of prior work in field}
+
+We generalize the well known Complex Step Method for computing derivatives by
+introducing a complex step in a strict sense. Exploring different combinations
+of terms, we derive 52 approximations for computing the first order derivatives
+and 43 for the second order derivatives. For an appropriate combination of
+terms and appropriate choice of the step size in the real and imaginary
+directions, fourth order accuracy can be achieved in a very simple and
+efficient scheme on a compact stencil. New different ways of computing second
+order derivatives in one single step are shown. Many of the first order
+derivative approximations avoid the problem of subtractive cancellation
+inherent to the classic finite difference approximations for real valued steps,
+and the superior accuracy and stability of the generalized complex step
+approximations are demonstrated for an analytic test function.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+
+\section{J. N. Lyness and C. B. Moler (1967)}
+\subsection{Abstract of prior work in field}
+
+Many algebraic computer languages now include facili- ties for the evaluation
+of functions of a complex variable. Such facilities can be effectively used for
+numerical differentiation. The method we de- scribe is appropriate for
+computing the derivatives f(n) (x) of any analytic function which can be
+evaluated at points in the complex plane near x.  Such a function might be a
+complicated rational combination of elementary functions of x which is
+difficult to differentiate analytically.  In this paper we derive several
+formulas, any of which is suitable for evaluating the nth derivative of a
+complex analytic function at a point in terms of function evaluations at
+neighborimg points. For simplicity we assume throughout this paper that the
+derivatives are to be evaluated at the origin. In this Introduction we state
+one formula; in succeeding sections we prove this and related formulas, discuss
+their degree and the error in their application, and give an example.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\section{J. N. Lyness (1968)}
+\subsection{Abstract of prior work in field}
+
+In a previous paper (Lyness and Moler [1]), several closely related formulas of
+use for obtaining a derivative of an analytic function numerically are derived.
+Each of these formulas consists of a convergent series, each term being a sum
+of function evaluations in the complex plane.  In this paper we introduce a
+simple generalization of the previous methods; we investigate the "truncation
+error" associated with truncating the infinite series.  Finally we recommend a
+particular differentiation rule, not given in the previous paper.
+
+\subsection{Similarities with review work}
+\subsection{Differences with review work}
+\subsection{Novelty of reviewed work}
+
+\end{document}
