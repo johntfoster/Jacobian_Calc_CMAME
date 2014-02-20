@@ -99,5 +99,83 @@
         to follow the discussion where concepts from computer science are relevant.
   \end{itemize}}
 
+  \item
+      The comparisons of the different algorithms are only performed with respect to the
+      construction of tangent-stiffness matrices. In par ticular, the authors always use the
+      solution of AD at each time step to compute the entries of the tangent-stiffness
+      matrices, even for the FD, CD, and CS methods. However, the authors need to
+      demonstrate the performance of the CS method, in comparison to the other ones,
+      with respect to the solution of real, ideally non-linear problems. 
+{\color{red}
+  \begin{itemize}
+    \item 
+        To address the reviewers comment, material from work done after the
+        initial submission of the manuscript has been included. New sections
+        include 'Working examples of CS, AD and FD for Newton's method' with
+        new subsections. To existing sections were appended new subsections
+        including 'Convergence and displacement accuracy studies', 'For further
+        studies of Jacobian accuracy in Newton's method', 'Grain of salt for
+        speed results' and 'Remarks'. Specifically, the added material addresses
+        the reviewers comments:
+    \end{itemize}}
+
+\item 
+      In other words, how the solutions compare in terms of accuracy and speed between the methods when
+      solving given problems? Please include two examples of interest. The authors
+      suggest that two examples involving non-linear systems are already included in the
+      paper repository.
+
+{\color{red}
+  \begin{itemize}
+    \item 
+        The added section 'Working examples of CS, AD and FD for Newton's method' includes
+        the two examples alluded to in the manuscript and requested by the reviewer. 
+        % 
+        To summarize, in this section is an example of interest: a displacement accuracy study and 
+        a convergence rate study on a non-linear beam problem, where each of the methods
+        discussed in the manuscript are used individually to solve the problem. 
+ \end{itemize}}
+
+\item
+      The authors say in the Conclusion: “While the results showed that CS
+      produced more accurate tangent-stiffness matrices than CD and FD under
+      the parameters of the tests, it was not determined whether or not this is
+      a clear advantage of CS over FD in terms of accuracy of final predicted
+      displacements and speed of convergence.” This needs to be studied and
+      results in this regard added to this manuscript.
+
+{\color{red}
+  \begin{itemize}
+    \item 
+      The added subsection 'Convergence and displacement accuracy studies'
+      includes convergence rate and displacement accuracy studies similar to
+      those shown in 'Working examples ...', but with the models and tools of
+      the main study. This subsection provides an example of interest. 
+  \item 
+      To summarize, these studies are done in \emph{Peridigm} using the most refined mesh
+      from the 'serial' test runs from the original manuscript. Measured was the performance of the methods in terms of speed
+      (convergence rate) and accuracy (displacement accuracy).  Iteration speed
+      was reported in the original manuscript.
+  \item
+      It was determined that the accuracy of CS over FD resulted in no appreciable
+      advantage in terms of displacement accuracy or convergence rate for the problems
+      solved in this study. 
+    \item
+      Additional comment on the significance of the accuracy of the Jacobian
+      to Newton's method is included in the subsections 'For further studies of
+      Jacobian accuracy in Newton's method', 'Grain of salt for speed results'
+      and 'Remarks'. 
+  \item 
+      To summarize, Newton's method is insensitive to the accuracy differences
+      shown by the methods, for the problems shown, when the methods are not
+      deliberately misused with inappropriate step sizes. For completeness,
+      formulas describing a relationship between Jacobian accuracy and
+      convergence rate order are included. 
+  \item
+      It is the authors' opinion that the above revisions offer the discussion of relative problem solving
+      performance of the methods that the reviewer has requested, including consideration
+      of speed and accuracy in solve real, non-linear problems.
+
+  \end{itemize}}
 
 \end{document}

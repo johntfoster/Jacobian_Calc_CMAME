@@ -1046,7 +1046,8 @@ selected by \emph{Perdigm} for the finite difference methods and presumable
 makes a good choice, do the single-iteration Jacobian accuracy results predict
 the ranking of the methods in terms of convergence rate for a given study? For
 brevity, convergence rate was measured for each of the methods in solving just
-the largest problem of the single-core test series. As was seen in the per-iteration results,
+the largest problem of the single-core test series. That problem was solved with each of the methods
+both on a single core and all sixteen cores of a 'normal' node on \emph{Stampede}. As was seen in the per-iteration results,
 Jacobian accuracy did not vary greatly from test to test, such that any pair of tests
 from the two series could have been considered reasonably representative. As in
 the validation problem shown in ~\ref{subsec:Validation}, would each of the methods return an
@@ -1101,6 +1102,9 @@ only a single datum, a very accurate Jacobian estimate, while the validation
 problem indicates the effect of using a grossly inaccurate Jacobian. The results here show that
 for very small Jacobian estimate inaccuracies, convergence rate is not
 affected, while for grossly inaccurate Jacobians Newton's method fails. 
+Additional confounding factors include that a Jacobian is only first
+order approximation of an often curved energy surface and that a non-naive implementation of Newton's
+method includes a line search phase that helps in choosing an optimal iterate given a Jacobian.
 Is it worthwhile then to investigate the effect of using moderately inaccurate Jacobians, 
 produced deliberately or otherwise, on the convergence rate of Newton's method?
 
