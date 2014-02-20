@@ -430,6 +430,165 @@ but, with the caveat that $F^{int}$ is evaluated in a way that is
 algorithmically consistent, and therefore should yield quadratic convergence
 with Newton's method.
 
+\section{Working examples of CS, AD and FD for Newton's method}
+\label{sec:WorkingExamples}
+In order to illustrate the complex-step technique in a simpler form than it
+appears in the \emph{Peridigm} code written for this study, an example
+header-only library and two example problem definition programs that use it
+have been created. All the materials described here are available in the
+associated project repository.
+
+\subsection{Common code} 
+\label{subsec:CommonCode} 
+
+The source code for the header-only library is entitled
+\emph{NewtonRaphson.hpp}. Note that the library is an interface to functions and
+data structures made available in the \emph{Trilinos} library, mentioned
+earlier, such that it is required in order for the examples described here
+to work. \emph{Trilinos} is freely available for download as of this
+writing at: \emph{trilinos.sandia.gov}.  Generally the header-only library
+works by taking in the users initial guessed equilibrium solution, target
+dependent variable values, system constants, and a function pointer to a
+model evaluation function. Solver parameters including an update scaling
+factor, tolerance, maximum iterations and probe length are chosen after the
+solver is instantiated as a new object. The behavior of the solver is
+specialized through a coding feature called inheritance to perform each of
+CS, AD and FD.  But, in common, each version of the solver works by
+computing the system Jacobian, solving a linear system as in that step of
+the Newton Raphson method, computing the residual and checking for
+convergence or overrun. Here the linear solution method is LU
+decomposition, while the chief convergence criterion is change in residual
+between iterations.  Additionally the problem can be partially respecified
+to allow for running a series of load steps having progressing target
+values, which is a typical mode also seen in \emph{Peridigm}. Applying
+boundary conditions incrementally in load steps assists convergence
+\cite{rezaiee2010dynamic}.
+
+\subsection{First example}
+\label{subsec:ProgOne}
+The first example program, \emph{NRexamples.cpp}, solves a simple nonlinear
+system describing the intersection of three infinite paraboloids in threespace.
+It works by defining force computation functions for each of the models, and
+then passing an address called a function pointer corresponding to each of
+these methods to a solver object which coordinates solving the problem and
+reporting output for the user based on their convergence criteria and other
+preferences like step-size and maximum number of iterations. CS, AD and FD are
+each represented and the user is free to adjust input settings by specifying
+command line arguments as the compiled program instructs, or perhaps create a
+shell script that varies parameters for each of the methods in order to perform
+a comparative study.
+
+\subsection{Second example and related studies} 
+\label{subsec:Validation}
+The second program,a \emph{NRComparison.cpp}, follows a case study that appears in
+\cite{rezaiee2010dynamic}. The example program departs from the cited
+literature by applying each of CS, AD and FD and verifying them against an
+analytical model of a nonlinear mechanical system involving a connected beam
+and spring. Fig. \ref{fig:TrussSchematic} is a schematic of the beam and spring
+system. 
+
+\begin{figure}[tbp]
+  \centering
+  \includegraphics[width=8cm]{./figs/truss.png}
+  \caption{Beam and spring simulated in example program.}
+  \label{fig:TrussSchematic}
+\end{figure}
+
+The equations describing this system and results for verification were obtained
+in \cite{rezaiee2010dynamic}. They include a force function, Eqn.
+\ref{eqn:TrussForce}, and an analytical force derivative or stiffness, Eqn.
+\ref{eqn:TrussStiffness}.
+
+\begin{equation} 
+    \label{eqn:TrussForce}
+    f(D) = .5AE(cos^{2}\phi)(\frac{D}{L_{0}})^{2}[\frac{D}{L_{0}}cos^{2}\phi - 3sin\phi] + k_{s}D + (AE\frac{D}{L_{0}})sin^{2}\phi,
+\end{equation} 
+
+\begin{equation} 
+    \label{eqn:TrussStiffness}
+    S_{T}(D) = 1.5AE(cos^{2}\phi)[\frac{D}{L_{0}}cos^{2}\phi - 2sin\phi](\frac{D}{L_{0}^{2}}) + k_{s} + \frac{AEsin^{2}\phi}{L_{0}}.
+\end{equation}
+
+Where $\phi$ is a constant, beam angle, $AE$ is rigidity, $D$ is displacement,
+$L_{0}$ is original beam length, and $k_{s}$ is the Hooke's constant for the
+coil spring attached to the beam. For a verification of each of the methods as
+well as a convergence rate study, this truss and spring model was analyzed in
+the second program. $f(D)$ is restorative force to balance downward force
+loading at the connection point of the beam and the spring, parallel to the
+wall. As in the reference, equilibrium solutions for 12 incremental load steps
+of 4.448 Newtons were sought. Differing from the reference, Newton's method was
+used rather than 'Dynamic Relaxation'. Solver parameters common to all tests
+were a limit of 100 iterations for convergence, a residual change tolerance of
+$1\times{10^{-9}} \si{\pico\meter}$ and an update multiplier of 1.0. Data
+collected included number of iterations to converge summed over all load-steps
+and final displacement, D, after the final load-step. Additionally
+finite-difference step-size was varied in order to measure the impact on each
+of the Jacobian calculation methods. Naturally, varying step size does not
+affect AD or the analytically derived Jacobian. The accuracy results for
+verifying the Jacobian calculation methods are summarized in Table
+\ref{tab:ConvergenceStudy}. 
+
+\begin{table*}[!ht]    
+  \centering
+        \caption{Displacement, D, after load-step 12} \label{tab:Verification}   
+        \begin{tabular}{c c c c c}
+         \toprule
+         Step exponent & Actual $\si{\centi\meter}$ & AD $\si{\centi\meter}$ & CS $\si{\centi\meter}$ & FD $\si{\centi\meter}$\\ 
+        \midrule
+        0 & 5.07996 & " & " & "\\
+        -4 & 5.07996 & " & " & "\\
+        -8 & 5.07996 & " & " & "\\
+        -12 & 5.07996 & " & " & " \\
+        -16 & 5.07996 & " & " & failed \\
+        -20 & 5.07996 & " & " & failed \\
+        \bottomrule
+    \end{tabular}
+\end{table*}
+
+Table \ref{tab:Verification} shows that each of the methods solved the problem
+as accurately as one another within the precision displayed on the table. The
+exception to this is that the finite difference method failed due to an
+arithmetic error in association with extremely small step size, suggesting
+subtractive cancellation. However, since there is no accuracy reason for
+choosing an extremely small step size, each of the methods can be used to
+produce acceptable solutions to the nonlinear truss system. Table
+\ref{tab:ConvergenceStudy} shows the total number of iterations taken over all
+load-steps for each of the methods.
+
+\begin{table*}[!ht]    
+  \centering
+        \caption{Summed iterations over all load steps} \label{tab:ConvergenceStudy}   
+        \begin{tabular}{c c c c c}
+         \toprule
+         Step exponent & Actual $\si{\centi\meter}$ & AD $\si{\centi\meter}$ & CS $\si{\centi\meter}$ & FD $\si{\centi\meter}$\\ 
+        \midrule
+        0 & 63 & " & 213 & 417\\
+        -4 & 63 & " & " & "\\
+        -8 & 63& " & " & "\\
+        -12 &63& " & " &  65\\
+        -16 &63& " & " & fail\\
+        -20 &63& " & " & fail\\
+        \bottomrule
+    \end{tabular}
+\end{table*}
+
+Table \ref{tab:ConvergenceStudy} indicates that when using AD or the 'actual'
+analytically derived Jacobian, a minimum number of iterations is achieved
+corresponding to a maximum convergence rate. CS and FD are similarly affected
+by a grossly large step-size, while subtractive cancellation invalidates the
+results for FD for very small step-sizes. Inaccuracy for large step-sizes is is
+predicted by the FD and CS formulas, which are contingent upon a small
+step-size to allow the neglect of higher order 12 terms. The results of this
+test show that step-size selection is not unimportant when using FD, but when
+properly configured any of the methods may return the same maximum convergence
+rate for this problem.  Overall conclusions regarding the methods that may be
+kept in mind for problems besides this example are that the accuracy of the
+Jacobian should not be confused with the accuracy of the equi- librium
+solution, since each of the methods discussed here may be equally capable given
+enough iterations. Additionally, while the accuracy of the Jacobian may
+strongly affect convergence rates, this relationship was not quantified here.
+
+
 \section{Description of analysis tools and approach.} 
 %
 \subsection{\emph{Peridigm} and peridynamics.}
