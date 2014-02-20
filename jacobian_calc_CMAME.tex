@@ -1,29 +1,3 @@
-%%
-%% Copyright 2007, 2008, 2009 Elsevier Ltd
-%%
-%% This file is part of the 'Elsarticle Bundle'.
-%% ---------------------------------------------
-%%
-%% It may be distributed under the conditions of the LaTeX Project Public
-%% License, either version 1.2 of this license or (at your option) any
-%% later version.  The latest version of this license is in
-%%    http://www.latex-project.org/lppl.txt
-%% and version 1.2 or later is part of all distributions of LaTeX
-%% version 1999/12/01 or later.
-%%
-%% The list of all files belonging to the 'Elsarticle Bundle' is
-%% given in the file `manifest.txt'.
-%%
-
-%% Template article for Elsevier's document class `elsarticle'
-%% with numbered style bibliographic references
-%% SP 2008/03/01
-%%
-%%
-%%
-%% $Id: elsarticle-template-num.tex 4 2009-10-24 08:22:58Z rishi $
-%%
-%%
 \documentclass[preprint,12pt]{elsarticle}
 
 %% Use the option review to obtain double line spacing
@@ -430,8 +404,7 @@ but, with the caveat that $F^{int}$ is evaluated in a way that is
 algorithmically consistent, and therefore should yield quadratic convergence
 with Newton's method.
 
-\note[Michael]{re: I.5, this is taken from the thesis.}
-\add[Michael]{
+\note[Michael]{re: I.5, next section is taken from the thesis.}
 \section{Working examples of CS, AD and FD for Newton's method}
 \label{sec:WorkingExamples}
 In order to illustrate the complex-step technique in a simpler form than it
@@ -489,11 +462,8 @@ analytical model of a nonlinear mechanical system involving a connected beam
 and spring. Fig. \ref{fig:TrussSchematic} is a schematic of the beam and spring
 system. 
 
-\begin{figure}[tbp]
-  \centering
-  \includegraphics[width=8cm]{./figs/truss.png}
-  \caption{Beam and spring simulated in example program.}
-  \label{fig:TrussSchematic}
+\begin{figure}[tbp] \centering \includegraphics{./figs/truss.png}
+\caption{Beam and spring simulated in example program.} \label{fig:TrussSchematic}
 \end{figure}
 
 The equations describing this system and results for verification were obtained
@@ -591,7 +561,7 @@ enough iterations. Numerical measurements of accuracy besides number of iteratio
 are not possible here because there is not basis for comparison, as the methods are solving
 the problem separately and producing difference Newton iterates. Additionally, while the inaccuracy of the Jacobian may
 strongly affect convergence rates, this relationship was not precisely quantified here.
-}
+
 
 \section{Description of analysis tools and approach.} 
 %
@@ -1062,8 +1032,7 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
   \label{fig:multi_efficiency}
 \end{figure}
 
-\note[Michael]{Re: I.5}
-\add[Michael]{
+\note[Michael]{Re: I.5, everything after this line is changed}
 \section{Convergence and displacement accuracy studies} 
 \label{sec:PeridigmConvergenceStudy}
 %
@@ -1265,7 +1234,7 @@ have an impact on convergence rate, and therefor serve as a predictor of
 convergence rate in per-iteration results, the amount of error detected between
 a supposed perfectly accurate Jacobian and the test Jacobian needs to be
 greater than allowed by the conditions seen in \cite{burkeLectures}, 
-reproduced in \ref{sec:FurtherStudies}. 
+reproduced in Subsection~\ref{subsec:FurtherStudies}. 
 
 It should be mentioned that another work, \cite{perez2012numerical}, compares
 the speed and accuracy of complex-step to finite difference for producing
@@ -1281,7 +1250,7 @@ accurate. 'Marching orders' for the analyst would be to select the swiftest
 method, while it would seem accuracy above what is adequate does not enhance
 the convergence rate or iteration speed until either classical Newton's convergence
 conditions or the approximate case conditions are violated. 
-}
+
 The CS method was shown to be highly accurate in calculating tangent-stiffness
 matrices by the standards of this study, and it is slower than other methods
 for a naive implementation. In the context of future use of CS in
@@ -1472,7 +1441,7 @@ $\frac{d}{d x}f(x) =  \frac{d{g}}{d{h}} \cdot \frac{d{h}}{d{k}}
 \cdot \frac{d{k}}{d{x}}\mid_{x_0}$ \\ \\
 From the rest of \ref{given} it follows that we can approximate  $\frac{d}{d x}f(x) \mid_{x_0}$ by
 specializing the computer's general forms of $u, v, w$ 
-according to \ref{abcvalues}, with parameters $a, b$ chosen for each function and held as constant, and
+according to ~\ref{abcvalues}, with parameters $a, b$ chosen for each function and held as constant, and
 evaluating, such that the total derivative of our original function w.r.t $x$ where $x = x_0$ is approximated
 by the partial derivative of our equivalent statement, $f(x) = u(a, b, s) \mid_{arguments}$,  w.r.t $s$ 
 where $s = x_0$. \\
