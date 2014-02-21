@@ -39,13 +39,13 @@ Establishing the accuracy of the method for computing first derivatives of
 real functions through empirical tests, versus forward and central difference 
 methods.
 
-\subsection{Similarities with review work}
+\subsection{Similarities with reviewed work}
 
 The reviewed work uses the numerical differentiation method as shown in the
 prior work. The accuracy of CS demonstrated in the prior work served as encouragement
 for investigating CS further.
 
-\subsection{Differences with review work}
+\subsection{Differences with reviewed work}
 
 In the reviewed work the CS method is used to compute derivatives of a
 non-linear vector function of vector variables wrt the components of the vector
@@ -79,11 +79,11 @@ plastic stress, obtaining algorithmically consistent elastoplastic modulii, and
 obtaining the Jacobian of the residual, for FEA simulations of two plastic
 material models.
 
-\subsection{Similarities with review work}
+\subsection{Similarities with reviewed work}
 
 First order CS is being used to compute the Jacobian of the residual in a solid mechanics.
 
-\subsection{Differences with review work}
+\subsection{Differences with reviewed work}
 
 The prior work demonstrates CS on a serial computer, and with a classical solid mechanics
 formulation. Automatic differentiation is not investigated, and speed measurements are
@@ -126,11 +126,11 @@ plastic stress, obtaining algorithmically consistent elastoplastic modulii, and
 obtaining the Jacobian of the residual, for FEA simulations of the MRS-Lade material
 model.
 
-\subsection{Similarities with review work}
+\subsection{Similarities with reviewed work}
 
 CS is used to compute the Jacobian of the residual. CPU runtime is measured.
 
-\subsection{Differences with review work}
+\subsection{Differences with reviewed work}
 
 The prior work demonstrates CS on a serial computer, and with a classical solid
 mechanics formulation. Automatic differentiation is not investigated.
@@ -171,16 +171,21 @@ can comprise a simulation or similar, and derivatives of response variables call
 sensitivities can be computed. The accuracy of this approach is compared to automatic 
 differentiation.
 
-\subsection{Similarities with review work}
+\subsection{Similarities with reviewed work}
 
 CS is used to compute derivatives.
 
-\subsection{Differences with review work}
+\subsection{Differences with reviewed work}
 
-The prior work mentions employing CS within an iterative solver code for a sensitivity analysis, but
+The prior work mentions employing CS within an iterative solver code within a sensitivity analysis, but
 does not mention if CS is also used by the iterative solver itself. 
 
 \subsection{Novelty of reviewed work}
+
+The reviewed work is about applying CS to solving Peridynamics problems using Newton's method, and is therefor about an
+application of the derivatives produced by CS. The prior work is about the application of CS itself to produce derivatives
+which themselves are the object of interest. The reviewed work is novel by comparison since it examines aspects of CS
+different to those examined in the prior work.
 
 \section{Re: W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen (2001)}
 \subsection{Abstract of prior work in field}
@@ -195,9 +200,27 @@ to the use of finite differences, which suffer from inaccuracies due to
 subtractive cancellation errors. In addition, the complex-variable procedure is
 easily implemented into existing codes.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspects of CS investigated}
+Based on the accuracy of CS, the method is used to compute sensitivities in CFD
+simulations. For the application of computing sensitivities, CS is compared to 
+automatic differentiation.
+
+\subsection{Similarities with reviewed work}
+CS is used to compute derivatives and CS is compared to AD.
+
+\subsection{Differences with reviewed work}
+The prior work does not discus using the derivatives produced by CS to compute
+the residual Jacobian, nor does it discuss the same for AD. The field is
+fluid dynamics rather than solid mechanics, and the use of a prallel computer
+is not discussed.
+
 \subsection{Novelty of reviewed work}
+
+The reviewed work offers discussion on the use of CS and AD to compute
+residual Jcobians and the effect of doing so on the performance of Newton's
+method in Peridynamics simulations run on a parallel computer, where the prior
+work discusses the derivitives produced by CS and AD themselves as the objects 
+of interest.
 
 \section{A. H. Al-Mohy and N. J. Higham (2010)}
 \subsection{Abstract of prior work in field}
@@ -217,9 +240,24 @@ differences, make it attractive when specialized methods for evaluating the
 Fréchet derivative are not available, and in particular for condition number
 estimation when used in conjunction with a block 1-norm estimation algorithm.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspect of CS discussed}
+The prior work investigates the use of complex step in computing Frechet derivatives 
+of matix to matrix functions.
+
+\subsection{Similarities with reviewed work}
+To compute the residual Jacobian in the peridynamics simulation dicussed in the reviewed
+work is essentially computing a Frechet derivative of a higher dimension function of higher
+dimension variables.
+
+\subsection{Differences with reviewed work}
+Where the application of the CS derivatives in the prior work is limited to a particular 
+class of abstract functions to determine the method's suitability for use in condition number
+estimation, the reviewed work applies CS to solving a mechanics problem.
+
 \subsection{Novelty of reviewed work}
+Because the reviewed work is not about just computing Frechet derivatives with CS but using
+them in a numerical method to solve a set of equations describing a physical system, the reviewed
+work is largely different from the prior work.
 
 \section{W. Jin, B. H. Dennis, and B. P. Wang (2010)}
 \subsection{Abstract of prior work in field}
@@ -240,9 +278,21 @@ is applicable to any structural elements including beam, frame, plate, or shell
 elements and only requires minor modifications to existing finite element
 codes.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspects of CS discussed}
+The use of CS to compute sensitivities is disucssed in the contect of a solid mechanics
+FEA analysis.
+
+\subsection{Similarities with reviewed work}
+CS is used to compute derivitives.
+
+\subsection{Differences with reviewed work}
+In the prior work the derivitives produced by CS themselves are the object of interest, where
+the reviewed work uses CS in a numerical method for solving a non-linear system.
+
 \subsection{Novelty of reviewed work}
+The prior work and the reviewed work discuss different aspects of the CS method. The
+reviewed work discusses using the CS in a numerical method to solve a non-linear system,
+where the prior work discusses the derivatves produced by CS as an object of interest.
 
 \section{A. Voorhees, H. Millwater, and R. Bagley (2011)}
 \subsection{Abstract of prior work in field}
@@ -269,9 +319,22 @@ the error in the sensitivities is primarily defined by the error in the finite
 element solution not the error in the sensitivity method. Hence, more accurate
 sensitivities can be obtained through mesh refinement.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspect of CS discussed}
+The prior work dicusses the background of the CS method and examines it as a subset
+of Fourier Differentiation. CS and Fourier Differentiation are then applied to 
+computing sensitivities within a solid mechanics FEA.
+
+\subsection{Similarities with reviewed work}
+CS is used to compute derivatives.
+
+\subsection{Differences with reviewed work}
+In the prior work, CS is discussed and related to a broader class of numerical methods. CS is then used
+to compute sensitivities. In the reviewed work, complex step is used to compute residual Jacobians
+which are used in Newton's method for solving non-linear systems.
+
 \subsection{Novelty of reviewed work}
+The reviewed work and prior work discuss different aspects of CS in that they examine different
+applications of the method.
 
 \section{K.-L. Lai and J. L. Crassidis (2008)}
 \subsection{Abstract of prior work in field}
@@ -290,9 +353,21 @@ approximations. Even higher accuracy formulations are obtained by repetitively
 applying Richardson extrapolations. The new extensions can allow the use of one
 step size to provide optimal accuracy for both derivative approximations.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspects of CS discussed}
+First and second order CS methods for computing derivatives. Choosing optimal
+step size.
+
+\subsection{Similarities with reviewed work}
+Derivatives are computed with CS.
+
+\subsection{Differences with reviewed work}
+The prior work discusses computing first and second order accurate derivatives with CS and choosing optimal step size.
+The reviewed work discussing using the derviatives computed with the CS method in a numerical method for solving 
+a non-linear system.
+
 \subsection{Novelty of reviewed work}
+The reviewed work is offers discusion of the CS method as used in a numerical method for solving a non-linear system, where 
+the prior work dicusses the derivatives produced by CS themselves as an object of interest.
 
 \section{R. Abreu, D. Stich, and J. Morales (2013)}
 \subsection{Abstract of prior work in field}
@@ -310,10 +385,24 @@ inherent to the classic finite difference approximations for real valued steps,
 and the superior accuracy and stability of the generalized complex step
 approximations are demonstrated for an analytic test function.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
-\subsection{Novelty of reviewed work}
+\subsection{Aspects of CS discussed}
+Computing derivatives with CS is discussed. Combinations of real and imaginary step components
+are studied to determine CS methods with extended accuracy order.
 
+\subsection{Similarities with reviewed work}
+Derivatives are computed with CS.
+
+\subsection{Differences with reviewed work}
+The prior work discusses using the CS method to compute derivatives and attempts to extend the
+methods for that application. The reviewed work us the derivatives computed with CS in a numerical
+method for solving a non-linear system.
+
+\subsection{Novelty of reviewed work}
+The prior work discusses the derviatives computed by the CS method as an object
+of interest, while the reviewed work discusses using the derivatives computed
+by the CS method in a numerical method for solving a non-linear system.
+Because the the reviewed work and the prior work discuss different aspects of
+CS and different applications, the reviewed work is novel.
 
 \section{J. N. Lyness and C. B. Moler (1967)}
 \subsection{Abstract of prior work in field}
@@ -332,9 +421,20 @@ derivatives are to be evaluated at the origin. In this Introduction we state
 one formula; in succeeding sections we prove this and related formulas, discuss
 their degree and the error in their application, and give an example.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspect of CS discussed}
+The CS method is identified in an exact form.
+
+\subsection{Similarities with reviewed work}
+Derivatives are computed with the CS method.
+
+\subsection{Differences with reviewed work}
+The prior work develops the CS method, while the reviewed work
+is about an application of the CS method.
+
 \subsection{Novelty of reviewed work}
+Because the reviewed work discusses an application the material presented in the
+prior work not discussed in the prior work, it introduces novel material relative to the
+prior work.
 
 \section{J. N. Lyness (1968)}
 \subsection{Abstract of prior work in field}
@@ -347,8 +447,19 @@ simple generalization of the previous methods; we investigate the "truncation
 error" associated with truncating the infinite series.  Finally we recommend a
 particular differentiation rule, not given in the previous paper.
 
-\subsection{Similarities with review work}
-\subsection{Differences with review work}
+\subsection{Aspects of CS discussed}
+The series representation derived CS method is shown in its truncated form.
+
+\subsection{Similarities with reviewed work}
+Derivatives are computed with the CS method.
+
+\subsection{Differences with reviewed work}
+The prior work develops the CS method, while the reviewed work
+is about an application of the CS method.
+
 \subsection{Novelty of reviewed work}
+Because the reviewed work discusses an application the material presented in the
+prior work not discussed in the prior work, it introduces novel material relative to the
+prior work.
 
 \end{document}
