@@ -623,7 +623,7 @@ analytical model of a nonlinear mechanical system involving a connected beam
 and spring. Fig. \ref{fig:TrussSchematic} is a schematic of the beam and spring
 system. 
 
-\begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth, height=30px]{./figs/truss.png}
+\begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth]{./figs/truss.png}
 \caption{Beam and spring simulated in example program.} \label{fig:TrussSchematic}
 \end{figure}
 
@@ -769,39 +769,70 @@ work are explained in the sequel.
 
 The type of material model used in this study is referred to as a linear
 peridynamic solid, having what is called a state-based constitutive model. In
-order for a definition of this material to be useful here, background material
-needs to be laid out to enable the discussion. To begin with, some essential
+order for a definition of this material to be useful her. To begin with, some essential
 mathematical definitions will be listed and peridynamic theory summarized. Then
 state-based constitutive models will be summarized, followed by a description of
 the linear peridynamic solid model used in this work. After the peridynamic
 equation of motion and consitutive model in use have been discussed, it is then
 possible to give a more precise definition of the tangent stiffness matrix for
 the problem being discussed in this work. The following discussion is largely
-taken from \cite{silling:psa}, but reproduced here fo clarity.
+taken from \cite{silling:psa} but reproduced here for clarity.
 
 \note[Michael]{re: I.2. John, this was to be the skeleton for the new sections on peridynamics.}
 \subsubsection{Vector states for state-based peridynamic theory.}
 
+
 \subsubsection{The state-based peridynamic equation of motion.}
 
-\subsubsection{State-based consitutive models.}
+In \cite{silling:psa}, the primary reference for state based peridynamics, the
+equation of motion for state based peridynamic theory is derived. No
+development of the theory is claimed; the equation of motion is reproduced here for the reader's convenience.
+%
+The general equation is written as it appears in \cite{silling:psa}:
+\begin{equation} 
+    \label{eqn:PDMotion}
+    \rho(\boldsymbol{x})\boldsymbol{\ddot{u}}(\boldsymbol{x}, t) = \int_{\mathcal{H}_{\boldsymbol{x}}} \{\boldsymbol{\underline{T}}[\boldsymbol{x}, t]\langle \boldsymbol{x}^{\prime} - \boldsymbol{x} \rangle - \boldsymbol{\underline{T}}[\boldsymbol{x}^{\prime}, t]\langle \boldsymbol{x} - \boldsymbol{x}^{\prime} \rangle \}dV_{\boldsymbol{x}^{\prime}} + \boldsymbol{b}(\boldsymbol{x}, t),
+\end{equation} 
+
+where "$\mathcal{H}_{\boldsymbol{x}}$ is a spherical neighborhood" with a
+radius, centered at the original coordinates of a peridynamic node,
+$\boldsymbol{x}$, and \boldsymbol{\underline{T}} is the "force vector state
+field". The force vector state field maps vectors in the original coordinate system 
+measured from the peridynamic node at the center of the neighborhood or 'horizon' to
+neighboring peridynamic nodes that fall within the radius of the horizon. $\boldsymbol{b}$ denotes a body force density. Equation~\ref{eqn:PDMotion} may be simplified based on the assumption that
+\boldsymbol{\underline{T}} is Riemann integrable and that integral is uniformly
+convergent \cite{silling:psa} as,
+
+\begin{equation} 
+    \label{eqn:PDMotion_simple}
+    \rho\boldsymbol{\ddot{u}} = \int_{\mathcal{H}_{\boldsymbol{x}}} \{\boldsymbol{\underline{T}}\langle \boldsymbol{x}^{\prime} - \boldsymbol{x} \rangle - \boldsymbol{\underline{T}}^{\prime}\langle \boldsymbol{x} - \boldsymbol{x}^{\prime} \rangle \}dV_{\boldsymbol{x}^{\prime}} + \boldsymbol{b},
+\end{equation} 
+
+where,
+
+\begin{equation} 
+    \label{eqn:PDMotion_simple}
+    \boldsymbol{\underline{T}} = \boldsymbol{\underline{T}}[\boldsymbol{x}, t], 
+    \boldsymbol{\underline{T}}^{\prime} = \boldsymbol{\underline{T}}[\boldsymbol{x}^{\prime}, t]. 
+\end{equation} 
 
 \subsubsection{The linear peridynamic solid.}
 
 \note[Michael]{re: I.2} \add[Michael]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simualtion.}
-The tangent stiffness matrix is the frechet derivative of the residual wrt the
+The tangent stiffness matrix is the Frechet derivative of the residual wrt the
 deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
-equilibrium version of the peridynamic equation of motion. The internal force
-density is computed in the peridynamic equation of motion by computing the
-volume integral over, a horizon, of the Frechet derivative of the 
-strain energy state wrt to the deformed configuration inner product with the deformation state, per node,
+static peridynamic momentum equation. The internal force
+density is computed in the peridynamic momentum equation by computing the
+volume integral over a horizon of the Frechet derivative of the 
+strain energy density state wrt to the deformed configuration inner product with the deformation state, per node,
 for each of the three directions in the original reference frame.
 
 For the finite-difference type methods in \emph{Peridigm}, the perturbation
 method is employed by probing the deformed configuration one degree of freedom
-at a time and so allowing the sensitivity of the force density state wrt the
-deformation state for all nodes to be computed.  }
+at a time and so allowing the derivative of the force density state wrt the
+deformation state for all nodes to be computed. 
+}
 
 \subsubsection{Implementing the complex-step method in Peridigm} 
 %
