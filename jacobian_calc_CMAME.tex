@@ -1424,25 +1424,31 @@ while AD requires a complicated serialization and deserialization in order to
 function as byte-copyable. This is fine for copying in between MPI processes,
 but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used.  What this means is
-that if \emph{Peridigm} or any simulation software were to be reformulated to
-take advantage of accelerators or GPUs, the flexibility of complex-step owed to
-its simple implementation may make it more viable for that application given
-its high accuracy. Additional performance gains may be achieved through the use
-of the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
+with the accelerator or GPU being used. A working definition of byte-copyable
+is that the collection of data to transfer is made of identically sized pieces.
+Byte-copyability is significant for example because it is a requirement for the
+basic offload mode provided for Intel MIC accelerator boards which are
+installed in \emph{Stampede}, where the alternative mode requires "more
+extensive" effort \cite{intel_byte_copyable}. What this means is that if
+\emph{Peridigm} or any simulation software were to be reformulated to take
+advantage of accelerators or GPUs, the flexibility of complex-step owed to its
+simple implementation may make it more viable for that application given its
+high accuracy. Additional performance gains may be achieved through the use of
+the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
 use of complex data types natively, and alleviate the expense of the
 dynamic-casts that were utilized in this study.  As a final comment, it should
 be noted that from a code development perspective the CS method may be the
 easiest of the methods to implement; It only requires one functional
 evaluation, there is no heuristic choice of probe distance, and there is no
 dependence on an external AD library.  From this perspective, the method may
-still be an attractive method for TS matrix evaluation. \add[Michael]{However, at least for 
-the models producing the results shown here, each of the
+still be an attractive method for TS matrix evaluation. \add[Michael]{However,
+at least for the models producing the results shown here, each of the
 methods returned quadratic convergence, indicating each was sufficiently
 accurate. 'Marching orders' for the analyst would be to select the swiftest
-method, while it would seem accuracy above what is adequate does not enhance
-the convergence rate or iteration speed until either classical Newton's convergence
-conditions or the approximate case conditions are violated.} 
+method, while it would seem accuracy above what is adequate does not
+enhance the convergence rate or iteration speed until either classical
+Newton's convergence conditions or the approximate case conditions are
+violated.} 
 
 
 \section{Acknowledgements}
