@@ -262,7 +262,7 @@ It is appropriate to detail the prior work discussing aspects of the
 complex-step method in order to indicate what is new in the instant work.  The
 CS method was introduced in a work by J. N. Lyness and C. B. Moler
 \cite{lyness1967numerical}.  In this prior work, the CS method is identified in
-an series form and the computing of analytical derivatives is shown. This prior
+an infinite series form and the computing of analytical derivatives is shown. This prior
 work develops the CS method, while the instant work is about an application of
 the CS method.
 
@@ -277,7 +277,7 @@ prior work and was motivated by the prior work's suggestion that CS is highly ac
 The instant work examines applications of the CS method beyond taking derivatives alone,
 whereas the prior work does not. 
 
-A work by J. C. Newman, W. K. Anderson and L. D. Whitfield, discusses computing
+A work by J. C. Newman, W. K. Anderson and L. D. Whitfield discusses computing
 sensitivities in a CFD analysis using complex step and compares the results to
 central difference produced results \cite{newman1998}. The work is also notable
 for identifying automatic differentiation as a competing method to CS and
@@ -289,27 +289,27 @@ systems, rather than as in the prior work investigating the derivatives
 themselves produced with the CS method.
 
 In a work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta, CS is used to
-compute Jacobians for both integrating plastic stress to determine
-elastoplastic modulii, but also for computing the Jacobian of the global
+compute Jacobians for integrating plastic stress to determine
+elastoplastic modulii and for computing the Jacobian of the residual for the global
 problem, both of which are an application of the CS method to the solution of
 non-linear systems \cite{perez2000numerical}. These elastoplastic modulii are
-used in computing the global Jacobian  and said to be 'algorithmically
+used in computing the global Jacobian  and are said to be 'algorithmically
 consistent' in that they are consistent with the algorithm used to return the
 predicted stress to the yield surface. Examples of interest include FEM
-simulations on two plastic material models with complex hardening rules.
+simulations on two plastic material models with complicated hardening rules.
 Comparing the prior work with the instant work, the prior work demonstrates CS
 on a serial computer and discusses a classical solid mechanics formulation.
-Automatic differentiation is not investigated, and CPU time measurements are not
+Automatic differentiation is not investigated and CPU time measurements are not
 taken. Scalability studies with a variety of equivalent, progressively more
 refined meshes are not done. Scalability as a function of parallel computer
 size is not investigated. The instant work is novel with respect to the prior work in
 offering a discussion of CS as applied to peridynamics simulation on a parallel
-computer, CPU time data, and comparison to automatic differentiation as a competing method. 
+computer, CPU time data, and comparison of CS to automatic differentiation as a competing method. 
 
-Another work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta The prior work
-applies CS in computing derivatives needed for integrating stress, obtaining
-algorithmically consistent elastoplastic modulii, and obtaining the Jacobian of
-the global residual, for FEM simulations using the MRS-Lade material model
+Another work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta applies CS in
+computing derivatives needed for integrating stress, obtaining algorithmically
+consistent elastoplastic modulii, and obtaining the Jacobian of the global
+residual, for FEM simulations using the MRS-Lade material model
 \cite{perez2012numerical}. In this prior work, CPU runtime is measured.
 Comparing the prior work to the instant work, the prior work demonstrates CS on
 a serial computer and discusses a classical solid mechanics formulation.
@@ -318,83 +318,86 @@ variety of equivalent, progressively more refined meshes are not done.
 Scalability as a function of distributed system size is not investigated.  The
 instant work is novel with respect to the prior work in offering a discussion
 of CS as applied to peridynamics simulation on a parallel computer, and
-comparison to automatic differentiation as a competing method. 
+comparison of CS to automatic differentiation as a competing method. 
 
 A work by Joaquim R. R. A. Martins, Ilan M. Kroo and Juan J. Alonso
 investigates using CS for computing aerodynamic sensitivities
-\cite{martins2000automated}. Additionally higher order accuracy versions of CS
+\cite{martins2000automated}. Additionally, higher order accuracy versions of CS
 are discussed, as is the task of implementing complex-step in most widely used
 general purpose programming languages. Also discussed is the relative ease of
 implementing a CS scheme versus an AD based scheme for computing sensitivities
 in an established code. The instant work is novel with respect to the prior
 work because the instant work investigates CS as applied to a numerical method
 for solving non-linear systems, rather than as in the prior work investigating
-the using the CS method to obtain sensitivities.
+the use of the CS method to obtain sensitivities.
 
-A work by W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen discusses
-the CS applied to computing sensitivities in CFD simulations \cite{anderson2001sensitivity}. CS is
-compared to AD both in Fortran and C++ applications. In this prior work it is suggested that forward mode
-AD is mathematically equivalent to first order CS. The instant work is novel with respect to the prior
-work because the instant work investigates CS as applied to a numerical method
-for solving non-linear systems, rather than as in the prior work investigating
-the derivatives themselves produced with the CS method.
+A work by W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen
+discusses the CS method as applied to computing sensitivities in CFD simulations
+\cite{anderson2001sensitivity}. CS is compared to AD both in Fortran and C++
+applications. In this prior work it is suggested that forward mode AD is
+mathematically equivalent to first order CS. The instant work is novel with
+respect to the prior work because the instant work investigates CS as applied
+to a numerical method for solving non-linear systems, rather than as in the
+prior work investigating the derivatives themselves produced with the CS
+method.
 
 A work by J. Martins, P. Sturdza, J. Alonso demonstrates that the CS method can
 be performed by using complex datatypes for the variables of functions
-comprising an analysis code. The analysis code can comprise a simulation and
-derivatives of response variables called sensitivities can be computed. The
-accuracy of this approach is compared to automatic differentiation
-\cite{martins2003complex}. The instant work is novel with respect to the prior
+comprising an analysis code \cite{martins2003complex}. The analysis code can
+comprise a simulation and derivatives of response variables called
+sensitivities can be computed. The accuracy of this approach is compared to
+automatic differentiation. The instant work is novel with respect to the prior
 work because the instant work investigates CS as applied to a numerical method
 for solving non-linear systems, rather than as in the prior work investigating
 the derivatives themselves produced with the CS method.
  
 A work by  K. L. Lai and J. L. Crassidis discusses first and second order CS
-methods for computing derivatives. Choosing optimal step size
-\cite{lai2008extensions}. This prior work discusses computing first and second
-order accurate derivatives with CS and choosing optimal step size.  The instant
-work discusses using the derivatives computed with the CS method in a numerical
-method for solving a non-linear system.
+methods for computing derivatives and choosing optimal step size
+\cite{lai2008extensions}. The instant work discusses using the derivatives
+computed with the CS method in a numerical method for solving a non-linear
+system, while in the prior work the derivatives obtained from the CS method 
+are the object of interest.
 
 A work by A. H. Al-Mohy and N. J. Higham investigates the use of complex step
-in computing Frechet derivatives of matix to matrix functions \cite{al2010complex}. To
-compute the residual Jacobian in the peridynamics simulation discussed in the
-instant work is analogous because it is computing a Frechet derivative of a
-higher dimension function of higher dimension variables. Where the application
-of the CS derivatives in the prior work is limited to a particular class of
-abstract functions to determine the CS' suitability for use in condition number
-estimation, the instant work applies CS to solving a mechanics problem. The
-instant work is not about computing Frechet derivatives with CS but moreover using them
-in a numerical method to solve a set of equations describing a physical system.
+in computing Frechet derivatives of matix to matrix functions
+\cite{al2010complex}. To compute the Jacobian of the residual in the
+peridynamics simulation as discussed in the instant work is analogous is
+computing a Frechet derivative. Where the application of the CS derivatives in
+the prior work is limited to a particular class of abstract functions to
+determine the CS method's suitability for use in condition number estimation, the
+instant work applies CS to solving a solid mechanics problem. The instant work is not
+about computing Frechet derivatives with CS but moreover using them in a
+numerical method to solve a set of equations describing a physical system.
 
 A work by W. Jin, B. H. Dennis, and B. P. Wang discusses using CS to compute
 sensitivities in a solid mechanics FEM analysis \cite{jin2010improved}. In the
-prior work the derivatives produced by CS themselves are the object of
-interest, where the instant work uses CS in a numerical method for solving a
+prior work the derivatives produced by CS are the object of
+interest, whereas the instant work uses CS in a numerical method for solving a
 non-linear system.
 
-A work by A. Voorhees, H. Millwater, and R. Bagley, where H. Millwater is an author of
-the instant work, discusses the background of the CS method and frames it as a subset
-of Fourier Differentiation. CS and Fourier Differentiation are then applied to 
-computing sensitivities within a solid mechanics FEA \cite{voorhees2011complex}. A notable
-technique demonstrated by this prior work is the representation of complex valued
-nodal components as additional degrees of freedom in the FE model, to be interpreted
-by a matrix representation of complex numbers during computations, yet without storing
-the entire matrix. In the prior work, CS is discussed and related to a broader class of differentiation methods and used
-to compute sensitivities. In the instant work, CS is used in a numerical method for solving non-linear systems.
+A work by A. Voorhees, H. Millwater, and R. Bagley discusses the background of
+the CS method and frames it as a subset of Fourier Differentiation. CS and
+Fourier Differentiation are then applied to computing sensitivities within a
+solid mechanics FEA \cite{voorhees2011complex}. A notable technique
+demonstrated by this prior work is the representation of complex valued nodal
+coordinates with additional degrees of freedom in the FE model, to be
+interpreted by a matrix representation of complex numbers during computations.
+In the prior work, CS is discussed and related to a broader class of
+differentiation methods and used to compute sensitivities. In the instant work,
+CS is used in a numerical method for solving non-linear systems.
 
 In another work by H. Millwater, C. Quintana, J. Garza and David Wagner the
 concept of incorporating complex values into the degrees of freedom of finite
-elements is labelled ZFEM \cite{millwater2013application}. Notable in this work
+elements is called ZFEM \cite{millwater2013application}. Notable in this work
 is the discussion of creating user defined element types for use with the
-popular \emph{ABAQUS} software suite which enable the use of ZFEM in that
-software, \emph{ABAQUS} is a trademark of Dassault Systemes
+popular \emph{ABAQUS} software package which enables the use of ZFEM in that
+software. \emph{ABAQUS} is a trademark of Dassault Systemes
 \cite{systemes2012abaqus}. In this prior work the goal of using CS through the
 ZFEM technique is to compute shape sensitivities, while in the instant work CS
 is used in a numerical method for solving non-linear systems.
 
 A work by R. Abreu, D. Stich, and J. Morales discusses computing derivatives
-with a re-interpreted version of the CS method which features the combined use
+with a version of the CS method which features the combined use
 of real and imaginary valued step components \cite{abreu2013generalization}.
 This prior work suggests that the modified CS method can achieve extended
 approximation accuracy up to fourth order.  The prior work discusses using the
@@ -407,7 +410,7 @@ The body of prior literature has introduced the application of CS to
 single dimension and multidimensional derivatives, sensitivity analysis,
 non-linear solution schemes, the extension of CS for higher accuracy, 
 and implementation strategies for CS in new and existing codes.
-With respect to the prior work discussing the CS method, the primary novel
+With respect to the prior work discussing the CS method, the novel
 aspects of the instant work are then its discussion of the application of CS to
 peridynamics simulations run in \emph{Peridigm}, a parallel implementation of
 CS and a compilation of CPU time data, where each of CS, AD, FD and CD are
