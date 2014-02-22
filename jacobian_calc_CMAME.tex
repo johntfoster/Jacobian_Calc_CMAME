@@ -1424,33 +1424,7 @@ while AD requires a complicated serialization and deserialization in order to
 function as byte-copyable. This is fine for copying in between MPI processes,
 but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used. \note[Michael]{re:
-I.3}\add[Michael]{For the reader's convenience, a collection of contiguously
-stored data elements are said to be 'byte-copiable' when the interval
-in bytes of memory spanned by a data element in the collection is constant
-throughout the collection. Suppose 'contiguously stored' means, stored in
-memory with a minimum of unrelated information stored in between data
-elements in the collection. Complicated objects, such as AD datatype
-elements, do not have the same size in memory as other objects even of that
-same class, for the reason that they themselves contain an uncertain
-amount of state data according to their design and work done in the
-program. This means that a collection of such objects, even if they are
-contiguously stored in memory, will not be alligned according to a constant
-interval, such that elements within a collection cannot be located by
-coordinates consisting of the location of the beginning of the first
-element in the collection and an interval multiplied by a natural number.
-This method of locating is integral to the serialized communication
-implemented by MPI the libraries as well as CUDA, OpenCL, and others,
-which allow only the transmission of collections of byte-copiable datatypes
-(that is 'primitive datatypes'). A common method of bypassing this
-limitation for communication purposes is to write the complicated data to a
-'character buffer', and transmit the byte-copiable character buffer,
-however this is useless unless the recipient device of the communication
-can recover the original data and process it, which is impossible if the
-recipient device only can work with a subset of the programming language
-that the sending device must use, such as in a communication between a CPU
-running C++ and a GPU running C (such as in CUDA programs), where the gap in
-sophistication contains the features of the "complicated" datatype.} What this means is
+with the accelerator or GPU being used.  What this means is
 that if \emph{Peridigm} or any simulation software were to be reformulated to
 take advantage of accelerators or GPUs, the flexibility of complex-step owed to
 its simple implementation may make it more viable for that application given
