@@ -262,7 +262,7 @@ It is appropriate to detail the prior work discussing aspects of the
 complex-step method in order to indicate what is new in the instant work.  The
 CS method was introduced in a work by J. N. Lyness and C. B. Moler
 \cite{lyness1967numerical}.  In this prior work, the CS method is identified in
-an exact form and the comptuing of analytical derivatives is shown. This prior
+an series form and the computing of analytical derivatives is shown. This prior
 work develops the CS method, while the instant work is about an application of
 the CS method.
 
@@ -271,7 +271,7 @@ of the original CS method to make it suitable for use on digital computers \cite
 This form of the CS method is used in the instant work.
 The prior work develops the CS method, while the instant work is about an application of the CS method.
 
-A work by W. Squire and G. Trapp showns through empirical data that CS offers superior accuracy
+A work by W. Squire and G. Trapp shows through empirical data that CS offers superior accuracy
 to FD and CD \cite{squire1998using}. The instant work uses the CS method as shown in the
 prior work and was motivated by the prior work's suggestion that CS is highly accurate. 
 The instant work examines applications of the CS method beyond taking derivatives alone,
@@ -282,7 +282,7 @@ sensitivities in a CFD analysis using complex step and compares the results to
 central difference produced results \cite{newman1998}. The work is also notable
 for identifying automatic differentiation as a competing method to CS and
 suggesting that complex step could be used to compute Jacobians of residuals
-for use in Newton-Kyrlov schemes for solving non-linear systems. The instant
+for use in Newton-Krylov schemes for solving non-linear systems. The instant
 work is novel with respect to the prior work because the instant work
 investigates CS as applied to a numerical method for solving non-linear
 systems, rather than as in the prior work investigating the derivatives
@@ -309,7 +309,7 @@ computer, CPU time data, and comparison to automatic differentiation as a compet
 Another work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta The prior work
 applies CS in computing derivatives needed for integrating stress, obtaining
 algorithmically consistent elastoplastic modulii, and obtaining the Jacobian of
-the global residual, for FEM simulations using the the MRS-Lade material model
+the global residual, for FEM simulations using the MRS-Lade material model
 \cite{perez2012numerical}. In this prior work, CPU runtime is measured.
 Comparing the prior work to the instant work, the prior work demonstrates CS on
 a serial computer and discusses a classical solid mechanics formulation.
@@ -324,7 +324,7 @@ A work by Joaquim R. R. A. Martins, Ilan M. Kroo and Juan J. Alonso
 investigates using CS for computing aerodynamic sensitivities
 \cite{martins2000automated}. Additionally higher order accuracy versions of CS
 are discussed, as is the task of implementing complex-step in most widely used
-general purpose programming languages. Also dicussed is the relative ease of
+general purpose programming languages. Also discussed is the relative ease of
 implementing a CS scheme versus an AD based scheme for computing sensitivities
 in an established code. The instant work is novel with respect to the prior
 work because the instant work investigates CS as applied to a numerical method
@@ -334,7 +334,7 @@ the using the CS method to obtain sensitivities.
 A work by W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen discusses
 the CS applied to computing sensitivities in CFD simulations \cite{anderson2001sensitivity}. CS is
 compared to AD both in Fortran and C++ applications. In this prior work it is suggested that forward mode
-AD is mathematically equivalent to first order CS. Forware mode AD isThe instant work is novel with respect to the prior
+AD is mathematically equivalent to first order CS. The instant work is novel with respect to the prior
 work because the instant work investigates CS as applied to a numerical method
 for solving non-linear systems, rather than as in the prior work investigating
 the derivatives themselves produced with the CS method.
@@ -352,8 +352,8 @@ the derivatives themselves produced with the CS method.
 A work by  K. L. Lai and J. L. Crassidis discusses first and second order CS
 methods for computing derivatives. Choosing optimal step size
 \cite{lai2008extensions}. This prior work discusses computing first and second
-order accurate derivatives with CS and choosing optimal step size.  The intant
-work discusses using the derviatives computed with the CS method in a numerical
+order accurate derivatives with CS and choosing optimal step size.  The instant
+work discusses using the derivatives computed with the CS method in a numerical
 method for solving a non-linear system.
 
 A work by A. H. Al-Mohy and N. J. Higham investigates the use of complex step
@@ -369,17 +369,17 @@ in a numerical method to solve a set of equations describing a physical system.
 
 A work by W. Jin, B. H. Dennis, and B. P. Wang discusses using CS to compute
 sensitivities in a solid mechanics FEM analysis \cite{jin2010improved}. In the
-prior work the derivitives produced by CS themselves are the object of
+prior work the derivatives produced by CS themselves are the object of
 interest, where the instant work uses CS in a numerical method for solving a
 non-linear system.
 
 A work by A. Voorhees, H. Millwater, and R. Bagley, where H. Millwater is an author of
-the instant work, dicusses the background of the CS method and frames it as a subset
+the instant work, discusses the background of the CS method and frames it as a subset
 of Fourier Differentiation. CS and Fourier Differentiation are then applied to 
 computing sensitivities within a solid mechanics FEA \cite{voorhees2011complex}. A notable
 technique demonstrated by this prior work is the representation of complex valued
 nodal components as additional degrees of freedom in the FE model, to be interpreted
-by a matrix representation of multicomplex numbers during computations, yet without storing
+by a matrix representation of complex numbers during computations, yet without storing
 the entire matrix. In the prior work, CS is discussed and related to a broader class of differentiation methods and used
 to compute sensitivities. In the instant work, CS is used in a numerical method for solving non-linear systems.
 
@@ -407,8 +407,8 @@ The body of prior literature has introduced the application of CS to
 single dimension and multidimensional derivatives, sensitivity analysis,
 non-linear solution schemes, the extension of CS for higher accuracy, 
 and implementation strategies for CS in new and existing codes.
-With respect to the prior work dicussing the CS method, the primary novel
-aspects of the instant work are then its dicussion of the application of CS to
+With respect to the prior work discussing the CS method, the primary novel
+aspects of the instant work are then its discussion of the application of CS to
 peridynamics simulations run in \emph{Peridigm}, a parallel implementation of
 CS and a compilation of CPU time data, where each of CS, AD, FD and CD are
 compared. 
@@ -1172,7 +1172,7 @@ series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
 
 \subsection{Efficiency Data}
 Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element, was plotted as a function of the number nonzero TS matrix elements. The single core results are shown in Fig.~\ref{fig:serial_efficiency}.  The ranking order of the methods
-matched their speed ranking in Fig.~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the the number of nonzero TS elements.  
+matched their speed ranking in Fig.~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the number of nonzero TS elements.  
 %
 \begin{figure}[tbp]
   \centering
@@ -1196,7 +1196,7 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
 %
 While the previous sections profiled the per-iteration performance of each of
 the methods, it was necessary to conduct convergence rate studies in order to
-get a complete picture. It is necessary for an analyist to know if the
+get a complete picture. It is necessary for an analyst to know if the
 accuracy differences measured in the per-iteration tests would amount to
 differences in convergence rates among the methods if they were allowed to solve problems
 normally. The question is posed, given that step-size $h$ is heuristically
@@ -1423,14 +1423,14 @@ but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
 with the accelerator or GPU being used. \note[Michael]{re:
 I.3}\add[Michael]{For the reader's convenience, a collection of contiguously
-stored data elements are said to be 'byte-copiable' when the the interval
+stored data elements are said to be 'byte-copiable' when the interval
 in bytes of memory spanned by a data element in the collection is constant
 throughout the collection. Suppose 'contiguously stored' means, stored in
-memory with a minimum of unrelated infomation stored in between data
+memory with a minimum of unrelated information stored in between data
 elements in the collection. Complicated objects, such as AD datatype
 elements, do not have the same size in memory as other objects even of that
 same class, for the reason that they themselves contain an uncertain
-ammount of state data according to their design and work done in the
+amount of state data according to their design and work done in the
 program. This means that a collection of such objects, even if they are
 contiguously stored in memory, will not be alligned according to a constant
 interval, such that elements within a collection cannot be located by
@@ -1449,7 +1449,7 @@ that the sending device must use, such as in a communication between a CPU
 running C++ and a GPU running C (such as in CUDA programs), where the gap in
 sophistication contains the features of the "complicated" datatype.} What this means is
 that if \emph{Peridigm} or any simulation software were to be reformulated to
-take advantage of accelerators or GPUs, the flexibilty of complex-step owed to
+take advantage of accelerators or GPUs, the flexibility of complex-step owed to
 its simple implementation may make it more viable for that application given
 its high accuracy. Additional performance gains may be achieved through the use
 of the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
