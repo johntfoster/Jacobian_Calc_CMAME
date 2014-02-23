@@ -763,26 +763,58 @@ great promise in modeling problems with pervasive failure
 \cite{littlewood2010}, interesting phenomenon such as dynamic crack branching
 \cite{ha2010sod}, and is being extended to multiphyics phenomena
 \cite{bobaru2011peridynamic,katiyar2013} and the problem of multi-scale
-coupling to molecular simulations \cite{seleson2009peridynamics}. The related mathematical
-definitions and parts of peridynamic theory especially relevant to the present
-work are explained in the sequel. 
+coupling to molecular simulations \cite{seleson2009peridynamics,seleson2014atom}. 
 
 The type of material model used in this study is referred to as a linear
-peridynamic solid, having what is called a state-based constitutive model. In
-order for a definition of this material to be useful her. To begin with, some essential
-mathematical definitions will be listed and peridynamic theory summarized. Then
-state-based constitutive models will be summarized, followed by a description of
-the linear peridynamic solid model used in this work. After the peridynamic
-equation of motion and consitutive model in use have been discussed, it is then
-possible to give a more precise definition of the tangent stiffness matrix for
-the problem being discussed in this work. The following discussion is largely
+peridynamic solid, having what is called a state based constitutive model. For
+the convenience of the reader, vector states will be introduced. Then the state
+based peridynamic equation of motion will be shown, followed by a description
+of the linear peridynamic solid model used in this work. After the peridynamic
+equation of motion and a consitutive model have been discussed, a definition of
+the tangent stiffness matrix is given. The following discussion is largely
 taken from \cite{silling:psa} but reproduced here for clarity.
 
 \note[Michael]{re: I.2. John, this was to be the skeleton for the new sections on peridynamics.}
-\subsubsection{Vector states for state-based peridynamic theory.}
+\subsubsection{Vector states for state based peridynamic theory.}
+Because the vector state, which is fair to say an uncommon notation, is used in the literature discussing state based peridynamic theory
+it will be enumerated here for the sake of continuity. 
+%
+Paraphrasing, let a spherical region, centered about a
+location in threespace, called a horizon or neighborhood with a certain radius
+be defined. A vector state of order $m$ is a mapping of a vector contained
+within the horizon to a tensor of order $m$ \cite{silling:psa}. Vector states
+have have their own mathematical properties and definitions for sums, composition,
+point product, reference state, identity scalar state, null reference state, null scalar state,
+dot product, magnitude state, unit state, and direction state which are detailed in \cite{silling:psa}. 
+It is important to think of vector states as non-linear, not necessarily continuous maps of vectors to real Euclidian space, where second order tensors are linear maps of three dimensional vectors to threespace. 
+%
+One important tool mechanics gains from the concept of vector states is a way
+to represent complicated deformations within a body in the form of a state
+function. Whereas a symmetric second order tensor maps a spherical region in a
+body in the reference configuration to an ellipsoid in the deformed
+configuration, a vector state can map a spherical region in a body into a
+complicated shape \cite{silling:psa}.
+
+(PLACE PERIDYNAMIC POTATO DIAGRAM HERE)
+
+%
+The properties and definitions of vector states allow interaction with vectors
+and second order tensors to be defined which includes a tensor vector product
+in terms of a state function called an expansion, the tensor product of two states in terms of the
+volume integral over a horizon of the dyadic product of those states times a
+scalar function, the shape tensor as the tensor product of the reference vector
+state with itself, and a tensor reduced form of a state as the conventionally
+defined tensor product of the state tensor product of the state and the
+reference state with the inverse of the shape tensor, and the inheritance of
+the properties of a proper orthogonal second order tensor in its state
+expansion. These ideas are detailed in \cite{silling:psa}. 
+%
+Because of its importance in this work, the definition of a derivative of a vector state
+will be given a more complete explanation.
 
 
-\subsubsection{The state-based peridynamic equation of motion.}
+
+\subsubsection{The state based peridynamic equation of motion.}
 
 In \cite{silling:psa}, the primary reference for state based peridynamics, the
 equation of motion for state based peridynamic theory is derived. No
@@ -817,6 +849,8 @@ where,
 \end{equation} 
 
 \subsubsection{The linear peridynamic solid.}
+
+
 
 \note[Michael]{re: I.2} \add[Michael]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simualtion.}
