@@ -130,26 +130,33 @@ In this case, one replaces “≈” by “=”.
 10. Pg. 7: Should Eqs. (4), (5), and (6) use “≈” instead of “=”?
 11. Pg. 7: In line 28, note that (cid:126)u is not the current conﬁguration, but the displacement
 ﬁeld. Please revise the sentence.
-12. Pg. 7: Please provide an expression for F int
+12. Pg. 7: Please provide an expression for ${F^int}_i$
 in the model used.
-i
+
 13. Pg. 9: In line 26, please add the reference [12] below to “coupling to molecular
 simulations [29].”
+
 14. Pg. 10: Please add an illustration of the block undergoing tension in Section 2.2,
 for clarity. Also, clarify the displacement boundary conditions; are they applied in a
 volumetric layer?
+
 15. Pg. 10: In line 40, you mentioned a bandwidth of 7. This seems to be clear in 1D.
 Does this hold in higher dimensions? Please clarify.
+
 16. Pg. 10: In lines 47-49, you say “The speciﬁc parameters ... can be found ... in the
 paper repository.” It seems a good idea to have the paper repository with ﬁles that a
 user can eventually use. However, the content of the paper should be independent
 of the repository. Please include a table with the parameters used. Similarly, in
 page 11 (lines 11-13).
+
 17. Pg. 14: In line 55, is there any conclusion you can draw from the power law index
 1.0 × 10−6?
+
 18. Pgs. 14-: Please clarify the value of the meshsize used on each of the experiments.
+
 19. Pg. 16: Would it be possible to rescale Fig. 2, so that the dependence of the time
 on the number of cores will look indeed linear?
+
 20. Pg. 16: In lines 54-56, you say “It should be pointed out that compared to the (cid:96)2 -
 norms of any of the TS matrices by themselves, the magnitude of the accuracy
 metric ... is relatively small.” Please include in the manuscript the explicit informa-

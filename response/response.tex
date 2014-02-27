@@ -201,11 +201,13 @@
       performance of the methods that the reviewer has requested, including consideration
       of speed and accuracy in solving real, non-linear problems.
   \end{itemize}}
+  \end{enumerate}
 
   \subsection*{Smaller issues}
   \begin{enumerate}
+
   \item
-	1. Pg. 2: In line 14, explain what does the term “algorithmically consistent” mean.
+	Pg. 2: In line 14, explain what does the term “algorithmically consistent” mean.
 
 {\color{red}
   \begin{itemize}
@@ -214,7 +216,7 @@
   \end{itemize}}
 
   \item
-	2. Pg. 2: In line 36, what do you mean by “discrimination”?
+	Pg. 2: In line 36, what do you mean by “discrimination”?
 
 {\color{red}  
 \begin{itemize}
@@ -223,7 +225,7 @@
   \end{itemize}}
 	
 ` \item	
-	3. Pg. 2: In line 37, explain what do you mean by “in-situ instrumentation”.
+	Pg. 2: In line 37, explain what do you mean by “in-situ instrumentation”.
 
 {\color{red}  
 \begin{itemize}
@@ -232,14 +234,184 @@
   \end{itemize}}
 	
   \item 
-	4. Pg. 3: In lines 19-29, specify the sections where each part of the manuscript is
+	Pg. 3: In lines 19-29, specify the sections where each part of the manuscript is
 included.
+
 {\color{red}  
 \begin{itemize}
      \item
-      The correction is made in the manunscript.
+      The correction is made in the manuscript.
+  \end{itemize}}
+
+  \item 
+Pg. 3: You may consider including the exact web address of the paper repository.
+
+{\color{red}  
+\begin{itemize}
+     \item
+      The correction is made in the manuscript. An exact web address for the paper repository has been added.
+  \end{itemize}}
+
+  \item 
+Pg. 3: Please include the forward and centered ﬁnite difference expressions for
+easier comparison with (2); include the truncation error as well. You do not have to
+derive these expressions though.
+
+{\color{red}  
+\begin{itemize}
+     \item
+      The correction is made in the manuscript. Expressions for forward and centered difference have been included for faster comparison with (2).  
+  \end{itemize}}
+
+  \item 
+Pg. 4: In Eq. (1), “$\partial f^2$” should be “$\frac{\partial^2 f}{\partial x^2}$”; similarly, for the third derivative.
+
+{\color{red}  
+\begin{itemize}
+     \item
+      The correction is made in the manuscript.
+  \end{itemize}}
+
+  \item 
+Pg. 4: You may consider writing Eq. (2) with the truncation error
+
+{\color{red}  
+\begin{itemize}
+     \item
+      The correction is made in the manuscript.
   \end{itemize}}
 
 
 
+9. Pg. 6: In lines 9-11, please add references to the “Poisson problem” and to the
+“mathematical optimization”.
+
+10. Pg. 7: Should Eqs. (4), (5), and (6) use “$\approx$” instead of “$=$”?
+
+11. Pg. 7: In line 28, note that (cid:126)u is not the current conﬁguration, but the displacement
+ﬁeld. Please revise the sentence.
+
+12. Pg. 7: Please provide an expression for ${F^int}_i$
+in the model used.
+
+13. Pg. 9: In line 26, please add the reference [12] below to “coupling to molecular
+simulations [29].”
+
+14. Pg. 10: Please add an illustration of the block undergoing tension in Section 2.2,
+for clarity. Also, clarify the displacement boundary conditions; are they applied in a
+volumetric layer?
+
+15. Pg. 10: In line 40, you mentioned a bandwidth of 7. This seems to be clear in 1D.
+Does this hold in higher dimensions? Please clarify.
+
+16. Pg. 10: In lines 47-49, you say “The speciﬁc parameters ... can be found ... in the
+paper repository.” It seems a good idea to have the paper repository with ﬁles that a
+user can eventually use. However, the content of the paper should be independent
+of the repository. Please include a table with the parameters used. Similarly, in
+page 11 (lines 11-13).
+
+17. Pg. 14: In line 55, is there any conclusion you can draw from the power law index
+$1.0 * 10^-6$?
+{\color{red}  
+\begin{itemize}
+     \item
+      Manuscript updated. More significant than the power law index is that the methods have the same power law relationship with computation time at all, meaning that there is some, but weak evidence that the methods have equal algorithm complexity. 
+  \end{itemize}}
+
+18. Pgs. 14-: Please clarify the value of the meshsize used on each of the experiments.
+{\color{red}  
+\begin{itemize}
+     \item
+      [TODO]
+  \end{itemize}}
+
+19. Pg. 16: Would it be possible to rescale Fig. 2, so that the dependence of the time
+on the number of cores will look indeed linear?
+{\color{red}  
+\begin{itemize}
+     \item
+     Manuscript is in error and has been corrected. An accurate statement is that CPU time and number of cores are inversely related.
+  \end{itemize}}
+
+20. Pg. 16: In lines 54-56, you say “It should be pointed out that compared to the (cid:96)2 -
+norms of any of the TS matrices by themselves, the magnitude of the accuracy
+metric ... is relatively small.” Please include in the manuscript the explicit informa-
+tion on the relative error. It seems that you already have such information in the
+paper repository.
+{\color{red}  
+\begin{itemize}
+     \item
+[TODO]
+  \end{itemize}}
+
+21. Pg. 17: Include the values of the probe distances h used for each method.
+{\color{red}  
+\begin{itemize}
+     \item
+[TODO]
+     The probe distances used in Peridigm are automatically determined with a heuristic algorithm and are not set by the user. They are 1.E-6 times the node spacing [ADAGIO REF] for FD and CD which is determined to limit the onset of subtractive cancellation. 1.E-100 was hard-coded for CS, while AD had no probe distance.
+  \end{itemize}}
+
+22. Pg. 17: In lines 53-54, you say “Accuracy trends matched those for the single core
+tests.” Indeed, comparing Figs. 3 and 4, the results for FD seem to be quite the
+same in serial and in parallel. For CS the accuracy seems higher in serial. For CD,
+the accuracy is also higher in serial and, in serial, it has a ﬂuctuating behavior. Can
+you comment on these observations?
+{\color{red}  
+\begin{itemize}
+     \item
+[TODO]
+	The fluctuation seems to be a function of the amount of nonzero TS matrix elements relative to total TS matrix elements. Information supporting this has been added to the manuscript. This may be related to the fact that neighborhood radius in terms of number of Peridynamic nodes was kept constant and may indicate that connectivity in the mesh oscillates when the mesh is refined incrementally. 
+  \end{itemize}}
+
+23. Pgs. 17-18: What are the units of K ? If F int in Eq. (4) etc. is internal force, then K
+should have units of force/length. However, in Figs. 3 and 4 you use the unit of
+MPa, which is force/length2 . Please clarify.
+
+24. Pg. 19: Are the units of the vertical axis in Fig. 5 “seconds”, as in Figs. 1 and 2?
+Please indicate that. Also, is the label of the vertical axis in Fig. 6 correct?
+
+25. Pg. 20: In lines 32-35, clarify what “byte-copyable” mean and why is that important.
+{\color{red}  
+\begin{itemize}
+     \item
+     Clarification made in manuscript, new reference added. 'Byte-copiable' means that members of an array of data elements are all of the same size in memory so that if one knew the position of the first element in the array, the position of all other elements in the array could be inferred with the additional information of the length of the array. This is important, in particular, to the designers and users of the thousands of MIC accelerator cards installed in the \emph{Stampede} computer system. MIC accelerator cards permit only the transfer of byte-copiable data from the host computer system for use with the '#pragma offload' mode, which is to say most code written for the MIC. This is even more important when it is realized that the great majority of \emph{Stampede}'s theoretical processing power is counted from these MIC accelerator cards. Meaning that if an AD user wanted to use any of that power, they would be out of luck since not even the full time personel at TACC could manage to compile the AD library Trilinos::Sacado for the MIC. A more 'casual' computational scientist would find the task impossible.
+  \end{itemize}}
+
+26. Pg. 21: Please include a section title for the references.
+
+27. Pg. 24: In line 23, you may add the truncation error O(h2 ) to the expression. Oth-
+erwise, you may need to replace the “=” sign by the “≈” sign. However, adding
+the error term would make more clear the limiting expression when h → 0. Also,
+replace the comma by a period.
+
+28. Pg. 24: Why do we need S and X in Appendix B?
+{\color{red}  
+\begin{itemize}
+     \item
+     All the members of set X need to be members of set S otherwise the approximations don't work. X are numbers from the 'real' world and S are numbers from the computer world. For example: "http://en.wikipedia.org/wiki/IEEE_floating_point" shows that computers and languages following IEEE standards don't represent very large numbers with very fine precision at the same time due to memory constraints, and there are upper and lower bounds on the magnitudes of nonzero numbers that can be represented. Obviously, approximation error is expected, but the fact that a user doesn't actually get 'all' the numbers is something that is not obvious.
+  \end{itemize}}
+
+
+29. Pgs. 25-26: Are the functions in the second column of the table in 2(c) (page 25)
+approximations? Why do you label the column “Approximates Function”? Simi-
+larly, in line 16 (page 26) you say “approximated by the partial derivative”; is it an
+approximation?
+{\color{red}  
+\begin{itemize}
+     \item
+      A computer can only provide finite precision approximations, of approxmations, of functions. Approximations of derivatives of functions are also approximations, therefor the label is correct in both cases. For example: "https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/x86_64/fpu/e_expl.S" is the implementation of the $exp(x)$ function on 80-bit extended precision floating point numbers in the popular GCC compiler. This implementation is the most accurate that GCC provides for the $e$ function on real numbers, but ultimately is still a discrete numerical algorithm.
+  \end{itemize}}
+
+30. Pg. 26: Please clarify whether storage is needed in automatic differentiation. For
+example, do we need to store w, v , and u?
+
+{\color{red}  
+\begin{itemize}
+     \item
+      Clarification is added in the manuscript. For an actual AD system like Trilinos::Sacado or ADIFOR, w, v and u (stand-ins for simple or elementary math operations) need to be written in code differently from the built-in implementation to replace all math operations as part of a complete AD datatype. What doesn't absolutely have to be stored are the evaluations of w, v and u. Not storing the evaluations happens in 'forward' AD, storing the evaluations happens in 'backward' or 'reverse accumulation' AD.  
+  \end{itemize}}
+
+
+  \end{enumerate}
 \end{document}

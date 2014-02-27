@@ -218,8 +218,8 @@ validation and verification example problems which show how to use the library.
 The purpose of the serial C++ library is to demonstrate in a less complex
 manner than in the \emph{Peridigm} code how one would use
 automatic-differentiation or complex-step to better encourage their use and
-discussion. This open source resource will be referred to as the \emph{paper
-repository} in what follows.
+discussion. This open source resource is available at the correposinding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
+ or directly at https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive.
 
 \subsection{Differentiation Techniques}
 
@@ -239,16 +239,16 @@ be be made complex and expanded in a Taylor series about a small perturbation
 along the imaginary axis by some arbitrary value $h$ as follows
 %
 \begin{align} f ( x + i h ) =& f(x) + \frac{\partial f(x)}{\partial x} \frac{i
-h}{1!}  \notag \\ &+ \frac{\partial f^2(x)}{\partial x^2} \frac{(i h)^2}{2!} +
-\frac{\partial f^3(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots,
+h}{1!}  \notag \\ &+ \frac{\partial^2 f(x)}{\partial x^2} \frac{(i h)^2}{2!} +
+\frac{\partial^3 f(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots,
 \label{eqn:complexTaylor} \end{align}
 %
 Taking the imaginary part of both sides of equation (\ref{eqn:complexTaylor})
 and solving for the first derivative and ignoring terms of $\mathcal{O}\left (
 h^2 \right)$ yields an estimate
 %
-\begin{equation} \frac{\partial f( x )}{\partial x} \approx \frac{\mbox{Im}
-\left( f (x + i h) \right)}{h}.  \label{eqn:complexFirstDeriv} \end{equation}
+\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{\mbox{Im}
+\left( f (x + i h) \right)}{h} +\mathcal{O}\left ( h^2 \right).  \label{eqn:complexFirstDeriv} \end{equation}
 %
 Thus, an estimate of the first derivative of a function can be made by only
 utilizing one functional evaluation of a perturbed model parameter along the
@@ -259,6 +259,16 @@ only disadvantage of this technique is the necessity of requiring the functions
 to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a
 simple example that illustrates the use of the complex-step method for the
 derivative calculation of a function. 
+
+For the reader's convenience the foward difference equivalent to~\ref{eqn:complexFirstDeriv} is
+%
+\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x)}{h} +\mathcal{O}\left ( h \right). \label{eqn:forwardFirstDeriv} \end{equation},
+%
+while the central difference equivalent to~\ref{eqn:complexFirstDeriv} is,
+%
+\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x - h)}{2h} +\mathcal{O}\left ( h^2 \right). \label{eqn:centeredFirstDeriv} \end{equation} \cite[Chap. 4.1.3]{chapra2010}.
+%
+    Note that the order of the truncation error in~\ref{eqn:forwardFirstDeriv} indicates that for a given $h$ forward difference is less accurate an approximation than central difference or complex step.
 
 \note[Michael]{re: I.4}
 It is appropriate to detail the prior work discussing aspects of the
@@ -446,7 +456,9 @@ partial derivatives may be computed and stored in a sequence. The AD system
 then multiplies the final sequence of partial derivatives together to produce
 the exact equivalent to taking a partial derivative of the corresponding
 composition function with respect to a designated variable at a particular
-value. It is obvious, but bears mentioning, that the AD system could simply
+value. 
+%
+It is obvious, but bears mentioning, that the AD system could simply
 store one value for partial derivatives, modifying it as appropriate for every
 function evaluation rather than keeping a sequence. This is significant because
 modifying a single value rather than keeping a list of values corresponding to
@@ -1156,9 +1168,17 @@ Average time in seconds to compute a TS matrix is plotted as a function of the
 number of nonzero TS elements.  CS was the slowest of the four methods, taking
 the longest average time per iteration,  followed by CD, FD and AD in that
 order. Calculation time has a power-law relationship with problem size, with a
-power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes
-well for the scalability of each of the methods by themselves in
-\emph{Peridigm}.
+power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes well
+for the scalability of each of the methods by themselves in \emph{Peridigm}. If we
+assumed every individual operation, generally speaking, took the same amount of
+time on average such that compute time were a measure of number of operations,
+this suggests that the methods as in \emph{Peridigm} have the same order
+algorithm complexity when considering computing a TS matrix alone, that is
+computation time is $\mathcal{O}(10^{(10^{-6} \times \log_{10}n)})$. This would
+suggest, to the algorithm design way of thinking, that the methods are equally
+well suited to the task of computing a TS matrix, if it were further assumed
+that the TS matrices produced by each method were identical. This is not the case
+as seen in the following subsection.
 %
 \begin{figure}[tbp] \centering \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
 \caption{Serial test series speed measurements.} \label{fig:serial_speed}
@@ -1171,7 +1191,7 @@ problem is increased, while the number of nonzero TS matrix elements remained
 constant at $\num{1.67E9}$ .  CS again was the slowest method, followed by CD,
 AD and then FD.  There is a somewhat surprise reversal of FD and AD for these
 parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking
-at average iteration time, the factor of speed improvement scales linearly with
+at average iteration time, the factor of speed improvement scales inversely with
 the number of compute cores used for the given conditions of this group of
 tests. Looking at Fig.~\ref{fig:multi_speed}, the reader can see that when core
 count doubles, compute time halves, for each method. Again, these results show
