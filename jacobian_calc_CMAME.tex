@@ -115,7 +115,7 @@ calculation: automatic differentiation, forward finite-difference, and central
 finite-difference. The complex-step method was \note[Michael]{re: I.1, could
 suggest claim of novelty} \remove[Michael]{newly} implemented in a massively
 parallel computational peridynamics code for the purpose of this comparison.
-The methods were compared through in situ profiling of the code for accuracy,
+The methods were compared through profiling of the code for accuracy,
 speed, efficiency, and parallel scalability. The research provides data that
 can serve as practical guide for code developers and analysts faced with
 choosing which method best suits the needs of their application code.
@@ -160,17 +160,20 @@ A goal of this study was to develop and evaluate a \note[Michael]{re: I.1}
 for calculating tangent-stiffness matrices against established methods.  This
 new method is based on a complex number Taylor series expansion and referred to
 as CTSE or the ``complex-step'' method.  The distinction of ``accurate'' is
-defined by comparison of the \note[Michael]{re: I.1}\remove[Michael]{new} method to popular finite differencing
-techniques used for computing tangent-stiffness matrices and with the exact to
-machine precision algorithmically consistent derivatives computed with
-\emph{automatic differentiation}.
+defined by comparison of the \note[Michael]{re: I.1}\remove[Michael]{new}
+method to popular finite differencing techniques used for computing
+tangent-stiffness matrices and with the exact to machine precision
+algorithmically consistent derivatives computed with \emph{automatic
+differentiation}. For the reader's convenience, from plasticity theory, the algorithmic consistency of
+the tangent-stiffness matrix refers to consistency with the integration of a
+plasticity model under the Khun-Tucker constraints or similar where the tangent-stiffness matrix is
+computed using the elastoplastic modulii that are determined from the integration \cite{simo1998}. 
 
 Comparative data regarding the accuracy and compute cycle timing for the
 complex step, finite-difference, central-difference, and automatic
 differentiation methods are included to aide developers and analysts in
 computational mechanics code design who are faced with implementing a general
-method for tangent stiffness matrix calculation.  A comparison and
-discrimination of the methods was achieved through in-situ instrumentation of a
+method for tangent stiffness matrix calculation.  A comparison of the methods was achieved through instrumentation of a
 massively parallel computational mechanics code. 
 
 The scope of the application component of the study was limited to a single
@@ -198,14 +201,14 @@ The aim of this paper is not only to \note[Michael]{re: I.1}\change[Michael]{int
 the context of}{of} evaluating tangent-stiffness matrices, but to serve as a review
 for other differentiation techniques useful for solving non-linear systems with
 Newton's method. After presenting background information on the underlying
-methods to be discussed, presented in this paper are: A) a description of
-tangent-stiffness matrices, B) detailed directions for producing
-tangent-stiffness matrices with each of the methods identified above, C) a
+methods to be discussed, presented in this paper are: In subsection~\ref{subsec:TS} a description of
+tangent-stiffness matrices, detailed directions for producing
+tangent-stiffness matrices with each of the methods identified above, and a
 description and justification of the \note[Michael]{re: I.1}\remove[Michael]{new}complex-step method for calculating
-tangent-stiffness matrices, D) a description of implementing complex-step in
-the \emph{Peridigm} software, E) a description of the quantities-of-interest
-used to rank the methods, F) a presentation and analysis of the results of the
-comparative study, and G) conclusions and thoughts on potential future work.
+tangent-stiffness matrices, in sub-subsection~\ref{subsubsec:Impl} a description of implementing complex-step in
+the \emph{Peridigm} software, in section~\ref{JGAM} a description of the quantities-of-interest
+used to rank the methods, in section~\ref{sec:Res} a presentation and analysis of the results of the
+comparative study, and in section~\ref{sec:Conc} conclusions and thoughts on potential future work.
 Finally, in the interest of replicable research, the reader is referred to the
 corresponding author's website for \emph{Peridigm} C++ source-code and data
 necessary to reproduce the results presented here. Additionally, included on
@@ -464,7 +467,7 @@ system's definition of the elementary math functions and their partial
 derivatives.
  
 \subsection{Tangent-stiffness} 
-
+\label{subsec:TS}
 In solid and structural computational mechanics the tangent-stiffness matrix is
 a linearization operator that describes the stiffness of a system in response
 to small displacements imposed upon the current configuration of the system.
@@ -727,9 +730,10 @@ strongly affect convergence rates, this relationship was not precisely quantifie
 \section{Description of analysis tools and approach.} 
 %
 \subsection{\emph{Peridigm} and peridynamics.}
+\label{subsec:PaP}
 %
 Comparisons of the different tangent-stiffness calculation techniques were
-carried out through code-development and \emph{in situ} instrumentation of the
+carried out through code-development and instrumentation of the
 computational peridynamics code \emph{Peridigm} \cite{peridigm}.
 \emph{Peridigm} is distributed by Sandia National Laboratories as its primary
 open-source computational peridynamics code. It is a massively parallel
@@ -869,6 +873,7 @@ deformation state for all nodes to be computed.
 }
 
 \subsubsection{Implementing the complex-step method in Peridigm} 
+\label{subsubsec:Impl}
 %
 The CS method was implemented in \emph{Perdigm} in a manner that follows
 closely the implementation of the FD technique.  However, because of
@@ -1114,6 +1119,7 @@ varying process. These data reduction and plotting scripts can be found on the
 corresponding author's website.
 
 \section{Results and Discussion}
+\label{sec:Res}
 %
 Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) non-zero matrix elements, load step average calculation time and load step average accuracy. The units for accuracy are derived equation~(\ref{eqn:accuracy}) and the units used to define bulk material properties, mentioned in Section~\ref{tcs}.
 %
@@ -1318,6 +1324,7 @@ force densities such as for small displacements or very lax materials. In this c
 that forward-difference be avoided. 
 
 \section{Conclusions}
+\label{sec:Conc}
 %
 \subsection{For further studies of Jacobian accuracy in Newton's method}
 \label{subsec:FurtherStudies}
