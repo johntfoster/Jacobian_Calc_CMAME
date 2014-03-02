@@ -218,7 +218,7 @@ validation and verification example problems which show how to use the library.
 The purpose of the serial C++ library is to demonstrate in a less complex
 manner than in the \emph{Peridigm} code how one would use
 automatic-differentiation or complex-step to better encourage their use and
-discussion. This open source resource is available at the correposinding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
+discussion. This open source resource is available at the corresponding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
  or directly at https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive.
 
 \subsection{Differentiation Techniques}
@@ -260,7 +260,7 @@ to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a
 simple example that illustrates the use of the complex-step method for the
 derivative calculation of a function. 
 
-For the reader's convenience the foward difference equivalent to~\ref{eqn:complexFirstDeriv} is
+For the reader's convenience the forward difference equivalent to~\ref{eqn:complexFirstDeriv} is
 %
 \begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x)}{h} +\mathcal{O}\left ( h \right). \label{eqn:forwardFirstDeriv} \end{equation},
 %
@@ -372,7 +372,7 @@ system, while in the prior work the derivatives obtained from the CS method
 are the object of interest.
 
 A work by A. H. Al-Mohy and N. J. Higham investigates the use of complex step
-in computing Frechet derivatives of matix to matrix functions
+in computing Frechet derivatives of matrix to matrix functions
 \cite{al2010complex}. To compute the Jacobian of the residual in the
 peridynamics simulation as discussed in the instant work is analogous is
 computing a Frechet derivative. Where the application of the CS derivatives in
@@ -538,22 +538,30 @@ of the function can be evaluated independently of the others. \\
 The \emph{forward-difference} (FD) formula for calculating a tangent-stiffness matrix in the setting of a solid structural mechanics problem is 
 %
 \begin{equation} 
-  K_{ij} = \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u})}{h},
+  K_{ij} \approx \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u})}{h},
 \end{equation}
 %
-Where $K_{ij}$ is the indicial notation representation of an element of the tangent-stiffness matrix at row $i$, column $j$. The first of the two terms in the numerator is the internal force, $F_i^{int}$ evaluated in the current deformed configuration, $\vec{u}$,  plus a small perturbation $h$ in the direction $\hat{e}_j$ where $\hat{e}_j$ represents a unit-vector corresponding to the $j^{\mbox{th}}$ degree-of-freedom. The second of the two terms is $F_i^{int}$ evaluated in the current configuration. The denominator is the magnitude of perturbation called the \emph{probe-distance}.
+
+Where $K_{ij}$ is the indicial notation representation of an element of the
+tangent-stiffness matrix at row $i$, column $j$. The first of the two terms in
+the numerator is the internal force, $F_i^{int}$ evaluated in the current
+deformed configuration, as a function of the displacement, $\vec{u}$,  plus a small perturbation $h$ in the
+direction $\hat{e}_j$ where $\hat{e}_j$ represents a unit-vector corresponding
+to the $j^{\mbox{th}}$ degree-of-freedom. The second of the two terms is
+$F_i^{int}$ evaluated in the current configuration. The denominator is the
+magnitude of perturbation called the \emph{probe-distance}.
 
 The \emph{central-difference} (CD) formula for calculating a tangent-stiffness matrix is
 %
 \begin{equation} 
-  K_{ij} = \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u} - h \hat{e}_j)}{2 h}.
+  K_{ij} \approx \frac{F_i^{int}(\vec{u} + h \hat{e}_j) - F_i^{int}(\vec{u} - h \hat{e}_j)}{2 h}.
 \end{equation}
 %
 Together, the FD and CD methods, are sometimes termed \emph{finite-difference probing} techniques for tangent-stiffness calculation in literature \cite{ref-Adaggio}. From the well-known 1-dimensional formulas for FD and CD, it is understood that the accuracy of these expressions is dependent theoretically upon selecting a small step-size $h$, however experiments shown in \cite{squire1998using} demonstrate that too small an $h$ can lead to inaccuracy from ``subtractive-cancellation''. Therefore it is fair to say that a general method for selecting $h$ in practice is unobtainable.
 
 The complex-step (CS) formula for calculating a tangent-stiffness matrix is
 %
-\begin{equation} K_{ij} = \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h
+\begin{equation} K_{ij} \approx \frac{\mbox{Im}(F_i^{int}(\vec{u} + i h
 \hat{e}_j))}{h}, \end{equation}
 %
 where the internal force, $F^{int}$ is now treated as function of complex
@@ -573,7 +581,7 @@ one only needs to follow the definition of the tangent-stiffness matrix and
 issue the correct commands to the AD system. The formula is the same as the
 continuum formula
 %
-\begin{equation} K_{ij} = \frac{\partial F_i^{int}(\vec{u})}{\partial u_j},
+\begin{equation} K_{ij} \approx \frac{\partial F_i^{int}(\vec{u})}{\partial u_j},
 \end{equation}
 %
 but, with the caveat that $F^{int}$ is evaluated in a way that is
@@ -786,7 +794,7 @@ peridynamic solid, having what is called a state based constitutive model. For
 the convenience of the reader, vector states will be introduced. Then the state
 based peridynamic equation of motion will be shown, followed by a description
 of the linear peridynamic solid model used in this work. After the peridynamic
-equation of motion and a consitutive model have been discussed, a definition of
+equation of motion and a constitutive model have been discussed, a definition of
 the tangent stiffness matrix is given. The following discussion is largely
 taken from \cite{silling:psa} but reproduced here for clarity.
 
@@ -869,7 +877,7 @@ where,
 
 
 \note[Michael]{re: I.2} \add[Michael]{
-\subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simualtion.}
+\subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simulation.}
 The tangent stiffness matrix is the Frechet derivative of the residual wrt the
 deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
 static peridynamic momentum equation. The internal force
@@ -900,7 +908,7 @@ type. \note[Michael]{re: I.3}\add[Michael]{For the reader's convenience,
     classes', whose purpose in object oriented computer programming is to
     automate the creation, accessing, modification and destruction of the
     underlying contained data. Templated container classes allow for user
-    choice in what properties that underlying data exihibits.  For example, in
+    choice in what properties that underlying data exhibits.  For example, in
     this work, complex arithmetic cannot be performed on the data contained
     within an \emph{Epetra} vector because that data, of type {\tt double} does
     not have the property of following the rules of complex arithmetic. The
@@ -942,7 +950,7 @@ many advanced techniques in C++ such as multiple virtual inheritance, pointer
 arithmetic, and distributed data structures, \note[Michael]{re:
 I.3}\add[Michael]{for example \emph{Epetra} vectors, were used in the basic
     code and by necessity in the modified code. These concepts are not vital to
-understanding the complex step method iteself, but may be necessary to understand complex
+understanding the complex step method itself, but may be necessary to understand complex
 step in \emph{Peridigm}.} To see CS and other methods in a more narrow context,
 it is advised that readers also take a look at the simple examples provided on
 the corresponding author's website.
@@ -969,16 +977,54 @@ for shear modulus. The peridynamic horizon, a length scale that effectively
 sets the bandwidth of tangent-stiffness in the computation, used in the test
 problems was always set to three times the nominal discretization size (i.e.
 node spacing in the particle discretization scheme). This results in a minimum
-tangent-stiffness matrix bandwidth of 7 (for an optimal node numbering scheme).
+tangent-stiffness matrix bandwidth of 21 for a 3D problem (for an optimal node
+numbering scheme). Pictured in Fig.~\ref{fig:SCMesh} is a viewgraph for one of
+the peridynamic meshes used in this study. The coloration in the image
+indicates node numbering, where a smooth color transition means that the nodes
+have close ID numbers. The abrupt color changes in the center and at the ends
+of the body show that numbering is not contiguous and is assigned with respect to four regions,
+called \emph{material blocks} in \emph{Peridigm}. The purpose of designating
+these material blocks, for this study, is to register the blocks on the ends of
+the mesh as volumetric regions over which to apply displacement boundary
+conditions called \emph{volume constraints} in peridynamics. 
+
+\begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth]{./figs/mesh2000.png}
+\caption{2000 node mesh} \label{fig:SCMesh}
+\end{figure}
 
 A series of nine single compute core (i.e. serial) test problems were run with
 the discretization size being refined with every test in the series. The aim of
 increasing the refinement was to examine differences between the methods in
 terms of accuracy and speed. This series would comprise the single core runs.
 The specific parameters of these tests can be found in \emph{Peridigm} input
-{\tt xml} files included in the paper repository. These {\tt xml} files allow
+{\tt xml} files included in the paper repository, however the parameters
+are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow
 users with the appropriately modified version of \emph{Peridigm} to reproduce
 the results found in this paper.
+
+\begin{table*}[!ht]    
+  \scriptsize
+  \centering
+        \caption{Test Parameters} \label{tab:TestParams}   
+       \begin{tabular}{c c c c c c c}
+         \toprule
+         Peri. nodes & Nozero TS elems. & Nonzero Fraction & Horizon & Load rate & # Load steps & Abs. tolerance \\ 
+                     & $\times 10^6$    &                  &\si{\meter}& \si{\centimeter\per\second} &   &     \\
+        \midrule
+        1000 & $\num{1.99}$             &                   & \num{.3}   & 2.0 & 2 & \num{10^-8}\\
+        2000 & $\num{4.25}$             &                   &            &     &   &            \\
+        3000 & $\num{7.79}$             &                   &            &     &   &            \\
+        4000 & $\num{15.4}$             &                   &            &     &   &            \\
+        6000 & $\num{20.0}$             &                   &            &     &   &            \\
+        8000 & $\num{31.4}$             &                   &            &     &   &            \\
+        12000 & $\num{40.1}$            &                   &            &     &   &            \\
+        16000 & $\num{83.9}$            &                   &            &     &   &            \\
+        32000 & $\num{165.0}$           &                   &            &     &   &            \\
+        1000000 & $\num{1670}$          &                   & \num{.03}  & 2.0 & 2 & \num{10^-8}\\
+        \bottomrule
+    \end{tabular}
+\end{table*}
+
 
 Another series of four test problems were simulated, however this time the
 number of compute cores used to solve the problem was increased from test to
@@ -986,28 +1032,36 @@ test while the discretization level was held constant at 1 million
 computational nodes (3 million degrees of freedom). This allowed for sufficient
 computational nodes per core even at the highest level of parallelization such
 that message passing computation did not overwhelm the simulation.  The
-specific parameters of these tests can be found in \emph{Perdigm} input {\tt
-xml} files also included in the paper repository. \note[Michael]{re:
-I.3}\add[Michael]{For the purposes of this work message passing is what
+specific parameters of these tests can be found in \emph{Peridigm} input {\tt
+xml} files also included in the paper repository, but a summary of the most relevant
+ones appears in Table~\ref{tab:TestParams}. A viewgraph of the 1 million node mesh is
+shown in Fig.~\ref{fig:MCMesh}. The nodes in the image, although actually discrete points
+in space are dense enough to appear as a continuous body at a distance.
+
+\begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth]{./figs/mesh1000000.png}
+\caption{1000000 node mesh} \label{fig:MCMesh}
+\end{figure}
+
+\note[Michael]{re: I.3}\add[Michael]{For the purposes of this work message passing is what
 synchronizes multiple computers that each are working on a separate section
 of the problem domain. This operation involves the time-consuming use of
 the data network. To reduce the proportion of simulation time spent on
 message passing, good practice is to maximize the amount of information
 contained within a subdomain solely managed by a single computer, relative
-to the amount of information shared accross multiple subdomains and
+to the amount of information shared across multiple subdomains and
 therefor multiple computers. A useful experiment to illustrate this idea
 concretely would be to implement a code to solve a 2D Laplace equation for
-simulating a simple heat condution problem on two processors. Use the
+simulating a simple heat conduction problem on two processors. Use the
 textbook finite difference method, which in this case does not refer just
 to the differentiation technique.  First decompose the domain into two
 contiguous chunks, having one shared border, and distribute these chunks,
-or subdomains to the two processors. Perfom the simulation a multitude of
+or subdomains to the two processors. Perform the simulation a multitude of
 times to calculate an average runtime.  Next implement the solution a
 different way, instead partitioning the problem domain into many narrow,
 alternating strips, and distribute those to again two processors, where adjacent
 strips in the graph of the domain should be sent to different processors. This way
 of decomposing the domain will cause much overlap between the subdomains
-managed by the two processors and much time will be spent synchronzing the
+managed by the two processors and much time will be spent synchronizing the
 subdomain overlap or 'ghost nodes' between the processors. Run the modified
 simulation a multitude of times and take the average runtime. The larger
 the unpartitioned domain, the worse the discrepancy should be.}
@@ -1019,7 +1073,7 @@ CD on the basis of accuracy. AD was omitted from the comparison because it
 served as the standard of accuracy for the other methods in the absence of
 appropriate analytical forms for the tangent-stiffness matrix associated with
 the system solved in the study. The assumption that AD is accurate enough to
-serve as a standard is supported by ADs implementation as a computerized chain
+serve as a standard is supported by AD's implementation as a computerized chain
 rule as explained in Section~\ref{ADsubsection}.
 
 It would be a poor comparative study to compare tangent-stiffness matrices from
@@ -1133,7 +1187,7 @@ corresponding author's website.
 \section{Results and Discussion}
 \label{sec:Res}
 %
-Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) non-zero matrix elements, load step average calculation time and load step average accuracy. The units for accuracy are derived equation~(\ref{eqn:accuracy}) and the units used to define bulk material properties, mentioned in Section~\ref{tcs}.
+Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) non-zero matrix elements, load step average calculation time and load step average accuracy. The units for accuracy are derived Eqn.~(\ref{eqn:accuracy}) and the units used to define bulk material properties, mentioned in Section~\ref{tcs}.
 %
 \begin{table*}[!ht]    
   \scriptsize
@@ -1219,7 +1273,7 @@ requirements causes the AD method to be slower than FD.
 \subsection{Accuracy Data}
 
 Data for accuracy measurements were taken according to the methods mentioned in
-Section~\ref{tcs}, and reduced using equation~(\ref{eqn:accuracy}). The
+Section~\ref{tcs}, and reduced using Eqn.~(\ref{eqn:accuracy}). The
 averaged results of these accuracy measurements for the serial tests can be
 seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as
 $l^2$-norm in the figure labels for conciseness) of the element-wise difference
@@ -1233,8 +1287,8 @@ $l^2$-norms of any of the TS matrices by themselves, the magnitude of the
 accuracy metric calculated with Eqn.~\ref{eqn:accuracy} for any of the methods
 is relatively small. These values for the $l^2$-norms of the TS matrices appear
 in the simulation data which is available in the paper repository. The effect
-of these accuracy differences on convergence rate of the Newton solver was not
-determined.  
+of these accuracy differences on convergence rate of the Newton solver was studied and the
+results are reported in section~\ref{sec:PeridigmConvergenceStudy}.  
 %
 The accuracy of FD and CD could be improved by using a smaller probe distance,
 $h$; however, if $h$ is too small, then the methods can suffer from severe
@@ -1294,7 +1348,7 @@ get a complete picture. It is necessary for an analyst to know if the
 accuracy differences measured in the per-iteration tests would amount to
 differences in convergence rates among the methods if they were allowed to solve problems
 normally. The question is posed, given that step-size $h$ is heuristically
-selected by \emph{Perdigm} for the finite difference methods and presumable
+selected by \emph{Peridigm} for the finite difference methods and presumable
 makes a good choice, do the single-iteration Jacobian accuracy results predict
 the ranking of the methods in terms of convergence rate for a given study? For
 brevity, convergence rate was measured for each of the methods in solving just
@@ -1491,7 +1545,7 @@ have an impact on convergence rate, and therefor serve as a predictor of
 convergence rate in per-iteration results, the amount of error detected between
 a supposed perfectly accurate Jacobian and the test Jacobian needs to be
 greater than allowed by the conditions seen in \cite{burkeLectures}, 
-reproduced in Subsection~\ref{subsec:FurtherStudies}. 
+reproduced in subsection~\ref{subsec:FurtherStudies}. 
 
 It should be mentioned that another work, \cite{perez2012numerical}, compares
 the speed and accuracy of complex-step to finite difference for producing

@@ -313,7 +313,7 @@ Pg. 6: In lines 9-11, please add references to the “Poisson problem” and to 
 \begin{itemize}
      \item
          [TODO]
-         No changes made. 
+         
   \end{itemize}}
 
 \item
@@ -322,7 +322,6 @@ Pg. 7: Should Eqs. (4), (5), and (6) use “$\approx$” instead of “$=$”?
 {\color{red}  
 \begin{itemize}
      \item
-         [TODO]
          Manuscript corrected. These expressions are approximations.
   \end{itemize}}
 
@@ -333,8 +332,7 @@ Pg. 7: In line 28, note that (cid:126)u is not the current conﬁguration, but t
 {\color{red}  
 \begin{itemize}
     \item
-        [TODO]
-        Manuscript corrected. 'u' has been removed from the sentence since while the equations are functions of displacement, 'u' is not a configuration. 
+        Manuscript corrected. Sentence was revised to mean that F, evaluated in the current configuration, is a function of the displacement rather than to say that the displacement is the current configuration.
         \end{itemize}}
 
 \item
@@ -365,8 +363,7 @@ volumetric layer?
 {\color{red}  
 \begin{itemize}
     \item
-        [TODO]
-        An conceptual illustration of the block undergoing tensions has been included. Additionally is a close-up illustration and some exposition explaining how displacement boundary conditions are achieved in peridynamics.
+        The manuscript has been corrected. Viewgraphs of the 2000 node and 1000000 node blocks undergoing tension has been included. The images depict colorized meshes in a way that is used in the revised manuscript to help explain what boundary conditions or 'volume constraints' are like in peridynamics. Displacement boundary conditions are typically applied to a volumetric layer, and in the study shown in the manuscript that is they way they were applied.
   \end{itemize}}
 
 \item
@@ -376,8 +373,7 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
     \item
-        [TODO]
-        Bandwidth was referring to connections between nodes rather than components and degrees of freedom. It would be more clear to say, a bandwidth of 21 for the 3D case. The manuscript has been corrected with this change.
+        The manuscript has been corrected. Bandwidth was referring to connections between nodes rather than components and degrees of freedom. It is more clear to say a bandwidth of 21 for the 3D case. The formula is number of nodes in a neighborhood times degrees of freedom.
   \end{itemize}}
 
     \item
@@ -391,8 +387,7 @@ Does this hold in higher dimensions? Please clarify.
 \begin{itemize}
     \item
         [TODO]
-        Correction made in the manuscript. The test parameters not already reported throughout the manuscript include: material density
-        and loading rates and information relevant to loading rates.
+        Correction made in the manuscript. 
   \end{itemize}}
 
   \item
@@ -411,21 +406,8 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-         No correction made. Justification follows.
-         %
-         Mesh sizes from smallest to largest were 1000, 2000, 4000, 8000,
-         16000, 32000, 1000000 peridynamic nodes, but this is not relevant to
-         the study, since the experiments were about the fullness of the
-         tangent stiffness matrix and mesh size only places bounds on the
-         mimimum and maximum fullness of the tangent stiffness matrix but does
-         not determine it.  Furthermore, other users should not take their
-         meshes of similar node count and make comparisons to the work based on that, since
-         differing connectivity between nodes could make a 2000 node mesh more
-         computationally challenging than a 1000000 node mesh.
-         %
-         The most extreme, but illustrative example of this is a stretched rope shaped mesh versus a cannonball shaped mesh of nearly overlapping nodes.
-         %
-         Instead, a better measure of problem size for this study was number of nonzero jacobian matrix elements, which was reported for the experiments in the work. Additionally, in \emph{Peridigm}, only the nonzero elements are stored in memory at all. This measure is a function of model dimensions, node spacing and horizon and not usefully related to number of nodes unless the meshes are at maximum or minimum connectivity.
+         Manuscript is corrected. Mesh sizes from smallest to largest were 1000, 2000, 3000, 4000, 6000, 8000, 12000,
+         16000, 32000, 1000000 peridynamic nodes.
       \end{itemize}}
 
   \item
@@ -449,9 +431,7 @@ Does this hold in higher dimensions? Please clarify.
 \begin{itemize}
      \item
 [TODO]
-    The manuscript has been corrected. 
-    %
-    The Frobenius norm of the TS matrices for each of the experiments was around 150 thousand, while the discrepancy between the matrices produced by the different methods, using the same metric, was on the order of 10 E-7. The relative error is on the order of 10 E-14. 
+    The manuscript has been corrected. These measurements are included in the output from the experiments.
     \end{itemize}}
 
   \item
@@ -508,7 +488,7 @@ Does this hold in higher dimensions? Please clarify.
         The manuscript has been corrected. The labels on the vertical axis in Fig. 5 were incorrect. 
   \end{itemize}}
 
-
+\item
 Pg. 20: In lines 32-35, clarify what “byte-copyable” mean and why is that important.
 
 {\color{red}  
