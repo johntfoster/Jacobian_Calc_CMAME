@@ -982,10 +982,8 @@ numbering scheme). Pictured in Fig.~\ref{fig:SCMesh} is a viewgraph for one of
 the peridynamic meshes used in this study. The coloration in the image
 indicates node numbering, where a smooth color transition means that the nodes
 have close ID numbers. The abrupt color changes in the center and at the ends
-of the body show that numbering is not contiguous and is assigned with respect to four regions,
-called \emph{material blocks} in \emph{Peridigm}. The purpose of designating
-these material blocks, for this study, is to register the blocks on the ends of
-the mesh as volumetric regions over which to apply displacement boundary
+of the body show that numbering is not contiguous and is assigned with respect to four regioins. The purpose of designating
+these regions, for this study, was to apply displacement boundary
 conditions called \emph{volume constraints} in peridynamics. 
 
 \begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth]{./figs/mesh2000.png}
@@ -1006,21 +1004,21 @@ the results found in this paper.
   \scriptsize
   \centering
         \caption{Test Parameters} \label{tab:TestParams}   
-       \begin{tabular}{c c c c c c c}
+       \begin{tabular}{c c c c c c}
          \toprule
-         Peri. nodes & Nozero TS elems. & Nonzero Fraction & Horizon & Load rate & # Load steps & Abs. tolerance \\ 
-                     & $\times 10^6$    &                  &\si{\meter}& \si{\centimeter\per\second} &   &     \\
+         Peri. nodes & Nozero TS elems. & Horizon & Load rate & # Load steps & Abs. tolerance \\ 
+                     & $\times 10^6$    & \si{\meter}& \si{\centimeter\per\second} &   &     \\
         \midrule
-        1000 & $\num{1.99}$             &                   & \num{.3}   & 2.0 & 2 & \num{10^-8}\\
-        2000 & $\num{4.25}$             &                   &            &     &   &            \\
-        3000 & $\num{7.79}$             &                   &            &     &   &            \\
-        4000 & $\num{15.4}$             &                   &            &     &   &            \\
-        6000 & $\num{20.0}$             &                   &            &     &   &            \\
-        8000 & $\num{31.4}$             &                   &            &     &   &            \\
-        12000 & $\num{40.1}$            &                   &            &     &   &            \\
-        16000 & $\num{83.9}$            &                   &            &     &   &            \\
-        32000 & $\num{165.0}$           &                   &            &     &   &            \\
-        1000000 & $\num{1670}$          &                   & \num{.03}  & 2.0 & 2 & \num{10^-8}\\
+        1000 & 1.99             & .3   & 2.0 & 2 & 10^-8\\
+        2000 & 4.25             & .24  & 2.0 & 2 & 10^-8\\
+        3000 & 7.79             & .21  & 2.0 & 2 & 10^-8\\
+        4000 & 15.4             & .19  & 2.0 & 2 & 10^-8\\
+        6000 & 20.0             & .16  & 2.0 & 2 & 10^-8\\
+        8000 & 31.4             & .15  & 2.0 & 2 & 10^-8\\
+        12000 & 40.1            & .131 & 2.0 & 2 & 10^-8\\
+        16000 & 83.9            & .12  & 2.0 & 2 & 10^-8\\
+        32000 & 165.0           & .095 & 2.0 & 2 & 10^-8\\
+        1000000 & 1670          & .03  & 2.0 & 2 & 10^-8\\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -1285,7 +1283,8 @@ magnitude more accurate than FD}. This accuracy ranking order was maintained
 for each test in the series. It should be pointed out that compared to the
 $l^2$-norms of any of the TS matrices by themselves, the magnitude of the
 accuracy metric calculated with Eqn.~\ref{eqn:accuracy} for any of the methods
-is relatively small. These values for the $l^2$-norms of the TS matrices appear
+is relatively small. Relative error was computed from these measurements and is reported in
+Table~\ref{tab:RelAcc}. The values for the $l^2$-norms of the TS matrices appear
 in the simulation data which is available in the paper repository. The effect
 of these accuracy differences on convergence rate of the Newton solver was studied and the
 results are reported in section~\ref{sec:PeridigmConvergenceStudy}.  
@@ -1295,7 +1294,9 @@ $h$; however, if $h$ is too small, then the methods can suffer from severe
 effects, including solution divergence, of the round-off error associated with
 subtracting two numbers that are very close to one another.  The value of $h$
 used in this study is the default value used in \emph{Peridigm} which is
-heuristically derived based on computational node spacing.  One of the beauties
+heuristically derived based on computational node spacing using the method explained in \cite[pp. 90]{ref-Adaggio}.  
+\add[Michael]{To summarize, a spacing of $1.E-6$ times grid spacing is used to provide acceptable accuracy but prevent roundoff error, 
+as is not a user determined setting in \emph{Peridigm}.} One of the beauties
 of the CS method is that since dependence on $h$ decreases for small $h$, which
 a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$,
 cannot be too small, therefore it can be set to machine epsilon and the
@@ -1316,7 +1317,34 @@ trends matched those for the single core tests.
 \begin{figure}[tbp] \centering
 \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} \caption{Multicore test
 series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
+%
+It can be seen in Figs.~\ref{fig:serial_accuracy} and ~\ref{fig:multi_accuracy} that there appears to be some fluctuating behavior in the accuracy of the methods. Those figures are depicting absolute error. If relative error is computed from the absolute error measurements by dividing them by the Frobenius norm of the appropriate AD produced TS matrix, it can be seen as in Table~\ref{tab:RelAcc}, that there is little variation in the accuracy of the methods between tests or between serial and parallel test groups. 
 
+\begin{table*}[!ht]    
+  \scriptsize
+  \centering
+        \caption{Relative accuracy results} \label{tab:RelAcc}   
+       \begin{tabular}{c c c c c}
+         \toprule
+         Cores & TS Elements & \multicolumn{3}{c}{Percent error} \\ 
+         & $\times 10^6$ & CD & CS & FD \\
+        \midrule
+        1 & $1.99$  & 1.28x10^-8 & 2.29x10^-15 & 1.46x10^-5\\
+        1 & $4.25$  & 8.86x10^-8 & 2.25x10^-14 & 1.34x10^-5\\
+        1 & $7.79$  & 1.37x10^-8 & 2.27x10^-14 & 1.25x10^-5\\
+        1 & $15.4$  & 4.33x10^-8 & 2.52x10^-14 & 1.16x10^-5\\
+        1 & $20.0$  & 7.97x10^-8 & 2.18x10^-15 & 1.13x10^-5\\
+        1 & $31.4$  & 1.44x10^-8 & 2.29x10^-15 & 1.09x10^-5\\
+        1 & $40.1$  & 1.36x10^-7 & 2.24x10^-15 & 1.05x10^-5\\
+        1 & $83.9$  & 1.30x10^-7 & 2.44x10^-14 & 9.63x10^-6\\
+        1 & $165.0$  &1.30x10^-7 & 2.44x10^-14 & 9.63x10^-6\\
+        32 & $1670$  &6.00x10^-7 & 2.29x10^-14 & 6.93x10^-6\\
+        64 & $1670$  & 6.01x10^-7 & 2.31x10^-14 & 7.02x10^-6\\
+        96 & $1670$  & 6.03x10^-7 & 2.33x10^-14 & 7.10x10^-6\\
+        128 & $1670$  & 5.97x10^-7 & 2.34x10^-14 & 7.19x10^-6\\
+        \bottomrule
+    \end{tabular}
+\end{table*}
 
 \subsection{Efficiency Data}
 Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element, was plotted as a function of the number nonzero TS matrix elements. The single core results are shown in Fig.~\ref{fig:serial_efficiency}.  The ranking order of the methods
@@ -1610,6 +1638,8 @@ This work was funded in part by grants from the United States Air Force Office o
 
 %% References with bibTeX database:
 
+\section{References}
+
 \bibliographystyle{elsarticle-num}
 \bibliography{all}
 
@@ -1633,7 +1663,7 @@ f(x + i h) = \cos(x) \cosh(h) - i \sin(x) \sinh(h),
 %
 Applying equation (\ref{eqn:complexFirstDeriv})
 \[
-\frac{\partial f(x)}{\partial x} = - \frac{\sin(x) \sinh(h)}{h},
+    \frac{\partial f(x)}{\partial x} = - \frac{\sin(x) \sinh(h)}{h} + \mathcal{O}(h^2).
 \]
 Since $h$ is arbitrary we desire it to be as small as possible or
 \[
@@ -1752,8 +1782,8 @@ $\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \
 %$u(a, b, s)\mid_{1, 2, s}$ & $v(a, b, s)\mid_{1, 1, w(a, b, s)\mid_{1, 1, x_0}}$ & $\frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot 1$ \\
 %\end{tabular} \\ \\
 %This explains what the equation and table above mean.
-Because the computer knew the analytical forms of the partial derivatives of each of $u,v,w$ beforehand,
-all it needed to do was:
+Because the computer knew the analytical forms of the partial derivatives of each of $u,v,w$ beforehand, which of course needed to be specified using an AD data structure from a library like Trilinos::Sacado \cite{trilinos} or ADIFOR \cite{bischof1995adifor},
+all it needed to do (for 'backward' AD) was:
 \begin{enumerate}
 \item to evaluate each of $u,v,w$ according to \ref{abcvalues}, in order from $w \rightarrow
 v \rightarrow u$, 

@@ -216,7 +216,7 @@
       A brief definition for the convenience of the reader was added in the
       manuscript. But, algorithmically consistent is a fairly common term in
       plasticity/mechanics. This same meaning is used for 'consistent' refering
-      to 'tangent matrices' in \cite[perez2012consistent, perez2010]. It means
+      to 'tangent matrices' in \cite{perez2012numerical, perez2000numerical}. It means
       consistent with integrating the plasticity model under the Khun-Tucker
       constraints. Integrating the plasticity model means, given a strain
       increment, determining a stress that does not exceed the yield stress,
@@ -386,7 +386,6 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
     \item
-        [TODO]
         Correction made in the manuscript. 
   \end{itemize}}
 
@@ -430,8 +429,7 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-[TODO]
-    The manuscript has been corrected. These measurements are included in the output from the experiments.
+    The manuscript has been corrected. 
     \end{itemize}}
 
   \item
@@ -440,14 +438,12 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-[TODO]
     Correction made in the manuscript, values used are collected and the reference to the material explaining these values was made more clear.
     %
     The probe distances used in Peridigm are automatically determined with a
     heuristic algorithm and are not set by the user. The algorithm for this in
     \emph{Peridigm} is the used for another Sandia software project called
-    \emph{Adagio}. The probe distances are 1.E-6 times the node spacing [ADAGIO
-    REF] for FD and CD which is indended to prevent the onset of roundoff error.
+    \emph{Adagio} \cite{ref-Adaggio}. The probe distances are 1.E-6 times the node spacing for FD and CD which is indended to prevent the onset of roundoff error.
     1.E-100 was hard-coded for CS into the CS method implementation, while AD had no probe distance.
   \end{itemize}}
 
@@ -461,8 +457,7 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-[TODO]
-	The fluctuation seems to be a function of the amount of nonzero TS matrix elements relative to total TS matrix elements. Information supporting this has been added to the manuscript. This may be related to the fact that neighborhood radius in terms of number of Peridynamic nodes was kept constant and may indicate that connectivity in the mesh oscillates when the mesh is refined incrementally. 
+     	Manuscript has been updatded. When accuracy is looked at in terms of relative error, where relative error is the accuracy metric previously plotted in the figures divided by the Frobenius norm of the AD TS matrix alone times 100, there is actually little fluctuation, between tests or between serial and parallel tests. The order of magnitude for this measure remains steady for all the methods.
   \end{itemize}}
 
   \item
@@ -473,8 +468,7 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-[TODO]
-    The manuscript has been corrected to clarify that in Peridynamics, there is only force density rather than internal force. The units of K are actually force / length4, and this is corrected in the manuscript.
+    The manuscript has been corrected. The units of K are actually force / length4, however there is no intuitive relationship between the norm of the TS matrix and some physical characteristic of the system being modeled.
   \end{itemize}}
 
     \item
@@ -484,7 +478,6 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-[TODO]
         The manuscript has been corrected. The labels on the vertical axis in Fig. 5 were incorrect. 
   \end{itemize}}
 
@@ -519,7 +512,6 @@ Pg. 20: In lines 32-35, clarify what “byte-copyable” mean and why is that im
 {\color{red}  
 \begin{itemize}
      \item
-         [TODO]
          Manuscript corrected.
   \end{itemize}}
 
@@ -532,7 +524,6 @@ Pg. 20: In lines 32-35, clarify what “byte-copyable” mean and why is that im
 {\color{red}  
 \begin{itemize}
      \item
-         [TODO]
          Manuscript corrected.
   \end{itemize}}
 
@@ -542,7 +533,23 @@ Pg. 24: Why do we need S and X in Appendix B?
 {\color{red}  
 \begin{itemize}
      \item
-     All the members of set X need to be members of set S otherwise the approximations don't work. X are numbers from the 'real' world and S are numbers from the computer world. For example: "http://en.wikipedia.org/wiki/IEEE_floating_point" shows that computers and languages following IEEE standards don't represent very large numbers with very fine precision at the same time due to memory constraints, and there are upper and lower bounds on the magnitudes of nonzero numbers that can be represented. Obviously, approximation error is expected, but the fact that a user doesn't actually get 'all' the numbers is something that is not obvious.
+
+     All the members of set X need to be members of set S otherwise the
+     approximations don't work. X are numbers from the 'real' world and S are
+     numbers from the computer world. For example:
+
+     \begin{verbatim}
+     "http://en.wikipedia.org/wiki/IEEE_floating_point" 
+     \end{verbatim}
+     
+     shows that computers
+     and languages following IEEE standards don't represent very large numbers
+     with very fine precision at the same time due to memory constraints, and
+     there are upper and lower bounds on the magnitudes of nonzero numbers that
+     can be represented. Obviously, approximation error is expected, but the
+     fact that a user doesn't actually get 'all' the numbers is something that
+     is not obvious.
+
   \end{itemize}}
 
 
@@ -555,7 +562,22 @@ Pg. 24: Why do we need S and X in Appendix B?
 {\color{red}  
 \begin{itemize}
      \item
-      A computer can only provide finite precision approximations, of approxmations, of functions. Approximations of derivatives of functions are also approximations, therefor the label is correct in both cases. For example: "https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/x86_64/fpu/e_expl.S" is the implementation of the $exp(x)$ function on 80-bit extended precision floating point numbers in the popular GCC compiler. This implementation is the most accurate that GCC provides for the $e$ function on real numbers, but ultimately is still a discrete numerical algorithm.
+
+      Strictly speaking, a computer can only provide finite precision
+      approximations, of approxmations, of functions. Approximations of
+      derivatives of functions are also approximations, therefor the label is
+      correct in both cases. For example:
+
+      \begin{verbatim}
+      "https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/x86_64/fpu/e_expl.S"
+      \end{verbatim}
+
+      is the implementation of the $exp(x)$ function on 80-bit extended
+      precision floating point numbers in the popular GCC compiler. This
+      implementation is the most accurate that GCC provides for the $e$
+      function on real numbers, but ultimately is still a discrete numerical
+      algorithm.
+
   \end{itemize}}
 
   \item
@@ -565,10 +587,12 @@ example, do we need to store w, v , and u?
 {\color{red}  
 \begin{itemize}
      \item
-         [TODO]
-      Clarification is added in the manuscript. For an actual AD system like Trilinos::Sacado or ADIFOR, w, v and u (stand-ins for simple or elementary math operations) need to be written in code differently from the built-in implementation to replace all math operations as part of a complete AD datatype. What doesn't absolutely have to be stored are the evaluations of w, v and u. Not storing the evaluations happens in 'forward' AD, storing the evaluations happens in 'backward' or 'reverse accumulation' AD.  
+      Clarification is added in the manuscript.  
   \end{itemize}}
 
 
   \end{enumerate}
+
+\bibliographystyle{elsarticle-num}
+\bibliography{all}
 \end{document}
