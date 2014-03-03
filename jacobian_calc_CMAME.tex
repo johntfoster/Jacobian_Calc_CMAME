@@ -164,7 +164,8 @@ defined by comparison of the \note[Michael]{re: I.1}\remove[Michael]{new}
 method to popular finite differencing techniques used for computing
 tangent-stiffness matrices and with the exact to machine precision
 algorithmically consistent derivatives computed with \emph{automatic
-differentiation}. For the reader's convenience, from plasticity theory, the algorithmic consistency of
+differentiation}. \note[Michael]{re: II.1}For the reader's convenience, 
+from plasticity theory, the algorithmic consistency of
 the tangent-stiffness matrix refers to consistency with the integration of a
 plasticity model under the Khun-Tucker constraints or similar where the tangent-stiffness matrix is
 computed using the elastoplastic modulii that are determined from the integration \cite{simo1998}. 
@@ -218,8 +219,8 @@ validation and verification example problems which show how to use the library.
 The purpose of the serial C++ library is to demonstrate in a less complex
 manner than in the \emph{Peridigm} code how one would use
 automatic-differentiation or complex-step to better encourage their use and
-discussion. This open source resource is available at the corresponding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
- or directly at https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive.
+discussion. \note[Michael]{re: II.5}This open source resource is available at the corresponding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
+or directly at https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive.
 
 \subsection{Differentiation Techniques}
 
@@ -259,7 +260,8 @@ only disadvantage of this technique is the necessity of requiring the functions
 to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a
 simple example that illustrates the use of the complex-step method for the
 derivative calculation of a function. 
-
+%
+\note[Michael]{re: II.6}
 For the reader's convenience the forward difference equivalent to~\ref{eqn:complexFirstDeriv} is
 %
 \begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x)}{h} +\mathcal{O}\left ( h \right). \label{eqn:forwardFirstDeriv} \end{equation},
@@ -268,9 +270,9 @@ while the central difference equivalent to~\ref{eqn:complexFirstDeriv} is,
 %
 \begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x - h)}{2h} +\mathcal{O}\left ( h^2 \right). \label{eqn:centeredFirstDeriv} \end{equation} \cite[Chap. 4.1.3]{chapra2010}.
 %
-    Note that the order of the truncation error in~\ref{eqn:forwardFirstDeriv} indicates that for a given $h$ forward difference is less accurate an approximation than central difference or complex step.
+Note that the order of the truncation error in~\ref{eqn:forwardFirstDeriv} indicates that for a given $h$ forward difference is less accurate an approximation than central difference or complex step.
 
-\note[Michael]{re: I.4}
+\note[Michael]{re: I.4, John all the rest of this section is new}
 It is appropriate to detail the prior work discussing aspects of the
 complex-step method in order to indicate what is new in the instant work.  The
 CS method was introduced in a work by J. N. Lyness and C. B. Moler
@@ -874,8 +876,6 @@ where,
 
 \subsubsection{The linear peridynamic solid.}
 
-
-
 \note[Michael]{re: I.2} \add[Michael]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simulation.}
 The tangent stiffness matrix is the Frechet derivative of the residual wrt the
@@ -993,7 +993,8 @@ conditions called \emph{volume constraints} in peridynamics.
 A series of nine single compute core (i.e. serial) test problems were run with
 the discretization size being refined with every test in the series. The aim of
 increasing the refinement was to examine differences between the methods in
-terms of accuracy and speed. This series would comprise the single core runs.
+terms of accuracy and speed. This series would comprise the single core runs. 
+\note[Michael]{re: II.16, specific test parameters were asked for}
 The specific parameters of these tests can be found in \emph{Peridigm} input
 {\tt xml} files included in the paper repository, however the parameters
 are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow
@@ -1009,16 +1010,19 @@ the results found in this paper.
          Peri. nodes & Nozero TS elems. & Horizon & Load rate & # Load steps & Abs. tolerance \\ 
                      & $\times 10^6$    & \si{\meter}& \si{\centimeter\per\second} &   &     \\
         \midrule
-        1000 & 1.99             & .3   & 2.0 & 2 & 10^-8\\
-        2000 & 4.25             & .24  & 2.0 & 2 & 10^-8\\
-        3000 & 7.79             & .21  & 2.0 & 2 & 10^-8\\
-        4000 & 15.4             & .19  & 2.0 & 2 & 10^-8\\
-        6000 & 20.0             & .16  & 2.0 & 2 & 10^-8\\
-        8000 & 31.4             & .15  & 2.0 & 2 & 10^-8\\
-        12000 & 40.1            & .131 & 2.0 & 2 & 10^-8\\
-        16000 & 83.9            & .12  & 2.0 & 2 & 10^-8\\
-        32000 & 165.0           & .095 & 2.0 & 2 & 10^-8\\
-        1000000 & 1670          & .03  & 2.0 & 2 & 10^-8\\
+        1000 & $1.99$             & $.3$   & $2.0$ & $2$ & $\num{10E-8}$ \\
+        2000 & $4.25$             & $.24$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        3000 & $7.79$             & $.21$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        4000 & $15.4$             & $.19$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        6000 & $20.0$             & $.16$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        8000 & $31.4$             & $.15$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        12000 & $40.1$            & $.131$ & $2.0$ & $2$ & $\num{10E-8}$ \\
+        16000 & $83.9$            & $.12$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        32000 & $165.0$           & $.095$ & $2.0$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -1197,8 +1201,8 @@ Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-
          & $\times 10^6$ & CS & CD & FD & AD & CS & CD & FD \\
         \midrule
         1 & $\num{1.99}$  & 3.5 & 2.7 & 1.7 & 1.6 & $\num{1.92E-10}$ & $\num{1.21E-4}$ & .137 \\
-        1 & $\num{4.25}$  & 6.2& 4.9& 3.2& 2.9 & $\num{2.28E-10}$& $\num{9.94E-4}$ & .148 \\
-        1 & $\num{7.79}$  & 11.2& 8.9& 5.7& 5.2 & $\num{2.38E-10}$& $\num{1.59E-4}$ & .145\\
+        1 & $\num{4.25}$  & 6.2& 4.9& 3.2& 2.9 & $\num{2.28E-10}$ & $\num{9.94E-4}$ & .148 \\
+        1 & $\num{7.79}$  & 11.2& 8.9& 5.7& 5.2 & $\num{2.38E-10}$ & $\num{1.59E-4}$ & .145\\
         1 & $\num{15.4}$  & 26.7& 21.0& 13.4& 12.2 & $\num{2.33E-10}$ & $\num{4.61E-4}$ & .12 \\
         1 & $\num{20.0}$  & 28.1& 22.2& 14.4& 13.1 & $\num{2.76E-10}$ & $\num{1.05E-3}$ & .145 \\
         1 & $\num{31.4}$  & 47.6& 37.7& 24.2& 21.9 & $\num{2.64E-10}$ & $\num{1.65E-3}$ & .133 \\
@@ -1224,11 +1228,11 @@ power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes we
 for the scalability of each of the methods by themselves in \emph{Peridigm}. If we
 assumed every individual operation, generally speaking, took the same amount of
 time on average such that compute time were a measure of number of operations,
-this suggests that the methods as in \emph{Peridigm} have the same order
-algorithm complexity when considering computing a TS matrix alone, that is
-computation time is $\mathcal{O}(10^{(10^{-6} \times \log_{10}n)})$. This would
-suggest, to the algorithm design way of thinking, that the methods are equally
-well suited to the task of computing a TS matrix, if it were further assumed
+this suggests that the methods as in \emph{Peridigm} have the same complexity class
+when considering computing a TS matrix alone, that is
+computation time is $\mathcal{O}(10^{(10^{-6} \times \log_{10}n)})$. The definition of 
+complexity class used here is the informal one given in \cite[pp. 1059]{cormen2009introduction}. This would
+suggest that the methods are equally well suited to the task of computing a TS matrix, if it were further assumed
 that the TS matrices produced by each method were identical. This is not the case
 as seen in the following subsection.
 %
@@ -1318,6 +1322,7 @@ trends matched those for the single core tests.
 \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} \caption{Multicore test
 series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
 %
+\note[Michael]{re: II.22, relative accuracy figures were asked for, these were taken from the archive data}
 It can be seen in Figs.~\ref{fig:serial_accuracy} and ~\ref{fig:multi_accuracy} that there appears to be some fluctuating behavior in the accuracy of the methods. Those figures are depicting absolute error. If relative error is computed from the absolute error measurements by dividing them by the Frobenius norm of the appropriate AD produced TS matrix, it can be seen as in Table~\ref{tab:RelAcc}, that there is little variation in the accuracy of the methods between tests or between serial and parallel test groups. 
 
 \begin{table*}[!ht]    
@@ -1329,19 +1334,19 @@ It can be seen in Figs.~\ref{fig:serial_accuracy} and ~\ref{fig:multi_accuracy} 
          Cores & TS Elements & \multicolumn{3}{c}{Percent error} \\ 
          & $\times 10^6$ & CD & CS & FD \\
         \midrule
-        1 & $1.99$  & 1.28x10^-8 & 2.29x10^-15 & 1.46x10^-5\\
-        1 & $4.25$  & 8.86x10^-8 & 2.25x10^-14 & 1.34x10^-5\\
-        1 & $7.79$  & 1.37x10^-8 & 2.27x10^-14 & 1.25x10^-5\\
-        1 & $15.4$  & 4.33x10^-8 & 2.52x10^-14 & 1.16x10^-5\\
-        1 & $20.0$  & 7.97x10^-8 & 2.18x10^-15 & 1.13x10^-5\\
-        1 & $31.4$  & 1.44x10^-8 & 2.29x10^-15 & 1.09x10^-5\\
-        1 & $40.1$  & 1.36x10^-7 & 2.24x10^-15 & 1.05x10^-5\\
-        1 & $83.9$  & 1.30x10^-7 & 2.44x10^-14 & 9.63x10^-6\\
-        1 & $165.0$  &1.30x10^-7 & 2.44x10^-14 & 9.63x10^-6\\
-        32 & $1670$  &6.00x10^-7 & 2.29x10^-14 & 6.93x10^-6\\
-        64 & $1670$  & 6.01x10^-7 & 2.31x10^-14 & 7.02x10^-6\\
-        96 & $1670$  & 6.03x10^-7 & 2.33x10^-14 & 7.10x10^-6\\
-        128 & $1670$  & 5.97x10^-7 & 2.34x10^-14 & 7.19x10^-6\\
+        1 & $\num{1.99}$ &  $\num{1.28E-8}$ &  $\num{2.29E-15}$ &  $\num{1.46E-5}$ \\
+        1 & $\num{4.25}$ &  $\num{8.86E-8}$ &  $\num{2.25E-14}$ &  $\num{1.34E-5}$ \\
+        1 & $\num{7.79}$ &  $\num{1.37E-8}$ &  $\num{2.27E-14}$ &  $\num{1.25E-5}$ \\
+        1 & $\num{15.4}$ &  $\num{4.33E-8}$ &  $\num{2.52E-14}$ &  $\num{1.16E-5}$ \\
+        1 & $\num{20.0}$ &  $\num{7.97E-8}$ &  $\num{2.18E-15}$ &  $\num{1.13E-5}$ \\
+        1 & $\num{31.4}$ &  $\num{1.44E-8}$ &  $\num{2.29E-15}$ &  $\num{1.09E-5}$ \\
+        1 & $\num{40.1}$ &  $\num{1.36E-7}$ &  $\num{2.24E-15}$ &  $\num{1.05E-5}$ \\
+        1 & $\num{83.9}$ &  $\num{1.30E-7}$ &  $\num{2.44E-14}$ &  $\num{9.63E-6}$ \\
+        1 & $\num{165.0}$ &  $\num{1.30E-7}$ &  $\num{2.44E-14}$ &  $\num{9.63E-6}$ \\
+        32 & $\num{1670}$ &  $\num{6.00E-7}$ &  $\num{2.29E-14}$ &  $\num{6.93E-6}$ \\
+        64 & $\num{1670}$ &  $\num{6.01E-7}$ &  $\num{2.31E-14}$ &  $\num{7.02E-6}$ \\
+        96 & $\num{1670}$ &  $\num{6.03E-7}$ &  $\num{2.33E-14}$ &  $\num{7.10E-6}$ \\
+        128 & $\num{1670}$ &  $\num{5.97E-7}$ &  $\num{2.34E-14}$ &  $\num{7.19E-6}$ \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -1425,6 +1430,8 @@ properties or loading conditions, it may have a greater impact on simulations in
 force densities such as for small displacements or very lax materials. In this case it could be recommended
 that forward-difference be avoided. 
 
+\note[Michael]{re: I.5, this and other material was added in from the thesis to discuss accuracy}
+\note[Michael]{re: I.5, the entire conclusion section was replaced with the thesis version}
 \section{Conclusions}
 \label{sec:Conc}
 %
@@ -1598,12 +1605,12 @@ while AD requires a complicated serialization and deserialization in order to
 function as byte-copyable. This is fine for copying in between MPI processes,
 but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used. A working definition of byte-copyable
+with the accelerator or GPU being used. \add[Michael]{A working definition of byte-copyable
 is that the collection of data to transfer is made of identically sized pieces.
 Byte-copyability is significant for example because it is a requirement for the
 basic offload mode provided for Intel MIC accelerator boards which are
 installed in \emph{Stampede}, where the alternative mode requires "more
-extensive" effort \cite{intel_byte_copyable}. What this means is that if
+extensive" effort} \cite{intel_byte_copyable}. What this means is that if
 \emph{Peridigm} or any simulation software were to be reformulated to take
 advantage of accelerators or GPUs, the flexibility of complex-step owed to its
 simple implementation may make it more viable for that application given its
