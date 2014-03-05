@@ -509,7 +509,7 @@ with the algorithmic constraint equations used when computing the internal
 forces that arise due to deformations.  An example of these constraint
 equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in
 integration of a flow rule for plasticity modeling.  If the continuum
-tangent-moduli are used in place of the \emph{consistent} or \emph{algorithmic
+tangent-modulii are used in place of the \emph{consistent} or \emph{algorithmic
 tangent moduli} in the solution of a non-linear solid mechanics problem,
 convergence may still be achieved, but not in the quadratic manner that makes
 Newton's method attractive for this class of problems.  In the setting of
@@ -897,7 +897,7 @@ at a time and so allowing the derivative of the force density state wrt the
 deformation state for all nodes to be computed. 
 }
 
-\subsubsection{Implementing the complex-step method in Peridigm} 
+\subsubsection{Implementing the complex-step method in \emph{Peridigm}} 
 \label{subsubsec:Impl}
 %
 The CS method was implemented in \emph{Peridigm} in a manner that follows
@@ -970,7 +970,7 @@ computational process; this definition is characterized in further detail in
 Section~\ref{JGAM}. Each test problem simulated a $\SI{4}{\meter}$ by
 $\SI{0.5}{\meter}$ by $\SI{0.5}{\meter}$ meter block of a material undergoing
 tension along the axis parallel to the long dimension of the block. The test
-problems were set up in \emph{Peridigm} as quasistatic equilibrium problems,
+problems were set up in \emph{Peridigm} as quasi-static equilibrium problems,
 where the displacement boundary conditions used to apply tension were applied
 gradually in ``load steps'', and an equilibrium solution for each load step was
 achieved before applying the next load step. Applying the load
@@ -987,7 +987,7 @@ numbering scheme). Pictured in Fig.~\ref{fig:SCMesh} is a viewgraph for one of
 the peridynamic meshes used in this study. The coloration in the image
 indicates node numbering, where a smooth color transition means that the nodes
 have close ID numbers. The abrupt color changes in the center and at the ends
-of the body show that numbering is not contiguous and is assigned with respect to four regioins. The purpose of designating
+of the body show that numbering is not contiguous and is assigned with respect to four regions. The purpose of designating
 these regions, for this study, was to apply displacement boundary
 conditions called \emph{volume constraints} in peridynamics. 
 
@@ -1194,7 +1194,7 @@ corresponding author's website.
 \section{Results and discussion}
 \label{sec:Res}
 %
-Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) matrix elements, load step average calculation time and load step average accuracy. The accuracy measure is given by Eqn.~(\ref{eqn:accuracy}) and the choice of elastic moduli mentioned in Section~\ref{tcs}.
+Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) matrix elements, load step average calculation time and load step average accuracy. The accuracy measure is given by Eqn.~(\ref{eqn:accuracy}) and the choice of elastic modulii mentioned in Section~\ref{tcs}.
 %
 \begin{table*}[!ht]    
   \scriptsize
@@ -1537,7 +1537,7 @@ these numerical methods evaluate the same linearized constitutive law and
 governing equation as for the exact Newton's method which in the case of a
 plastic simulation are involved in iteratively determining algorithmic tangent moduli. 
 In fact, a secant equation based method is appropriate for Newton's method with algorithmic
-tangent moduli since the Jacobian ought only depend on known converged
+tangent modulii since the Jacobian ought only depend on known converged
 values such that the Newton iterate could not artificially drive the plasticity
 of the model \cite[Chap. 6]{belytschko1999nonlinear}. It should be noted that
 constraints or a line search algorithm to minimize the residual are necessary
