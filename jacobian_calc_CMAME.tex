@@ -378,14 +378,14 @@ system, while in the prior work the derivatives obtained from the CS method
 are the object of interest.
 
 A work by A. H. Al-Mohy and N. J. Higham investigates the use of complex step
-in computing Frechet derivatives of matrix to matrix functions
+in computing Fr\'{e}chet derivatives of matrix to matrix functions
 \cite{al2010complex}. To compute the Jacobian of the residual in the
 peridynamics simulation as discussed in the instant work is analogous is
-computing a Frechet derivative. Where the application of the CS derivatives in
+computing a Fr\'{e}chet derivative. Where the application of the CS derivatives in
 the prior work is limited to a particular class of abstract functions to
 determine the CS method's suitability for use in condition number estimation, the
 instant work applies CS to solving a solid mechanics problem. The instant work is not
-about computing Frechet derivatives with CS but moreover using them in a
+about computing Fr\'{e}chet derivatives with CS but moreover using them in a
 numerical method to solve a set of equations describing a physical system.
 
 A work by W. Jin, B. H. Dennis, and B. P. Wang discusses using CS to compute
@@ -664,12 +664,12 @@ in \cite{rezaiee2010dynamic}. They include a force function, Eqn.
 
 \begin{equation} 
     \label{eqn:TrussForce}
-    f(D) = .5AE(cos^{2}\phi)(\frac{D}{L_{0}})^{2}[\frac{D}{L_{0}}cos^{2}\phi - 3sin\phi] + k_{s}D + (AE\frac{D}{L_{0}})sin^{2}\phi,
+    f(D) = .5AE(\cos^{2}\phi)(\frac{D}{L_{0}})^{2}[\frac{D}{L_{0}}\cos^{2}\phi - 3\sin\phi] + k_{s}D + (AE\frac{D}{L_{0}})\sin^{2}\phi,
 \end{equation} 
 
 \begin{equation} 
     \label{eqn:TrussStiffness}
-    S_{T}(D) = 1.5AE(cos^{2}\phi)[\frac{D}{L_{0}}cos^{2}\phi - 2sin\phi](\frac{D}{L_{0}^{2}}) + k_{s} + \frac{AEsin^{2}\phi}{L_{0}}.
+    S_{T}(D) = 1.5AE(\cos^{2}\phi)[\frac{D}{L_{0}}\cos^{2}\phi - 2sin\phi](\frac{D}{L_{0}^{2}}) + k_{s} + \frac{AE\sin^{2}\phi}{L_{0}}.
 \end{equation}
 
 Where $\phi$ is a constant, beam angle, $AE$ is rigidity, $D$ is displacement,
@@ -883,11 +883,11 @@ where,
 
 \note[Michael]{re: I.2} \add[Michael]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simulation}
-The tangent-stiffness matrix is the Frechet derivative of the residual wrt the
+The tangent-stiffness matrix is the Fr\'{e}chet derivative of the residual wrt the
 deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
 static peridynamic momentum equation. The internal force
 density is computed in the peridynamic momentum equation by computing the
-volume integral over a horizon of the Frechet derivative of the 
+volume integral over a horizon of the Fr\'{e}chet derivative of the 
 strain energy density state wrt to the deformed configuration inner product with the deformation state, per node,
 for each of the three directions in the original reference frame.
 
@@ -1673,7 +1673,7 @@ f (x + i h) = \cos(x + i h),
 or through trigonometric identities equivalently
 %
 \[
-f(x + i h) = \cos(x) \cosh(h) - i \sin(x) \sinh(h),
+f(x + i h) = \cos(x) \cosh(h) - i \sin(x) \sinh(h).
 \]
 %
 Applying equation (\ref{eqn:complexFirstDeriv})
@@ -1684,22 +1684,22 @@ Since $h$ is arbitrary we desire it to be as small as possible or
 \[
 \frac{\partial f(x)}{\partial x} = \lim_{h \to 0} - \frac{\sin(x) \sinh(h)}{h},
 \]
-using L'H\^opital's rule
+using l'H\^opital's rule
 \[
-\frac{\partial f(x)}{\partial x} = \lim_{h \to 0} - \frac{\sin(x) \cosh(h)}{1},
+\frac{\partial f(x)}{\partial x} = \lim_{h \to 0} - \frac{\sin(x) \cosh(h)}{1}.
 \]
-of course, as $h \to 0$ then $\cosh(h) \to 1$ thereby recovering the exact derivative
+As $h \to 0$ then $\cosh(h) \to 1$ thereby recovering the exact derivative
 \[
 \frac{\partial f(x)}{\partial x} =-\sin(x).
 \]
 
-\section{AD Example}
+\section{Automatic differentiation example}
 \label{sec:appendixB}
 
 \begin{enumerate}
 %Set up example problem. The example is meant to walk the reader through the forward AD algorithm
 %while encouraging them to rely on their understanding of the chain rule
-\item Take an example composition function $f(x) = (sin(cos(x)))^2$\\
+\item Take an example composition function $f(x) = (\sin(\cos(x)))^2$\\
 
 \item Suppose we want to know $\frac{df}{dx} \mid_{x_0}$ where $x_0$ is a particular value of $x$. \\
 
@@ -1714,7 +1714,7 @@ of course, as $h \to 0$ then $\cosh(h) \to 1$ thereby recovering the exact deriv
 \item $S \in R^1$ 
 \item $X \in S$ 
 \item $g, h, k \in H: S \rightarrow S$ 
-\item $\forall s \in S : g(s) = {s}^2$, $h(s) = sin(s)$, $k(s) = cos(s)$ 
+\item $\forall s \in S : g(s) = {s}^2$, $h(s) = \sin(s)$, $k(s) = \cos(s)$ 
 \item
 \label{composition}
 $\forall x \in X : f(x) = g(h(k(x)))$ \\
@@ -1756,7 +1756,7 @@ $\frac{\partial{w}}{\partial{s}} \mid _{a_n, b_n, s_n} = -a_n \cdot b_n \cdot si
 \item 
 \label{abcvalues}
 %General definitions of functions are specialized by arguments. 
-Given that it is possible to describe $f(x) = (sin(cos(x)))^2$ in terms the computer understands by inputting
+Given that it is possible to describe $f(x) = (\sin(\cos(x)))^2$ in terms the computer understands by inputting
 $f(x)$ such that the computer stores an equivalent statement $f(x) = u(a, b, s) \mid_{arguments}$,
 iff the arguments of $u,v,w$ are chosen such that $u,v,w$ approximate $g,h,k$ as follows:\\
 \begin{tabular}{l l l l | c}
@@ -1772,12 +1772,12 @@ iff the arguments of $u,v,w$ are chosen such that $u,v,w$ approximate $g,h,k$ as
 %AD is equivalent to the chain rule, when the computer has definitions for functions and partials
 %that can be adapted to match the composition function.
 It follows from \ref{composition} that we can evaluate $\frac{d}{d x}f(x) \mid_{x_0}$ with the chain rule: \\ \\
-$\frac{d}{d x}f(x) = \frac{d}{d x} \cdot g(h(k(x))) \mid_{x_0}$ \\
+$\frac{d}{d x}f(x) = \frac{d}{d x} g(h(k(x))) \mid_{x_0}$ \\
 $\frac{d}{d x}f(x) =  \frac{d{g}}{d{h}} \cdot \frac{d{h}}{d{k}}
 \cdot \frac{d{k}}{d{x}}\mid_{x_0}$ \\ \\
 From the rest of \ref{given} it follows that we can approximate  $\frac{d}{d x}f(x) \mid_{x_0}$ by
 specializing the computer's general forms of $u, v, w$ 
-according to ~\ref{abcvalues}, with parameters $a, b$ chosen for each function and held as constant, and
+according to~\ref{abcvalues}, with parameters $a, b$ chosen for each function as in~\ref{abcvalues} and held constant, and
 evaluating, such that the total derivative of our original function w.r.t $x$ where $x = x_0$ is approximated
 by the partial derivative of our equivalent statement, $f(x) = u(a, b, s) \mid_{arguments}$,  w.r.t $s$ 
 where $s = x_0$. \\
@@ -1787,7 +1787,7 @@ where $s = x_0$. \\
 %This shows how information flows through the nested functions in one expression, like a table of contents
 For completeness we write out the computer's steps to evaluate \ref{differentiation} under the conditions of
 \ref{abcvalues} with a particular value of $s = x_0$, in equation format: \\ \\
-$\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot \frac{ds}{dx}$\\ \\
+$\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \mid _{1, 2, v \mid _{1, 1, w \mid _{ 1, 1, x_0}}} \cdot \frac{\partial{v}}{\partial{w}} \mid _{1,1, w \mid _{1, 1, x_0}} \cdot \frac{\partial{w}}{\partial{s}} \mid _{1, 1, x_0} \cdot \frac{ds}{dx}.$\\ \\
 %Repeating above in tabular format: \\ \\
 %This shows the same information but is ordered to show progression, like chapters
 %\begin{tabular}{l l l}
