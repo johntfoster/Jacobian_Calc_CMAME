@@ -28,6 +28,7 @@
 \usepackage{booktabs}
 \usepackage{siunitx}
 \usepackage{array}
+\usepackage{hyperref}
 %% The amssymb package provides various useful mathematical symbols
 \usepackage{amssymb}
 
@@ -220,8 +221,7 @@ validation and verification example problems which show how to use the library.
 The purpose of the serial C++ library is to demonstrate in a less complex
 manner than in the \emph{Peridigm} code how one would use
 automatic differentiation or complex-step to better encourage their use and
-discussion. \note[Michael]{re: II.5}This open source resource is available at the corresponding author's website: http://idl.utsa.edu/jtfoster/paper-repositories/
-or directly at https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive.
+discussion. \note[Michael]{re: II.5}This open source resource is available at the corresponding author's website or at \href{https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive}{https://github.com/utsa-idl/Complex\_Step\_Jacobian\_Project\_Archive}.
 
 \subsection{Differentiation techniques}
 
@@ -859,11 +859,11 @@ The general equation is written as it appears in \cite{silling:psa}:
 
 where "$\mathcal{H}_{\boldsymbol{x}}$ is a spherical neighborhood" with a
 radius, centered at the original coordinates of a peridynamic node,
-$\boldsymbol{x}$, and \boldsymbol{\underline{T}} is the "force vector state
+$\boldsymbol{x}$, and $\boldsymbol{\underline{T}}$ is the "force vector state
 field". The force vector state field maps vectors in the original coordinate system 
 measured from the peridynamic node at the center of the neighborhood or 'horizon' to
 neighboring peridynamic nodes that fall within the radius of the horizon. $\boldsymbol{b}$ denotes a body force density. Equation~\ref{eqn:PDMotion} may be simplified based on the assumption that
-\boldsymbol{\underline{T}} is Riemann integrable and that integral is uniformly
+$\boldsymbol{\underline{T}}$ is Riemann integrable and that integral is uniformly
 convergent \cite{silling:psa} as,
 
 \begin{equation} 
