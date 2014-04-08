@@ -35,7 +35,7 @@
 %Package for adding notes/comments/and tracking changes
 \usepackage[inline]{trackchanges}
 \addeditor{JTF}
-\addeditor{Michael}
+\addeditor{MDB}
 %% The amsthm package provides extended theorem environments
 %% \usepackage{amsthm}
 
@@ -105,24 +105,7 @@
 
 \begin{abstract} %% Text of abstract Shown is a retrospective comparative study of tangent-stiffness
 
-In order to maintain the quadratic convergence properties of Newton's method in
-quasi-static nonlinear analysis of solid structures it is crucial to obtain
-accurate, algorithmically consistent tangent-stiffness matrices. A goal of the
-study described in this paper was to establish the suitability of an
-underexplored method for numerical computation of tangent-stiffness operators,
-referred to as ``complex-step'', and compare the \note[Michael]{re: I.1}
-\remove[Michael]{new} method with other techniques for numerical derivative
-calculation: automatic differentiation, forward finite difference, and central
-finite difference. The complex-step method was \note[Michael]{re: I.1, could
-suggest claim of novelty} \remove[Michael]{newly} implemented in a massively
-parallel computational peridynamics code for the purpose of this comparison.
-The methods were compared through profiling of the code for accuracy,
-speed, efficiency, and parallel scalability. The research provides data that
-can serve as practical guide for code developers and analysts faced with
-choosing which method best suits the needs of their application code.
-Additionally, motivated by the reproducible research movement, all of the
-code, examples, and workflow to regenerate the data and figures in this paper
-are provided as open source.
+In order to maintain the quadratic convergence properties of Newton's method in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent tangent-stiffness matrices. A goal of the study described in this paper was to establish the suitability of an underexplored method for numerical computation of tangent-stiffness operators, referred to as ``complex-step'', and compare the \note{Re: I.1} \remove{new} method with other techniques for numerical derivative calculation: automatic differentiation, forward finite difference, and central finite difference. The complex-step method was \note{Re: I.1} \remove{newly} implemented in a massively parallel computational peridynamics code for the purpose of this comparison.  The methods were compared through profiling of the code for accuracy, speed, efficiency, and parallel scalability. The research provides data that can serve as practical guide for code developers and analysts faced with choosing which method best suits the needs of their application code.  Additionally, motivated by the reproducible research movement, all of the code, examples, and workflow to regenerate the data and figures in this paper are provided as open source.
 
 
 \end{abstract}
@@ -148,340 +131,69 @@ Newton's method \sep Newton-Raphson \sep numerical differentiation \sep complex-
 %\subsection{Motivation}
 \label{sec:intro} 
 
-In order to maintain the quadratic convergence properties of the first-order
-Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in
-quasi-static nonlinear analysis of solid structures it is crucial to obtain
-accurate, algorithmically consistent tangent-stiffness matrices. For an
-extremely small class of nonlinear material models, these consistent
-tangent-stiffness operators can be derived analytically; however, most often in
-practice, they are found through numerical approximation of derivatives. 
+In order to maintain the quadratic convergence properties of the first-order Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent\footnote{\note{Re: II.1} In the context of plasticity thoery, the algorithmic consistency of the tangent-stiffness matrix refers to consistency with the integration of a plasticity model under the Khun-Tucker constraints or similar where the tangent-stiffness matrix is computed using the elastoplastic modulii that are determined from the integration \cite{simo1998}.} tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
 
-A goal of this study was to develop and evaluate a \note[Michael]{re: I.1}
-\change[Michael]{new}{relatively underexplored}, accurate, and practical method
-for calculating tangent-stiffness matrices against established methods.  This
-new method is based on a complex number Taylor series expansion and referred to
-as CTSE or the ``complex-step'' method. The practical accuracy of CTSE is
-determined by comparing its measured accuracy\note[Michael]{re:
-I.1}\remove[Michael]{new} relative to the measured accuracy of popular finite
-differencing techniques used for computing tangent-stiffness matrices. For this
-comparison the exact to machine precision derivatives computed with
-\emph{automatic differentiation} serve as the standard. \note[Michael]{re:
-II.1}For the reader's convenience, from plasticity theory, the algorithmic
-consistency of the tangent-stiffness matrix refers to consistency with the
-integration of a plasticity model under the Khun-Tucker constraints or similar
-where the tangent-stiffness matrix is computed using the elastoplastic modulii
-that are determined from the integration \cite{simo1998}. 
+A goal of this study was to develop and evaluate a \note{Re: I.1} \change{new }{relatively unexplored}, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This \note{Re: I.1} \remove{new} method is based on a complex number Taylor series expansion and referred to as CTSE or the ``complex-step'' method. The practical accuracy of CTSE is determined by comparing its measured accuracy relative to the measured accuracy of popular finite differencing techniques used for computing tangent-stiffness matrices. For this comparison the,  exact to machine precision, derivatives computed with \emph{automatic differentiation} serve as the standard.
 
 Comparative data regarding the accuracy and compute cycle timing for the
-complex step, forward difference, central difference, and automatic
-differentiation methods are included to aid developers and analysts in
-computational mechanics code design who are faced with implementing a general
-method for tangent-stiffness matrix calculation.  A comparison of the methods was achieved through instrumentation of a
-massively parallel computational mechanics code. 
+complex step, forward difference, central difference, and automatic differentiation methods are included to aid developers and analysts in computational mechanics code design who are faced with implementing a general
+method for tangent-stiffness matrix calculation.  A comparison of the methods was achieved through instrumentation of a massively-parallel computational mechanics code. 
 
-The scope of the application component of this study was limited to a single
-material model, an elastic peridynamic solid, implemented in the computational
-peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific
-application provided a practical framework for implementing the
-\note[Michael]{re: I.1}\remove[Michael]{new} method and solving engineering
-problems to generate the data needed to compare the methods. In particular,
-\emph{Peridigm} was chosen because it combined several helpful
-characteristics: the utilization of Newton's method and tangent-stiffness
-matrices for solving nonlinear quasi-static problems, prior inclusion of
-forward difference, central difference, and automatic differentiation
-methods needed for comparison to the new complex-step method
-implementation, and being an agile-components code that makes use of
-distributed computing data structures via Trilinos \cite{trilinos} for
-efficient parallelization on large clusters. Agile-components is a software
-development term meaning to structure a software project for continuous
-development to respond to evolving specifications by making much use of
-techniques from object-oriented programming and reusing proven pre-existing
-code to reduce development time and increase reliability. The modularity of
-\emph{Peridigm} allowed the adding of new features, such as those required by the
-study.
+The scope of the application component of this study was limited to a single material model, an elastic peridynamic solid, implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the \note{Re: I.1} \change{new }{complex-step} method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of forward-difference, central-difference, and automatic-differentiation methods needed for comparison to the complex-step method implementation, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters. Agile-components is a software development term meaning to structure a software project for continuous development to respond to evolving specifications by making much use of techniques from object-oriented programming and reusing proven pre-existing code to reduce development time and increase reliability. The modularity of \emph{Peridigm} allowed the adding of new features, such as those required by the study.
 
-The aim of this paper is not only to \note[Michael]{re: I.1}\change[Michael]{introduce the new}{study the} complex-step method \change[Michael]{in
-the context of}{of} evaluating tangent-stiffness matrices, but to serve as a review
-for other differentiation techniques useful for solving non-linear systems with
-Newton's method. After presenting background information on the underlying
-methods to be discussed, presented in this paper are: In subsection~\ref{subsec:TS} a description of
-tangent-stiffness matrices, detailed directions for producing
-tangent-stiffness matrices with each of the methods identified above, and a
-description and justification of the \note[Michael]{re: I.1}\remove[Michael]{new}complex-step method for calculating
-tangent-stiffness matrices, in sub-subsection~\ref{subsubsec:Impl} a description of implementing the complex-step method in
-the \emph{Peridigm} software, in section~\ref{JGAM} a description of the quantities-of-interest
-used to rank the methods, in section~\ref{sec:Res} a presentation and analysis of the results of the
-comparative study, and in section~\ref{sec:Conc} conclusions and thoughts on potential future work.
-Finally, in the interest of replicable research, the reader is referred to the
-corresponding author's website for \emph{Peridigm} C++ source-code and data
-necessary to reproduce the results presented here. Additionally, included on
-the website is an example serial C++ library with classes for solving
-non-linear systems using the techniques discussed here, as well as two
-validation and verification example problems which show how to use the library.
-The purpose of the serial C++ library is to demonstrate in a less complex
-manner than in the \emph{Peridigm} code how one would use
-automatic differentiation or complex-step to better encourage their use and
-discussion. \note[Michael]{re: II.5}This open source resource is available at the corresponding author's website or at \href{https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive}{https://github.com/utsa-idl/Complex\_Step\_Jacobian\_Project\_Archive}.
+The aim of this paper is not only to \note{Re: I.1} \change{introduce the new}{study the} complex-step method in the context of evaluating tangent-stiffness matrices, but to serve as a review for other differentiation techniques useful for solving non-linear systems with Newton's method. After presenting background information on the underlying methods to be discussed, presented in this paper are: In Section~\ref{subsec:TS} a description of tangent-stiffness matrices, detailed directions for producing tangent-stiffness matrices with each of the methods identified above, and a description and justification of the \note{Re: I.1} \remove{new} complex-step method for calculating tangent-stiffness matrices, in Section~\ref{subsubsec:Impl} a description of implementing the complex-step method in the \emph{Peridigm} software, in Section~\ref{JGAM} a description of the quantities-of-interest used to rank the methods, in Section~\ref{sec:Res} a presentation and analysis of the results of the comparative study, and in section~\ref{sec:Conc} conclusions and thoughts on potential future work.  Finally, in the interest of replicable research, the reader is referred to the corresponding author's website for \emph{Peridigm} C++ source-code and data necessary to reproduce the results presented here. Additionally, included on the website is an example serial C++ library with classes for solving non-linear systems using the techniques discussed here, as well as two validation and verification example problems which show how to use the library.  The purpose of the serial C++ library is to demonstrate in a less complex manner than in the \emph{Peridigm} code how one would use automatic-differentiation or complex-step to better encourage their use and discussion. \note{Re: II.5} \add{This open source resource is available at the corresponding author's website or at} \href{https://github.com/utsa-idl/Complex_Step_Jacobian_Project_Archive}{https://github.com/utsa-idl/Complex\_Step\_Jacobian\_Project\_Archive}.
 
 \subsection{Differentiation techniques}
 
-This section contains background information on the differentiation techniques
-underlying the tangent-stiffness matrix calculation methods compared in the
-study. Since the derivation of first-order finite difference techniques from
-Taylor series expansion is considered well known, it is not described here.
-Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
+This section contains background information on the differentiation techniques underlying the tangent-stiffness matrix calculation methods compared in the study. Since the derivation of first-order finite difference techniques from Taylor series expansion is considered well-known, it is not described here.  Instead the reader is referred to \cite[Chap. 4.1.3]{chapra2010}.
 
 \subsubsection{The ``complex-step'' method}  
 \label{sec:CSmethod} 
 
-It is
-possible to approximate derivatives quite accurately with a technique based on
-a complex variable Taylor series expansion of a function.  This method was
-first described by Lyness and Moler
-\cite{lyness1967numerical,lyness1968differentiation} and has more recently been
-rediscovered for use in engineering analysis.  The basic idea is that a model parameter can
-be made complex and expanded in a Taylor series about a small perturbation
-along the imaginary axis by some arbitrary value $h$ as follows
+It is possible to approximate derivatives quite accurately with a technique based on a complex-variable Taylor series expansion of a function.  This method was first described by Lyness and Moler \cite{lyness1967numerical,lyness1968differentiation} and has more recently been rediscovered for use in engineering analysis.  The basic idea is that a model parameter can be made complex and expanded in a Taylor series about a small perturbation along the imaginary axis by some arbitrary value $h$ as follows
 %
-\begin{align} f ( x + i h ) =& f(x) + \frac{\partial f(x)}{\partial x} \frac{i
-h}{1!}  \notag \\ &+ \frac{\partial^2 f(x)}{\partial x^2} \frac{(i h)^2}{2!} +
-\frac{\partial^3 f(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots.
-\label{eqn:complexTaylor} \end{align}
+\begin{align} 
+    f ( x + i h ) =& f(x) + \frac{\partial f(x)}{\partial x} \frac{i h}{1!}  \notag \\ &+ \frac{\partial^2 f(x)}{\partial x^2} \frac{(i h)^2}{2!} + \frac{\partial^3 f(x)}{\partial x^3} \frac{(i h)^3}{3!} + \cdots.
+\label{eqn:complexTaylor} 
+\end{align}
 %
-Taking the imaginary part of both sides of equation (\ref{eqn:complexTaylor})
-and solving for the first derivative and ignoring terms of $\mathcal{O}\left(
-h^2 \right)$ yields an estimate
+Taking the imaginary part of both sides of equation (\ref{eqn:complexTaylor}) and solving for the first derivative and ignoring terms of $\mathcal{O}\left(h^2 \right)$ yields an estimate
 %
-\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{\mbox{Im}
-\left( f (x + i h) \right)}{h} +\mathcal{O}\left( h^2 \right).  \label{eqn:complexFirstDeriv} \end{equation}
+\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{\mbox{Im} \left( f (x + i h) \right)}{h} +\mathcal{O}\left( h^2 \right).  
+\label{eqn:complexFirstDeriv} 
+\end{equation}
 %
-Thus, an estimate of the first derivative of a function can be made by only
-utilizing one functional evaluation of a perturbed model parameter along the
-imaginary axis.  The step-size $h$ is arbitrary and can be made as small as
-practical (even to machine precision without the dangers of roundoff error as
-in finite differences) to yield an accurate estimate of this derivative.  The
-only disadvantage of this technique is the necessity of requiring the functions
-to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a
-simple example that illustrates the use of the complex-step method for the
-derivative calculation of a function. 
+Thus, an estimate of the first derivative of a function can be made by only utilizing one functional evaluation of a perturbed model parameter along the imaginary axis.  The step-size $h$ is arbitrary and can be made as small as practical (even to machine precision without the dangers of roundoff error as in finite differences) to yield an accurate estimate of this derivative.  The only disadvantage of this technique is the necessity of requiring the functions to accept complex numbers as arguments. Appendix~\ref{sec:appendixA} includes a simple example that illustrates the use of the complex-step method for the derivative calculation of a function. 
 %
-\note[Michael]{re: II.6}
-For the reader's convenience the forward difference equivalent to~\ref{eqn:complexFirstDeriv} is
+\note{Re: II.6} \add{For completeness, the forward- and central-difference formulas corresponding to equation}~(\ref{eqn:complexFirstDeriv}) \add{are} \cite[Chap. 4.1.3]{chapra2010}
 %
-\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x)}{h} +\mathcal{O}\left( h \right). \label{eqn:forwardFirstDeriv} \end{equation},
+\begin{equation} 
+\frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x)}{h} +\mathcal{O}\left( h \right), 
+\label{eqn:forwardFirstDeriv} 
+\end{equation}
 %
-while the central difference equivalent to~\ref{eqn:complexFirstDeriv} is,
+\begin{equation} 
+\frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x - h)}{2h} +\mathcal{O}\left( h^2 \right). 
+\label{eqn:centeredFirstDeriv} 
+\end{equation} 
 %
-\begin{equation} \frac{\partial f( x )}{\partial x} = \frac{f (x + h) - f (x - h)}{2h} +\mathcal{O}\left( h^2 \right). \label{eqn:centeredFirstDeriv} \end{equation} \cite[Chap. 4.1.3]{chapra2010}.
-%
-Note that the order of the truncation error in~\ref{eqn:forwardFirstDeriv} indicates that for a given $h$ forward difference is less accurate an approximation than central difference or complex step.
+\add{The order of the truncation error in the forward-difference formula (equation}~(\ref{eqn:forwardFirstDeriv})\add{) indicates that for a given $h$ this method is less accurate an approximation than either central-difference or complex-step which have errors of $\mathcal{O}(h^2)$.}
 
-\note[Michael]{re: I.4, John all the rest of this section is new}
-It is appropriate to detail the prior work discussing aspects of the
-complex-step method in order to indicate what is new in the instant work.  The
-CS method was introduced in a work by J. N. Lyness and C. B. Moler
-\cite{lyness1967numerical}.  In this prior work, the CS method is identified in
-an infinite series form and the computing of analytical derivatives is shown. This prior
-work develops the CS method, while the instant work is about an application of
-the CS method.
-
-A follow-on work by J. N. Lyness demonstrates a 'truncated' approximate version
-of the original CS method to make it suitable for use on digital computers \cite{lyness1968differentiation}.
-This form of the CS method is used in the instant work.
-The prior work develops the CS method, while the instant work is about an application of the CS method.
-
-A work by W. Squire and G. Trapp shows through empirical data that CS offers superior accuracy
-to FD and CD \cite{squire1998using}. The instant work uses the CS method as shown in the
-prior work and was motivated by the prior work's suggestion that CS is highly accurate. 
-The instant work examines applications of the CS method beyond taking derivatives alone,
-whereas the prior work does not. 
-
-A work by J. C. Newman, W. K. Anderson and L. D. Whitfield discusses computing
-sensitivities in a CFD analysis using complex step and compares the results to
-central difference produced results \cite{newman1998}. The work is also notable
-for identifying automatic differentiation as a competing method to CS and
-suggesting that complex step could be used to compute Jacobians of residuals
-for use in Newton-Krylov schemes for solving non-linear systems. The instant
-work is novel with respect to the prior work because the instant work
-investigates CS as applied to a numerical method for solving non-linear
-systems, rather than as in the prior work investigating the derivatives
-themselves produced with the CS method.
-
-In a work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta, CS is used to
-compute Jacobians for integrating plastic stress to determine
-elastoplastic modulii and for computing the Jacobian of the residual for the global
-problem, both of which are an application of the CS method to the solution of
-non-linear systems \cite{perez2000numerical}. These elastoplastic modulii are
-used in computing the global Jacobian  and are said to be 'algorithmically
-consistent' in that they are consistent with the algorithm used to return the
-predicted stress to the yield surface. Examples of interest include FEM
-simulations on two plastic material models with complicated hardening rules.
-Comparing the prior work with the instant work, the prior work demonstrates CS
-on a serial computer and discusses a classical solid mechanics formulation.
-Automatic differentiation is not investigated and CPU time measurements are not
-taken. Scalability studies with a variety of equivalent, progressively more
-refined meshes are not done. Scalability as a function of parallel computer
-size is not investigated. The instant work is novel with respect to the prior work in
-offering a discussion of CS as applied to peridynamics simulation on a parallel
-computer, CPU time data, and comparison of CS to automatic differentiation as a competing method. 
-
-Another work by A. Perez-Foguet, A. Rodriguez-Ferran, A. Huerta applies CS in
-computing derivatives needed for integrating stress, obtaining algorithmically
-consistent elastoplastic modulii, and obtaining the Jacobian of the global
-residual, for FEM simulations using the MRS-Lade material model
-\cite{perez2012numerical}. In this prior work, CPU runtime is measured.
-Comparing the prior work to the instant work, the prior work demonstrates CS on
-a serial computer and discusses a classical solid mechanics formulation.
-Automatic differentiation is not investigated.  Scalability studies with a
-variety of equivalent, progressively more refined meshes are not done.
-Scalability as a function of distributed system size is not investigated.  The
-instant work is novel with respect to the prior work in offering a discussion
-of CS as applied to peridynamics simulation on a parallel computer, and
-comparison of CS to automatic differentiation as a competing method. 
-
-A work by Joaquim R. R. A. Martins, Ilan M. Kroo and Juan J. Alonso
-investigates using CS for computing aerodynamic sensitivities
-\cite{martins2000automated}. Additionally, higher order accuracy versions of CS
-are discussed, as is the task of implementing complex-step in most widely used
-general purpose programming languages. Also discussed is the relative ease of
-implementing a CS scheme versus an AD based scheme for computing sensitivities
-in an established code. The instant work is novel with respect to the prior
-work because the instant work investigates CS as applied to a numerical method
-for solving non-linear systems, rather than as in the prior work investigating
-the use of the CS method to obtain sensitivities.
-
-A work by W. K. Anderson, J. C. Newman, D. l. Whitfield and E. J. Nielsen
-discusses the CS method as applied to computing sensitivities in CFD simulations
-\cite{anderson2001sensitivity}. CS is compared to AD both in Fortran and C++
-applications. In this prior work it is suggested that forward mode AD is
-mathematically equivalent to first order CS. The instant work is novel with
-respect to the prior work because the instant work investigates CS as applied
-to a numerical method for solving non-linear systems, rather than as in the
-prior work investigating the derivatives themselves produced with the CS
-method.
-
-A work by J. Martins, P. Sturdza, J. Alonso demonstrates that the CS method can
-be performed by using complex datatypes for the variables of functions
-comprising an analysis code \cite{martins2003complex}. The analysis code can
-comprise a simulation and derivatives of response variables called
-sensitivities can be computed. The accuracy of this approach is compared to
-automatic differentiation. The instant work is novel with respect to the prior
-work because the instant work investigates CS as applied to a numerical method
-for solving non-linear systems, rather than as in the prior work investigating
-the derivatives themselves produced with the CS method.
- 
-A work by  K. L. Lai and J. L. Crassidis discusses first and second order CS
-methods for computing derivatives and choosing optimal step size
-\cite{lai2008extensions}. The instant work discusses using the derivatives
-computed with the CS method in a numerical method for solving a non-linear
-system, while in the prior work the derivatives obtained from the CS method 
-are the object of interest.
-
-A work by A. H. Al-Mohy and N. J. Higham investigates the use of complex step
-in computing Fr\'{e}chet derivatives of matrix to matrix functions
-\cite{al2010complex}. To compute the Jacobian of the residual in the
-peridynamics simulation as discussed in the instant work is analogous is
-computing a Fr\'{e}chet derivative. Where the application of the CS derivatives in
-the prior work is limited to a particular class of abstract functions to
-determine the CS method's suitability for use in condition number estimation, the
-instant work applies CS to solving a solid mechanics problem. The instant work is not
-about computing Fr\'{e}chet derivatives with CS but moreover using them in a
-numerical method to solve a set of equations describing a physical system.
-
-A work by W. Jin, B. H. Dennis, and B. P. Wang discusses using CS to compute
-sensitivities in a solid mechanics FEM analysis \cite{jin2010improved}. In the
-prior work the derivatives produced by CS are the object of
-interest, whereas the instant work uses CS in a numerical method for solving a
-non-linear system.
-
-A work by A. Voorhees, H. Millwater, and R. Bagley discusses the background of
-the CS method and frames it as a subset of Fourier Differentiation. CS and
-Fourier Differentiation are then applied to computing sensitivities within a
-solid mechanics FEA \cite{voorhees2011complex}. A notable technique
-demonstrated by this prior work is the representation of complex valued nodal
-coordinates with additional degrees of freedom in the FE model, to be
-interpreted by a matrix representation of complex numbers during computations.
-In the prior work, CS is discussed and related to a broader class of
-differentiation methods and used to compute sensitivities. In the instant work,
-CS is used in a numerical method for solving non-linear systems.
-
-In another work by H. Millwater, C. Quintana, J. Garza and David Wagner the
-concept of incorporating complex values into the degrees of freedom of finite
-elements is called ZFEM \cite{millwater2013application}. Notable in this work
-is the discussion of creating user defined element types for use with the
-popular \emph{ABAQUS} software package which enables the use of ZFEM in that
-software. \emph{ABAQUS} is a trademark of Dassault Systemes
-\cite{systemes2012abaqus}. In this prior work the goal of using CS through the
-ZFEM technique is to compute shape sensitivities, while in the instant work CS
-is used in a numerical method for solving non-linear systems.
-
-A work by R. Abreu, D. Stich, and J. Morales discusses computing derivatives
-with a version of the CS method which features the combined use
-of real and imaginary valued step components \cite{abreu2013generalization}.
-This prior work suggests that the modified CS method can achieve extended
-approximation accuracy up to fourth order.  The prior work discusses using the
-CS method to compute derivatives and attempts to extend the method for that
-application, where the derivatives themselves are the object of interest. In
-contrast, the instant work discusses using the derivatives computed with CS in
-a numerical method for solving a non-linear system.
-
-The body of prior literature has introduced the application of CS to
-single dimension and multidimensional derivatives, sensitivity analysis,
-non-linear solution schemes, the extension of CS for higher accuracy, 
-and implementation strategies for CS in new and existing codes.
-With respect to the prior work discussing the CS method, the novel
-aspects of the instant work are then its discussion of the application of CS to
-peridynamics simulations run in \emph{Peridigm}, a parallel implementation of
-CS and a compilation of CPU time data, where each of CS, AD, FD and CD are
-compared. 
+\note{Re: I.4} \add{As mentioned earlier, the CS method was originally introduced in a paper by Lyness and Moler} \cite{lyness1967numerical}\add{.  A follow-on contribution by Lyness demonstrated a ``truncated'' approximate version of the original CS method to make it suitable for use on digital computers} \cite{lyness1968differentiation}\add{.  After these original papers, little can be found in the literature regarding the method until Squire and Trapp showed through empirical data that CS offers superior accuracy to FD and CD} \cite{squire1998using} \add{in computing numerical derivatives. Papers by Newman et al.\ } \cite{newman1998} \add{and Anderson et al.\ } \cite{anderson2001sensitivity} \add{discuss computing sensitivities in a CFD analysis using CS and compares the results to sensitivities produced with central-difference derivatives. The work is also notable for identifying automatic-differentiation as a competing method to CS and suggesting that complex-step could be used to compute Jacobians of residuals for use in Newton-Krylov schemes for solving non-linear systems. Perez-Foguet et al.\ } \cite{perez2000numerical, perez2012numerical} \add{used the CS method to compute algorithmically consistent elastoplastic moduli in non-linear solid mechanics problems.  A paper by Joaquim et al.\ } \cite{martins2000automated} \add{investigates using CS for computing aerodynamic sensitivities. Additionally, higher-order accuracy versions of CS are discussed, as is the task of implementation in most widely used general purpose programming languages. Discussed is the relative ease of implementing a CS scheme versus an automatic-differentiation based scheme for computing sensitivities in an established code.  
+Martins et al.\ } \cite{martins2003complex}  \add{demonstrates that the CS method can be performed by using complex datatypes for the variables of functions comprising an analysis code. The accuracy of this approach, with respect to the derivatives themselves, is compared to automatic-differentiation in a serial analysis code. Lai and Crassidis} \cite{lai2008extensions} \add{discuss first- and second-order CS methods for computing derivatives and choosing optimal step sizes.  Al-Mohy and Higham} \cite{al2010complex} \add{investigate the use of CS in computing Fr\'{e}chet derivatives of matrix functions. Jin et al.\ } \cite{jin2010improved} \add{discuss using CS to compute sensitivities in a solid mechanics FEM analysis.  Voorhees et al.\ } \cite{voorhees2011complex} \add{discusses the background of the CS method and frames it as a subset of Fourier Differentiation. CS and Fourier Differentiation are then applied to computing sensitivities within a solid mechanics finite element analysis. They implemented the complex-values as additional degrees of freedom in the finite element stiffness matrices using a real-valued matrix representation of the complex numbers where required. In a follow-on work,  Millwater et al.\ } \cite{millwater2013application} \add{extended this concept, calling it ZFEM, and implemented the method into user defined element types for use with the popular ABAQUS} \cite{systemes2012abaqus} \add{FEA software package.  Finally, Abreu et al.\ } \cite{abreu2013generalization} \add{discusses computing derivatives with a version of the CS method which features the combined use of real and imaginary valued step components, as in Fourier differentiation.  They suggests that the modified CS method can achieve extended approximation accuracy up to fourth order.  The body of prior literature has introduced the application of CS to single dimension and multidimensional derivatives, sensitivity analysis, non-linear solution schemes, the extension of CS for higher accuracy, and implementation strategies for CS in new and existing codes.  With respect to the prior work discussing the CS method, the novel aspects of the instant work are then its discussion of the application of CS to peridynamics simulations run in \emph{Peridigm}, a parallel implementation of CS and a compilation of CPU time data, where each of CS, AD, FD and CD are compared.}
 
 \subsubsection{Automatic differentiation} 
 \label{ADsubsection}
 
-Automatic differentiation (AD) is a computerized method for computing exact
-derivatives based on the chain-rule from calculus. AD takes advantage of the fact
-that any mathematical function executed on a computer, no matter how
-complicated, is a ``composition of simple operations'' (addition, multiplication, exponentiation and the like) each having known analytical derivatives
-\cite{ref-sacado-presentation}. For reference, the AD implementation used in
-this study is part of the \emph{Sacado} package from the \emph{Trilinos}
-agile-component libraries developed at Sandia National Laboratories
-\cite{ref-Sacado}.
+Automatic differentiation (AD) is a computerized method for computing exact derivatives based on the chain-rule from calculus. AD takes advantage of the fact that any mathematical function executed on a computer, no matter how complicated, is a ``composition of simple operations'' (addition, multiplication, exponentiation and the like) each having known analytical derivatives \cite{ref-sacado-presentation}. For reference, the AD implementation used in this study is part of the \emph{Sacado} package from the \emph{Trilinos} agile-component libraries developed at Sandia National Laboratories \cite{ref-Sacado}.
 
-An AD system evaluates composition functions in the expected manner: it works
-by first evaluating the innermost function of the composition, then presenting
-that function's output as input to the next level function until all levels are
-complete, observing commonly expected order of operations. However, an AD
-system does additional work during a function evaluation in that as each nested
-function is evaluated, the function's partial derivative with respect to the
-designated variables of the given input is also calculated.  This is possible
-because the elementary math functions are hard-coded into the AD source-code
-along with their analytical derivatives, and linked by special instructions, so
-that when the elementary math functions are called upon for computation, their
-partial derivatives may be computed and stored in a sequence. The AD system
-then multiplies the final sequence of partial derivatives together to produce
-the exact equivalent to taking a partial derivative of the corresponding
-composition function with respect to a designated variable at a particular
-value. 
+An AD system evaluates composition functions in the expected manner: it works by first evaluating the innermost function of the composition, then presenting that function's output as input to the next level function until all levels are complete, observing commonly expected order of operations. However, an AD system does additional work during a function evaluation in that as each nested function is evaluated, the function's partial derivative with respect to the designated variables of the given input is also calculated.  This is possible because the elementary math functions are hard-coded into the AD source-code along with their analytical derivatives, and linked by special instructions, so that when the elementary math functions are called upon for computation, their
+partial derivatives may be computed and stored in a sequence. The AD system then multiplies the final sequence of partial derivatives together to produce the exact equivalent to taking a partial derivative of the corresponding composition function with respect to a designated variable at a particular value. 
 %
-It is obvious, but bears mentioning, that the AD system could simply
-store one value for partial derivatives, modifying it as appropriate for every
-function evaluation rather than keeping a sequence. This is significant because
-modifying a single value rather than keeping a list of values corresponding to
-every level of a composition function, which itself may not be the sole one
-needing to be evaluated, represents a savings in memory usage, which at large
-scales is an active concern. In the literature, the AD scheme described here is
-called \emph{forward automatic differentiation}. Only forward AD will be
-covered here since it is the implementation used in \emph{Sacado} and therefore
-in this study; however, the reader is referred to the introduction section of
-\cite{ref-AD-methods} and its citations for further information on AD, and
+It is obvious, but bears mentioning, that the AD system could simply store one value for partial derivatives, modifying it as appropriate for every function evaluation rather than keeping a sequence. This is significant because modifying a single value rather than keeping a list of values corresponding to every level of a composition function, which itself may not be the sole one needing to be evaluated, represents a savings in memory usage, which at large scales is an active concern. In the literature, the AD scheme described here is called \emph{forward automatic differentiation}. Only forward AD will be covered here since it is the implementation used in \emph{Sacado} and therefore in this study; however, the reader is referred to the introduction section of \cite{ref-AD-methods} and its citations for further information on AD, and
 particularly \cite{ref-on-AD} which is foundational.
-Appendix~\ref{sec:appendixB} includes an example that walks the reader through
-the process a computer uses to compute derivatives via AD.  Some things to note
-about AD are that no approximation of derivatives is being made because the
-analytical forms of the partial derivatives of the elementary math functions are defined
-alongside them. The accuracy of AD is then limited by the precision of the AD
-system's definition of the elementary math functions and their partial
-derivatives.
+
+Appendix~\ref{sec:appendixB} includes an example that walks the reader through the process a computer uses to compute derivatives via AD.  Some things to note about AD are that no approximation of derivatives is being made because the analytical forms of the partial derivatives of the elementary math functions are defined alongside them. The accuracy of AD is then limited by the precision of the AD system's definition of the elementary math functions and their partial derivatives.
  
 \subsection{Tangent-stiffness} 
 \label{subsec:TS}
@@ -594,7 +306,7 @@ but, with the caveat that $F^{int}$ is evaluated in a way that is
 algorithmically consistent, and therefore should yield quadratic convergence
 with Newton's method.
 
-\note[Michael]{re: I.5, next section is taken from the thesis.}
+\note[]{Re: I.5, next section is taken from the thesis.}
 \section{Working examples of CS, AD and FD for Newton's method}
 \label{sec:WorkingExamples}
 
@@ -783,8 +495,8 @@ quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm}
 development team has an interest in profiling the performance of the
 tangent-stiffness matrix computation methods.
 
-\note[Michael]{re: I.2, John I think you would better handle expanding this section,
-I was going to essentially copy silling:psa.}\change[Michael]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
+\note[]{Re: I.2, John I think you would better handle expanding this section,
+I was going to essentially copy silling:psa.}\change[]{Briefly, peridynamics}Peridynamics \cite{silling2000ret,silling:psa,silling2010peridynamic}
 is a nonlocal reformulation of the partial-differential equations that provide
 the statement of momentum balance in classical continuum mechanics. Its primary
 goal is to avoid the use of spatial derivatives in the balance equations or
@@ -805,7 +517,7 @@ equation of motion and a constitutive model have been discussed, a definition of
 the tangent stiffness matrix is given. The following discussion is largely
 taken from \cite{silling:psa} but reproduced here for clarity.
 
-\note[Michael]{re: I.2. John, this was to be the skeleton for the new sections on peridynamics.}
+\note[]{Re: I.2. John, this was to be the skeleton for the new sections on peridynamics.}
 \subsubsection{Vector states for state based peridynamic theory}
 Because the vector state, which is fair to say an uncommon notation, is used in the literature discussing state based peridynamic theory
 it will be enumerated here for the sake of continuity. 
@@ -881,7 +593,7 @@ where,
 
 \subsubsection{The linear peridynamic solid}
 
-\note[Michael]{re: I.2} \add[Michael]{
+\note[]{Re: I.2} \add[]{
 \subsubsection{The tangent stiffness matrix in a quasi-static peridynamic simulation}
 The tangent-stiffness matrix is the Fr\'{e}chet derivative of the residual wrt the
 deformation state.  For the purposes of this work, the residual represents the unbalanced forces in the
@@ -906,9 +618,9 @@ closely the implementation of the FD technique.  However, because of
 \emph{Epetra} package, special steps had to be followed to allow the use of
 complex number data types.  This is because \emph{Epetra} vectors, which can be
 thought of as distributed memory parallel cousins to standard C++
-\change[Michael]{STL}{Standard Template Library} vectors, are hard coded to be
+\change[]{STL}{Standard Template Library} vectors, are hard coded to be
 of type {\tt double} and can not be simply declared as having a complex data
-type. \note[Michael]{re: I.3}\add[Michael]{For the reader's convenience,
+type. \note[]{Re: I.3}\add[]{For the reader's convenience,
     \emph{Epetra} vectors and STL vectors are what are known as 'container
     classes', whose purpose in object oriented computer programming is to
     automate the creation, accessing, modification and destruction of the
@@ -925,7 +637,7 @@ the FD method were copied, renamed and re-written to follow the CS formula.
 Because of restrictions imposed by the container class being used, this
 involved changing the data type of intermediate variables which were locally
 scoped, and dynamically casting persistent memory variables to complex data
-types where necessary. \note[Michael]{re: I.3}\add[Michael]{For the reader's
+types where necessary. \note[]{Re: I.3}\add[]{For the reader's
 convenience, 'locally scoped' in the C++ programming language refers to
 data which is created within a context more specific than the context of
 the entire program, or 'translation unit'.  Most data created this way is
@@ -943,8 +655,8 @@ however, it must be noted that the overhead associated with the dynamic casts
 in the CS method likely hurts its overall performance and this issue could be
 alleviated by using the next generation of templated \emph{TPetra} vectors
 available in \emph{Trilinos} that are capable of taking an explicit
-instantiation of any data type including {\tt complex}. \note[Michael]{re:
-I.3}\add[Michael]{For the purposes of this work, an explicit instantiation
+instantiation of any data type including {\tt complex}. \note[]{Re:
+I.3}\add[]{For the purposes of this work, an explicit instantiation
 refers to requesting the creation of an object, or instance, of a templated
 class or container class that holds data which has the property of
 following desired mathematic or logic rules.} The version of \emph{Peridigm}
@@ -952,8 +664,8 @@ modified to implement CS can be found in the paper repository.
 
 \emph{Peridigm} was primarily written by computer scientists; therefore,
 many advanced techniques in C++ such as multiple virtual inheritance, pointer
-arithmetic, and distributed data structures, \note[Michael]{re:
-I.3}\add[Michael]{for example \emph{Epetra} vectors, were used in the basic
+arithmetic, and distributed data structures, \note[]{Re:
+I.3}\add[]{for example \emph{Epetra} vectors, were used in the basic
     code and by necessity in the modified code. These concepts are not vital to
 understanding the complex step method itself, but may be necessary to understand complex
 step in \emph{Peridigm}.} To see CS and other methods in a more narrow context,
@@ -999,7 +711,7 @@ A series of nine single compute core (i.e. serial) test problems were run with
 the discretization size being refined with every test in the series. The aim of
 increasing the refinement was to examine differences between the methods in
 terms of accuracy and speed. This series would comprise the single core runs. 
-\note[Michael]{re: II.16, specific test parameters were asked for}
+\note[]{Re: II.16, specific test parameters were asked for}
 The specific parameters of these tests can be found in \emph{Peridigm} input
 {\tt xml} files included in the paper repository, however the parameters
 are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow
@@ -1049,7 +761,7 @@ in space are dense enough to appear as a continuous body at a distance.
 \caption{1000000 node mesh} \label{fig:MCMesh}
 \end{figure}
 
-\note[Michael]{re: I.3}\add[Michael]{For the purposes of this work message passing is what
+\note[]{Re: I.3}\add[]{For the purposes of this work message passing is what
 synchronizes multiple computers that each are working on a separate section
 of the problem domain. This operation involves the time-consuming use of
 the data network. To reduce the proportion of simulation time spent on
@@ -1306,7 +1018,7 @@ effects, including solution divergence, of the round-off error associated with
 subtracting two numbers that are very close to one another.  The value of $h$
 used in this study is the default value used in \emph{Peridigm} which is
 heuristically derived based on computational node spacing using the method explained in \cite[pp. 90]{ref-Adaggio}.  
-\add[Michael]{To summarize, a spacing of $1.E-6$ times grid spacing is used to provide acceptable accuracy but prevent roundoff error, 
+\add[]{To summarize, a spacing of $1.E-6$ times grid spacing is used to provide acceptable accuracy but prevent roundoff error, 
 as is not a user determined setting in \emph{Peridigm}.} One of the beauties
 of the CS method is that since dependence on $h$ decreases for small $h$, which
 a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$,
@@ -1329,7 +1041,7 @@ trends matched those for the single core tests.
 \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} \caption{Multicore test
 series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
 %
-\note[Michael]{re: II.22, relative accuracy figures were asked for, these were taken from the archive data}
+\note[]{Re: II.22, relative accuracy figures were asked for, these were taken from the archive data}
 It can be seen in Figs.~\ref{fig:serial_accuracy} and ~\ref{fig:multi_accuracy} that there appears to be some fluctuating behavior in the accuracy of the methods. Those figures are depicting absolute error. If relative error is computed from the absolute error measurements by dividing them by the Frobenius norm of the appropriate AD produced TS matrix, it can be seen as in Table~\ref{tab:RelAcc}, that there is little variation in the accuracy of the methods between tests or between serial and parallel test groups. 
 
 \begin{table*}[!ht]    
@@ -1379,7 +1091,7 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
   \label{fig:multi_efficiency}
 \end{figure}
 
-\note[Michael]{Re: I.5, everything after this line is changed}
+\note[]{Re: I.5, everything after this line is changed}
 \section{Convergence and displacement accuracy studies} 
 \label{sec:PeridigmConvergenceStudy}
 %
@@ -1438,8 +1150,8 @@ properties or loading conditions, it may have a greater impact on simulations in
 force densities such as for small displacements or very lax materials. In this case it could be recommended
 that forward difference be avoided. 
 
-\note[Michael]{re: I.5, this and other material was added in from the thesis to discuss accuracy}
-\note[Michael]{re: I.5, the entire conclusion section was replaced with the thesis version}
+\note[]{Re: I.5, this and other material was added in from the thesis to discuss accuracy}
+\note[]{Re: I.5, the entire conclusion section was replaced with the thesis version}
 \section{Conclusions}
 \label{sec:Conc}
 %
@@ -1613,7 +1325,7 @@ while AD requires a complicated serialization and deserialization in order to
 function as byte-copyable. This is fine for copying in between MPI processes,
 but deserialization on an accelerator or GPU is very difficult, as this would
 require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used. \add[Michael]{A working definition of byte-copyable
+with the accelerator or GPU being used. \add[]{A working definition of byte-copyable
 is that the collection of data to transfer is made of identically sized pieces.
 Byte-copyability is significant for example because it is a requirement for the
 basic offload mode provided for Intel MIC accelerator boards which are
@@ -1630,7 +1342,7 @@ be noted that from a code development perspective the CS method may be the
 easiest of the methods to implement; it only requires one functional
 evaluation, there is no heuristic choice of probe distance, and there is no
 dependence on an external AD library.  From this perspective, the method may
-still be an attractive method for TS matrix evaluation. \add[Michael]{However,
+still be an attractive method for TS matrix evaluation. \add[]{However,
 at least for the models producing the results shown here, each of the
 methods returned quadratic convergence, indicating each was sufficiently
 accurate. 'Marching orders' for the analyst would be to select the swiftest

@@ -14,43 +14,19 @@
 \end{center}
 
 %%%% First Reviewer %%%%
-\section{Re: Information to the authors}
+\section*{Re: Information to the authors}
 %
-\subsection*{Larger issues}
+\subsection*{I. Larger issues}
 %
 \begin{enumerate}
     \item
-         Some parts of the manuscript suggest that the authors introduced a new method,
-         i.e., the complex-step (CS) method. For example, in the introduction, they say
-         “A goal of this study was to develop and evaluate a new, accurate, and practical
-         method ...” Another example appears in page 3, where the authors say “The aim
-         of this paper is not only to introduce the new complex-step method in the context
-         of evaluating tangent-stiffness matrices ..”. However, the CS method has already
-         appeared in many publications since 1998 [1]. Please revise the way you refer to
-         the CS method along the manuscript
+         Some parts of the manuscript suggest that the authors introduced a new method, i.e., the complex-step (CS) method. For example, in the introduction, they say ``A goal of this study was to develop and evaluate a new, accurate, and practical method ...'' Another example appears in page 3, where the authors say ``The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices ...'' However, the CS method has already appeared in many publications since 1998 [1]. Please revise the way you refer to the CS method along the manuscript
 
 {\color{red}
   \begin{itemize}
-      \item
-        The way the CS method is referred to has been revised throughout,
-        specifically: 
-    \item In the abstract, "... the new method ..." has been
-        replaced by "... the method ...", "... newly implemented ..." has been
-        replaced by "... implemented ..."; 
-    \item in the introduction, paragraph two,
-        "... a new, accurate ..." has been replaced by "... a relatively
-        underexplored, accurate ...", in paragraph two and four "... the new
-        method ..." has been replaced by "... the method ...", in paragraph
-        five, "... introduce the new complex-step method in the context of ..."
-        has been replaced by "... study the complex-step method of ...", "...
-        the new complex-step ..." has been replaced by "... the complex-step
-        ...".
-    \item 
-        It is the authors' opinion that the above changes correct the suggestion
-        that the authors introduce a new method. 
-
-  \end{itemize}}
-
+      \item In the cases of ambiguity pointed out by the reviewer, the wording has been changed such that it should be clear we are only evaluating an underutilized method, not introducing it.
+  \end{itemize}
+}
     \item
         The work presented focuses on a parallel computational peridynamic code, and
         uses peridynamic models for mechanics. However, no detailed explanation of the
@@ -204,29 +180,15 @@
 
   \end{enumerate}
 
-  \subsection*{Smaller issues}
+  \subsection*{II. Smaller issues}
   \begin{enumerate}
 
   \item
-	Pg. 2: In line 14, explain what does the term “algorithmically consistent” mean.
+	Pg. 2: In line 14, explain what does the term ``algorithmically consistent'' mean.
 
 {\color{red}
   \begin{itemize}
-     \item
-
-      A brief definition for the convenience of the reader was added in the
-      manuscript. But, algorithmically consistent is a fairly common term in
-      plasticity/mechanics. This same meaning is used for 'consistent' refering
-      to 'tangent matrices' in \cite{perez2012numerical, perez2000numerical}. It means
-      consistent with integrating the plasticity model under the Khun-Tucker
-      constraints. Integrating the plasticity model means, given a strain
-      increment, determining a stress that does not exceed the yield stress,
-      and by doing so computing a linear slope, called a consistent tangent
-      modulus, that relates the strain increment to a correct stress increment.
-      An alogorithmically consistent tangent stiffness matrix is then one that
-      uses the consistent tangent modulii, making it a more accurate
-      approximation of the stiffness of the system. 
-
+      \item Footnote 1 has been added to manuscript to address this.
   \end{itemize}}
 
   \item
@@ -540,7 +502,7 @@ Pg. 24: Why do we need S and X in Appendix B?
      numbers from the computer world. For example:
 
      \begin{verbatim}
-     "http://en.wikipedia.org/wiki/IEEE_floating_point" 
+    ``http://en.wikipedia.org/wiki/IEEE_floating_point''
      \end{verbatim}
      
      shows that computers
@@ -570,7 +532,7 @@ Pg. 24: Why do we need S and X in Appendix B?
       correct in both cases. For example:
 
       \begin{verbatim}
-      "https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/x86_64/fpu/e_expl.S"
+     ``https://sourceware.org/git/?p=glibc.git;a=blob;f=sysdeps/x86_64/fpu/e_expl.S"
       \end{verbatim}
 
       is the implementation of the $exp(x)$ function on 80-bit extended
