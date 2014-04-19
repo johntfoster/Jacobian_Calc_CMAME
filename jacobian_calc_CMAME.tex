@@ -260,7 +260,56 @@ The source code for the header-only library is entitled \emph{NewtonRaphson.hpp}
 \label{subsec:Validation}
 The second program,a \emph{NRComparison.cpp}, follows a case study that appears in \cite{rezaiee2010dynamic}. The example program departs from the cited literature by applying each of CS, AD and FD and verifying them against an analytical model of a nonlinear mechanical system involving a connected beam and spring. Fig. \ref{fig:TrussSchematic} is a schematic of the beam and spring system. 
 %
-\begin{figure}[tbp] \centering \includegraphics[width=0.7\textwidth]{./figs/truss.png}
+\begin{figure}[tbp] 
+\centering %%\includegraphics[width=0.7\textwidth]{./figs/truss.png}
+
+\begin{tikzpicture}
+\usetikzlibrary{shapes.geometric}
+\usetikzlibrary{decorations.pathmorphing}
+\usetikzlibrary{calc}
+\usetikzlibrary{patterns}
+
+\tikzstyle{wall}=[fill,pattern=north east lines,draw=none,minimum width=0.2cm,minimum height=5.1cm];
+\tikzstyle{ground}=[fill,pattern=north east lines,draw=none,minimum width=6.1cm,minimum height=.2cm];
+
+\coordinate (bar_1) at (0,0);
+\coordinate (bar_1_support) at (0,-.5);
+
+\coordinate (bar_2) at (5,3);
+\coordinate (bar_2_pin) at (5.4,3.0);
+\coordinate (spring_1_support) at (5,-.5);
+\coordinate (spring_1_pin) at (5,0);
+
+\coordinate (rhm) at (5.4,1.5);
+\coordinate (rhml) at (4.5,1.5);
+\coordinate (mf) at (2.5, -0.8);
+\coordinate (lm) at (1.0, 0.0);
+\coordinate (mm) at (1.2, 0.0);
+\coordinate (rht) at (5.0, 4.0);
+\coordinate (rhtt) at (5.0, 4.2);
+
+\node (wall_slider) at (bar_2_pin) [circular sector, draw, rotate=180] {};
+\node (ground_triangle_1) at (bar_1_support) [isosceles triangle, draw, rotate=90] {};
+\node (ground_triangle_2) at (spring_1_support) [isosceles triangle, draw, rotate=90] {};
+
+\node (wall) at ($ (rhm) !.3cm!(10, 3) $)  [rectangle, draw, style=wall] {};
+\node (ground) at (mf)  [rectangle, draw, style=ground] {};
+
+\node (spring_label) at (rhml) [] {$k_s$};
+\node (load_label) at (rhtt) [] {$P$};
+\node (angle_label) at ($ (mm)!.4cm!(bar_2) $) [] {$\phi$};
+
+\path (bar_1) -- (bar_2) [draw, very thick];
+\path (bar_1) circle (.10) [fill=black];
+\path (bar_2) circle (.10) [fill=black];
+\path (spring_1_pin) circle (.10) [fill=black];
+\path [decorate, decoration={coil, segment length = 4, amplitude=4}] (bar_2) -- (spring_1_pin) [draw, thin, stroke=black];
+\path (rht) -- ($ (bar_2)!.2cm!(rht) $) [draw, -latex, ultra thick, color=black];
+\path (lm) arc(0:16:2) (lm) [draw];
+\path (bar_1) -- (mm) [draw, -latex];
+--cycle
+\end{tikzpicture}
+
 \caption{Beam and spring simulated in example program.} \label{fig:TrussSchematic}
 \end{figure}
 %
