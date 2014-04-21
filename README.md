@@ -40,3 +40,11 @@ Make sure you have a current LaTeX installation in your `$PATH`, then just
 type `make`.  The included `Makefile` will correctly typeset and update
 references, cross-references, bibliography, etc. You can also type `make clean`
 to remove all the auxiliary files in the directory.
+
+### Creating a LaTeX diff from the repository
+
+````
+latexdiff-vc -c ld.cfg -r 9ee7554 --math-markup=0 jacobian_calc_CMAME.tex
+````
+
+where `9ee7554` should be replaced with the correct `git` commit.
