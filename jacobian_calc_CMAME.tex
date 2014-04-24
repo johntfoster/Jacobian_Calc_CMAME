@@ -257,7 +257,6 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 %
 \begin{figure}[tbp] 
 \centering %%\includegraphics[width=0.7\textwidth]{./figs/truss.png}
-
 \begin{tikzpicture}
 \usetikzlibrary{shapes.geometric}
 \usetikzlibrary{decorations.pathmorphing}
@@ -265,6 +264,7 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \usetikzlibrary{patterns}
 \tikzstyle{wall}=[fill,pattern=north east lines,draw=none,minimum width=0.2cm,minimum height=5.1cm];
 \tikzstyle{ground}=[fill,pattern=north east lines,draw=none,minimum width=6.1cm,minimum height=.2cm];
+\tikzstyle{displacement_reference}=[fill,pattern=north east lines,draw=none,minimum width=5.cm, minimum height=.6cm];
 \coordinate (bar_1) at (0,0);
 \coordinate (bar_1_support) at (0,-.5);
 \coordinate (bar_2) at (5,3);
@@ -278,6 +278,13 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \coordinate (mm) at (1.2, 0.0);
 \coordinate (rht) at (5.0, 4.0);
 \coordinate (rhtt) at (5.0, 4.2);
+\coordinate (dispref) at (6.5, 3.06);
+\coordinate (bmdisref) at (6.5, 3.0);
+\coordinate (bldisref) at (6.0,3.0);
+\coordinate (brdisref) at (7.0,3.0);
+\coordinate (bbdisref) at (6.5,2.5);
+\coordinate (bbrdisref) at (6.8,2.6);
+\node (displacement_reference) at (dispref) [rectangle, draw, style=displacement_reference, scale=.2]{};
 \node (wall_slider) at (bar_2_pin) [circular sector, draw, rotate=180] {};
 \node (ground_triangle_1) at (bar_1_support) [isosceles triangle, draw, rotate=90] {};
 \node (ground_triangle_2) at (spring_1_support) [isosceles triangle, draw, rotate=90] {};
@@ -286,6 +293,7 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \node (spring_label) at (rhml) [] {$k_s$};
 \node (load_label) at (rhtt) [] {$P$};
 \node (angle_label) at ($ (mm)!.4cm!(bar_2) $) [] {$\phi$};
+\node (displacement_label) at (bbrdisref) [] {D};
 \path (bar_1) -- (bar_2) [draw, very thick];
 \path (bar_1) circle (.10) [fill=black];
 \path (bar_2) circle (.10) [fill=black];
@@ -294,6 +302,8 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \path (rht) -- ($ (bar_2)!.2cm!(rht) $) [draw, -latex, ultra thick, color=black];
 \path (lm) arc(0:16:2) (lm) [draw];
 \path (bar_1) -- (mm) [draw, -latex];
+\path (bldisref) -- (brdisref) [draw];
+\path (bmdisref) -- (bbdisref) [draw, -latex];
 --cycle
 \end{tikzpicture}
 \caption{Beam and spring simulated in example program.} 
