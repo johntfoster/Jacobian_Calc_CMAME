@@ -373,51 +373,18 @@ where, $\rho$ is the mass density, $\mathbf{\ddot{u}}$ is the second time deriva
 \subsubsection{\todo[]{Re: I.2}The tangent stiffness matrix in a quasi-static peridynamic simulation}
 The tangent-stiffness matrix is the Fr\'{e}chet derivative of the residual with respect to the deformed positions of the discrete computational nodes.  For the purposes of this work, the residual represents the unbalanced forces in the peridynamic equalibrium equation.  For the finite difference type methods in \emph{Peridigm}, a perturbation method is employed by probing the deformed configuration one degree-of-freedom at a time and so allowing the derivative of the residual for all nodes to be computed.  The resulting spatial rate of change in the residual for each of these independent probes becomes one column of the tangent-stiffness matrix.
 
-\subsubsection{Implementing the complex-step method in \emph{Peridigm}} 
+\subsubsection{Implementing the complex-step method in Peridigm} 
 \label{subsubsec:Impl}
 %
-The CS method was implemented in \emph{Peridigm} in a manner that follows closely the implementation of the FD technique.  However, because of \emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the \emph{Epetra} package, special steps had to be followed to allow the use of complex number data types.  This is because \emph{Epetra} vectors, which can be thought of as distributed memory parallel cousins to standard C++ Standard Template Library (STL) vectors, are hard coded to be of type {\tt double} and can not be simply declared as having a complex data type. \todo[]{Re: I.3} For the reader's convenience, \emph{Epetra} vectors and STL vectors are what are known as 'container classes', whose purpose in object oriented computer programming is to automate the creation, accessing, modification and destruction of the underlying contained data. Templated container classes allow for user choice in what properties that underlying data exhibits.  For example, in this work, complex arithmetic cannot be performed on the data contained within an \emph{Epetra} vector because that data, of type {\tt double} does not have the property of following the rules of complex arithmetic. The reason the non-templated \emph{Epetra} vector could not be dispensed with for the purposes of this work is because the \emph{Epetra} vector was tightly integrated with \emph{Peridigm's} parallel communication strategy and linear algebra code. Program methods that were used in the course of applying the FD method were copied, renamed and re-written to follow the CS formula.  Because of restrictions imposed by the container class being used, this involved changing the data type of intermediate variables which were locally scoped, and dynamically casting persistent memory variables to complex data types where necessary. \todo[]{Re: I.3}For the reader's convenience, 'locally scoped' in the C++ programming language refers to data which is created within a context more specific than the context of the entire program, or 'translation unit'.  Most data created this way is destroyed when that specific context is left. The topic of contexts in C++ is very broad, so for the purposes of this work context refers to a program method or function that begins, concludes and yields a result, also destroying locally scoped data. Dynamic casting for the purposes of this work refers to copying the value of data contained within an \emph{Epetra} vector into locally scoped data that has the property of following the rules of complex arithmetic, where a mapping called 'type casting' allows the translation of data between different types. No attempt was made to ``tune'' the CS code in any way for performance. The algorithm  was implemented in such as way that it was in one-to-one correspondence with the FD and CD methods; however, it must be noted that the overhead associated with the dynamic casts in the CS method likely hurts its overall performance and this issue could be alleviated by using the next generation of templated \emph{TPetra} vectors available in \emph{Trilinos} that are capable of taking an explicit instantiation of any data type including {\tt complex}. \todo[]{Re: I.3}For the purposes of this work, an explicit instantiation refers to requesting the creation of an object, or instance, of a templated class or container class that holds data which has the property of following desired mathematic or logic rules. The version of \emph{Peridigm} modified to implement CS can be found in the paper repository.  
+The CS method was implemented in \emph{Peridigm} in a manner that follows closely the implementation of the FD technique.  However, because of \emph{Peridigm}'s reliance on \emph{Trilinos} and specifically the \emph{Epetra} package, special steps had to be followed to allow the use of complex number data types.  This is because \emph{Epetra} vectors, which can be thought of as distributed memory parallel cousins to standard C++ Standard Template Library (STL) vectors, are hard coded to be of type {\tt double} and can not be simply declared as having a complex data type. \todo[]{Re: I.3} \emph{Epetra} vectors and STL vectors are what are known as \emph{container classes}, whose purpose in object-oriented computer programming is to automate the creation, accessing, modification,  and destruction of the underlying contained data.  \emph{Templated} container classes allow for user choice in what properties that underlying data exhibits.  For example, in this work, complex arithmetic cannot be performed on the data contained within an \emph{Epetra} vector because that data, of type {\tt double},  does not have the property of following the rules of complex arithmetic. The reason the non-templated \emph{Epetra} vector could not be dispensed with for the purposes of this work is because the \emph{Epetra} vectors are tightly integrated with \emph{Peridigm}'s parallel communication strategy and linear algebra code. Because of restrictions imposed by the container class being used, this involved changing the data type of intermediate variables which were locally scoped (i.e. only allocated to memory within the specific CS method and later destroyed), and dynamically casting persistent memory variables to complex data types where necessary. No attempt was made to ``tune'' the CS code in any way for performance. The algorithm  was implemented in such as way that it was in one-to-one correspondence with the FD and CD methods; however, it must be noted that the overhead associated with the dynamic casts in the CS method likely hurts its overall performance and this issue could be alleviated by using the next generation of templated \emph{TPetra} vectors available in \emph{Trilinos} that are capable of taking an explicit instantiation of any data type including {\tt complex}. The version of \emph{Peridigm} modified to implement CS can be found in the paper repository.  
 
-\emph{Peridigm} was primarily written by computer scientists; therefore,
-many advanced techniques in C++ such as multiple virtual inheritance, pointer
-arithmetic, and distributed data structures, \todo[]{Re: I.3}for example \emph{Epetra} vectors, were used in the basic
-    code and by necessity in the modified code. These concepts are not vital to
-understanding the complex step method itself, but may be necessary to understand complex
-step in \emph{Peridigm}. To see CS and other methods in a more narrow context,
-it is advised that readers also take a look at the simple examples provided on
-the corresponding author's website.
+\emph{Peridigm} was primarily written by computational scientists and engineers; therefore, many advanced techniques in C++ such as multiple virtual inheritance, pointer arithmetic, and distributed data structures are employed. These concepts are not vital to understanding the CS method itself, but may be necessary to understand CS in \emph{Peridigm}. To see CS and other methods in a more narrow context, it is advised that readers also take a look at the simple examples, such as that described in Section~\ref{sec:WorkingExamples},  provided on the corresponding author's website.
 
 \subsection{Comparative study} 
 \label{tcs}
 
-The methods were compared by running two sets of test problems where each
-method would solve a problem concurrently. In this context, concurrently means
-successively, drawing from the same independent variables, yet within the same
-computational process; this definition is characterized in further detail in
-Section~\ref{JGAM}. Each test problem simulated a $\SI{4}{\meter}$ by
-$\SI{0.5}{\meter}$ by $\SI{0.5}{\meter}$ meter block of a material undergoing
-tension along the axis parallel to the long dimension of the block. The test
-problems were set up in \emph{Peridigm} as quasi-static equilibrium problems,
-where the displacement boundary conditions used to apply tension were applied
-gradually in ``load steps'', and an equilibrium solution for each load step was
-achieved before applying the next load step. Applying the load
-in gradual steps is a widely used technique to ensure the Newton's method is
-always initialized near the actual solution and therefore likely to converge.
-The fictional material represented in the model had values of
-$\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$
-for shear modulus. The peridynamic horizon, a length scale that effectively
-sets the bandwidth of tangent-stiffness matrix in the computation, used in the test
-problems was always set to three times the nominal discretization size (i.e.
-node spacing in the particle discretization scheme). This results in a minimum
-tangent-stiffness matrix bandwidth of 21 for a 3D problem (for an optimal node
-numbering scheme). Pictured in Fig.~\ref{fig:SCMesh} is a viewgraph for one of
-the peridynamic meshes used in this study. The coloration in the image
-indicates node numbering, where a smooth color transition means that the nodes
-have close ID numbers. The abrupt color changes in the center and at the ends
-of the body show that numbering is not contiguous and is assigned with respect to four regions. The purpose of designating
-these regions, for this study, was to apply displacement boundary
-conditions called \emph{volume constraints} in peridynamics. 
-
+The methods were compared by running two sets of test problems where each method would solve a problem concurrently. In this context, concurrently means successively, drawing from the same independent variables, yet within the same computational process; this definition is characterized in further detail in Section~\ref{JGAM}. Each test problem simulated a $\SI{4}{\meter}$ by $\SI{0.5}{\meter}$ by $\SI{0.5}{\meter}$ meter block of a material undergoing tension along the axis parallel to the long dimension of the block. The test problems were set up in \emph{Peridigm} as quasi-static equilibrium problems, where the displacement boundary conditions used to apply tension were applied gradually in ``load steps'', and an equilibrium solution for each load step was achieved before applying the next load step. Applying the load in gradual steps is a widely used technique to ensure the Newton's method is always initialized near the actual solution and therefore likely to converge.  The fictional material represented in the model had values of $\SI{1.515e4}{\mega\pascal}$ for bulk modulus, and $\SI{7.813e4}{\mega\pascal}$ for shear modulus. The peridynamic horizon, a length scale that effectively sets the bandwidth of tangent-stiffness matrix in the computation, used in the test problems was always set to three times the nominal discretization size (i.e.  node spacing in the particle discretization scheme). Pictured in Figure.~\ref{fig:pd_discrete} is an illustration of the peridynamic discretizations used in this study. The coloration in the images indicate material regions that were defined to assist in post-processing application of boundary conditions. 
+%
 \begin{figure}[tbp] 
     \centering 
     \begin{subfigure}[b]{0.4\textwidth}
@@ -434,205 +401,69 @@ conditions called \emph{volume constraints} in peridynamics.
     \label{fig:pd_discrete}
 \end{figure}
 
-A series of nine single compute core (i.e.\ serial) test problems were run with
-the discretization size being refined with every test in the series. The aim of
-increasing the refinement was to examine differences between the methods in
-terms of accuracy and speed. This series would comprise the single core runs. 
-\todo[]{Re: II.16}
-The specific parameters of these tests can be found in \emph{Peridigm} input
-{\tt xml} files included in the paper repository, however the parameters
-are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow
-users with the appropriately modified version of \emph{Peridigm} to reproduce
-the results found in this paper.
-
-\begin{table*}[!ht]    
+A series of nine single compute core (i.e.\ serial) test problems were run with the discretization size being refined with every test in the series. The aim of increasing the refinement was to examine differences between the methods in terms of accuracy and speed. This series would comprise the single core runs.  \todo[]{Re: II.16} The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the paper repository, however the parameters are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow users with the appropriately modified version of \emph{Peridigm} to reproduce the results found in this paper.
+%
+\begin{table*}[!tbp]    
   \scriptsize
   \centering
         \caption{Test Parameters} \label{tab:TestParams}   
        \begin{tabular}{c c c c c c}
          \toprule
-         Peri. nodes & Nozero TS elems. & Horizon & Load rate & Number Load steps & Abs. tolerance \\ 
-                     & $\times 10^6$    & \si{\meter}& \si{\centi\meter\per\second} &   &     \\
+         Peri. nodes & Nozero TS elems. & Horizon ($\delta$) & Load rate & Number Load steps & Abs. tolerance \\ 
+                     & $\times 10^6$    & \si{\centi\meter}& \si{\centi\meter\per\second} &   &     \\
         \midrule
-        1000 & $1.99$             & $.3$   & $2.0$ & $2$ & $\num{10E-8}$ \\
-        2000 & $4.25$             & $.24$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        3000 & $7.79$             & $.21$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        4000 & $15.4$             & $.19$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        6000 & $20.0$             & $.16$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        8000 & $31.4$             & $.15$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        12000 & $40.1$            & $.131$ & $2.0$ & $2$ & $\num{10E-8}$ \\
-        16000 & $83.9$            & $.12$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        32000 & $165.0$           & $.095$ & $2.0$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $.03$  & $2.0$ & $2$ & $\num{10E-8}$ \\
+        1000 & $1.99$             & $30$   & $2$ & $2$ & $\num{10E-8}$ \\
+        2000 & $4.25$             & $24$  & $2$ & $2$ & $\num{10E-8}$ \\
+        3000 & $7.79$             & $21$  & $2$ & $2$ & $\num{10E-8}$ \\
+        4000 & $15.4$             & $19$  & $2$ & $2$ & $\num{10E-8}$ \\
+        6000 & $20.0$             & $16$  & $2$ & $2$ & $\num{10E-8}$ \\
+        8000 & $31.4$             & $15$  & $2$ & $2$ & $\num{10E-8}$ \\
+        12000 & $40.1$            & $13.1$ & $2$ & $2$ & $\num{10E-8}$ \\
+        16000 & $83.9$            & $12$  & $2$ & $2$ & $\num{10E-8}$ \\
+        32000 & $165.0$           & $9.5$ & $2$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
         \bottomrule
     \end{tabular}
 \end{table*}
 
+Another series of four test problems were simulated, however this time the number of compute cores used to solve the problem was increased from test to test while the discretization level was held constant at 1 million computational nodes (3 million degrees of freedom). This allowed for sufficient computational nodes per core even at the highest level of parallelization such that message passing computation did not overwhelm the simulation.  The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files also included in the paper repository, but a summary of the most relevant ones appears in Table~\ref{tab:TestParams}. An image of the 1 million node discretization is shown in Figure~\ref{fig:MCMesh}. The nodes in the image, although actually discrete points in space are dense enough to appear as a continuous body at a distance.
 
-Another series of four test problems were simulated, however this time the
-number of compute cores used to solve the problem was increased from test to
-test while the discretization level was held constant at 1 million
-computational nodes (3 million degrees of freedom). This allowed for sufficient
-computational nodes per core even at the highest level of parallelization such
-that message passing computation did not overwhelm the simulation.  The
-specific parameters of these tests can be found in \emph{Peridigm} input {\tt
-xml} files also included in the paper repository, but a summary of the most relevant
-ones appears in Table~\ref{tab:TestParams}. A viewgraph of the 1 million node mesh is
-shown in Fig.~\ref{fig:MCMesh}. The nodes in the image, although actually discrete points
-in space are dense enough to appear as a continuous body at a distance.
+\subsubsection{Quantities-of-interest} 
+\label{JGAM} 
 
+As stated in Section~\ref{sec:intro}, a goal of this study was to compare CS, FD, and CD on the basis of accuracy. AD was omitted from the comparison because it served as the standard of accuracy for the other methods in the absence of appropriate analytical forms for the tangent-stiffness matrix associated with the system solved in this study. The assumption that AD is accurate enough to serve as a standard is supported by AD's implementation as a computerized chain rule as explained in Section~\ref{ADsubsection}.
 
-\todo[]{Re: I.3}For the purposes of this work message passing is what
-synchronizes multiple computers that each are working on a separate section
-of the problem domain. This operation involves the time-consuming use of
-the data network. To reduce the proportion of simulation time spent on
-message passing, good practice is to maximize the amount of information
-contained within a subdomain solely managed by a single computer, relative
-to the amount of information shared across multiple subdomains and
-therefor multiple computers. A useful experiment to illustrate this idea
-concretely would be to implement a code to solve a 2D Laplace equation for
-simulating a simple heat conduction problem on two processors. Use the
-textbook finite difference method, which in this case does not refer just
-to the differentiation technique.  First decompose the domain into two
-contiguous chunks, having one shared border, and distribute these chunks,
-or subdomains to the two processors. Perform the simulation a multitude of
-times to calculate an average runtime.  Next implement the solution a
-different way, instead partitioning the problem domain into many narrow,
-alternating strips, and distribute those to again two processors, where adjacent
-strips in the graph of the domain should be sent to different processors. This way
-of decomposing the domain will cause much overlap between the subdomains
-managed by the two processors and much time will be spent synchronizing the
-subdomain overlap or 'ghost nodes' between the processors. Run the modified
-simulation a multitude of times and take the average runtime. The larger
-the unpartitioned domain, the worse the discrepancy should be.
+It would be a poor comparative study to compare tangent-stiffness matrices from different problems, load steps that start with different current configurations, or from different iterations; because of this, it was necessary to solve one load step and conclude each Newton iteration within that load step by updating the displacement iterate with only the results of the AD method and to subsequently feed all four methods the same updated displacement in the following iteration. This decision precluded a comparison of Newton iteration convergence rate, since if the methods were allowed to solve a problem at their individual pace, differences in accuracy would produce differences in guess updates and therefore the number and nature of Newton iterations performed (e.g. lower accuracy predictions of the algorithmically correct tangent-stiffness matrix could cause a loss of quadratic convergence).  Different guesses from iterations started with different previous guesses could not be data for a valid comparison of tangent-stiffness matrix accuracy between methods.  Additionally, having each of the methods physically operate in the same process, serial or one of associated parallel, allowed the comparison of tangent-stiffness matrix calculation time as cached from random access memory rather than from the hard-disk.  Caching from RAM gives the benefit of vastly greater speed and simpler programming compared to some other solution speculatively involving dynamic file management on files which for one of the components of this study would be on the order of a terabyte in size. However, the price of running the methods together in the same process and avoiding the use of the hard-disk was that at least two tangent-stiffness matrices had to be stored in RAM during the simulation, which meant that special high-memory compute nodes were needed for the 1 million peridynamic node test series.
 
-\subsubsection{Quantities of interest} \label{JGAM} 
+The other goal was to compare the four methods, including AD, on the basis of speed. Speed is defined as the total compute-time of one iteration of a Newton step which includes the tangent-stiffness matrix calculation and parallel assembly.  The speed of iteration was measured because it could be so done at the same time as accuracy was being measured given a single tangent-stiffness calculation.  It was assumed that the order that each method was evaluated in parallel was unimportant, that evaluating each method successively within each solver iteration did not affect their performance individually and that speed of computation did not change with time. These assumptions allowed the test program to run the same problem with each of the methods at effectively the same time and generate an equal volume of data from each method. It was also assumed that the tangent-stiffness matrix calculation time for each of the methods did not vary based on the current configuration, as it changes slightly from iteration to iteration as the Newton solution iterate is updated.  This assumption allowed calculation time measurements to be averaged over all iterations within a single load step. The purpose of averaging calculation time measurements was to informally address the extraneous variables of parallel evaluation order and computer system load due to system processes not associated with this study. While not part of this study, the example programs available in the paper repository allow the reader to make a comparison of the methods for themselves on the basis of accuracy and convergence rate for two example nonlinear systems. In these examples, one will notice that the finite difference methods will lose quadratic convergence when the step size selected is too large such that accuracy relative to AD is decreased as shown in Table~\ref{tab:ConvergenceStudy}.
 
-As stated in the Introduction, a goal of this study was to compare CS, FD, and
-CD on the basis of accuracy. AD was omitted from the comparison because it
-served as the standard of accuracy for the other methods in the absence of
-appropriate analytical forms for the tangent-stiffness matrix associated with
-the system solved in this study. The assumption that AD is accurate enough to
-serve as a standard is supported by AD's implementation as a computerized chain
-rule as explained in Section~\ref{ADsubsection}.
-
-It would be a poor comparative study to compare tangent-stiffness matrices from
-different problems, load steps that start with different current
-configurations, or from different iterations; because of this, it was necessary
-to solve one load step and conclude each Newton iteration within that load step
-by updating the displacement iterate with only the results of the AD method and
-to subsequently feed all four methods the same updated displacement in the
-following iteration. This decision precluded a comparison of Newton iteration
-convergence rate, since if the methods were allowed to solve a problem at their
-individual pace, differences in accuracy would produce differences in guess
-updates and therefore the number and nature of Newton iterations performed
-(e.g. lower accuracy predictions of the algorithmically correct
-tangent-stiffness matrix could cause a loss of quadratic convergence).  Different
-guesses from iterations started with different previous guesses could not be
-data for a valid comparison of tangent-stiffness matrix accuracy between methods.
-Additionally, having each of the methods physically operate in the same
-process, serial or one of associated parallel, allowed the comparison of
-tangent-stiffness matrix calculation time as cached from random access memory
-rather than from the hard-disk.  Caching from RAM gives the benefit of vastly
-greater speed and simpler programming compared to some other solution
-speculatively involving dynamic file management on files which for one of the
-components of this study would be on the order of a terabyte in size. However,
-the price of running the methods together in the same process and avoiding the
-use of the hard-disk was that at least two tangent-stiffness matrices had to be
-stored in RAM during the simulation, which meant that special high-memory
-compute nodes were needed for the 1 million peridynamic node test series.
-
-The other goal was to compare the four methods, including AD, on the basis of
-speed. Speed is defined as the total compute-time of one iteration of a Newton
-step which includes the tangent-stiffness matrix calculation and parallel assembly.
-The speed of iteration was measured because it could be so done at the same
-time as accuracy was being measured given a single tangent-stiffness
-calculation.  It was assumed that the order that each method was evaluated in
-parallel was unimportant, that evaluating each method successively within each
-solver iteration did not affect their performance individually and that speed
-of computation did not change with time. These assumptions allowed the test
-program to run the same problem with each of the methods at effectively the
-same time and generate an equal volume of data from each method. It was also
-assumed that the tangent-stiffness matrix calculation time for each of the
-methods did not vary based on the current configuration, as it changes slightly
-from iteration to iteration as the Newton solution iterate is updated.  This
-assumption allowed calculation time measurements to be averaged over all
-iterations within a single load step. The purpose of averaging calculation time
-measurements was to informally address the extraneous variables of parallel
-evaluation order and computer system load due to system processes not
-associated with this study. While not part of this study, the example programs
-available in the paper repository allow the reader to make a comparison of the
-methods for themselves on the basis of accuracy and convergence rate for two
-example nonlinear systems. In these examples, one will notice that the finite
-difference methods will lose quadratic convergence when the step size selected
-is too large such that accuracy relative to AD is decreased.
-
-The goals of collecting accuracy and speed measurements were achieved by
-developing and implementing metrics within the simulation program used in the
-study. The metric used to measure the accuracy of a tangent-stiffness matrix
-was the Frobenius norm (analogous to an $l^2$-norm except defined on a matrix)
-of the element-wise difference between the tangent-stiffness matrix produced by
-the method being evaluated and the tangent-stiffness matrix produced by the AD
-based method (i.e., the \emph{exact} derivatives), given that both methods were
-set upon the same problem. The lower the value of this metric, the more
-accurate the method. The expression for the accuracy metric was
+The goals of collecting accuracy and speed measurements were achieved by developing and implementing metrics within the simulation program used in the study. The metric used to measure the accuracy of a tangent-stiffness matrix was the Frobenius norm (analogous to an $l^2$-norm except defined on a matrix) of the element-wise difference between the tangent-stiffness matrix produced by the method being evaluated and the tangent-stiffness matrix produced by the AD based method (i.e., the \emph{exact} derivatives to numerical precision), given that both methods were set upon the same problem. The lower the value of this metric, the more accurate the method. The expression for the accuracy metric was
 %
-\begin{equation} D = \sqrt{\sum_i \sum_j(K^{AD}_{ij} - K^{M}_{ij})^2},
-\label{eqn:accuracy} \end{equation}
+\begin{equation} 
+    D = \sqrt{\sum_i \sum_j(K^{AD}_{ij} - K^{M}_{ij})^2},
+    \label{eqn:accuracy} 
+\end{equation}
 %
-where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the
-AD based method, and $M$ is replaced with either CS, FD, or CD depending on the
-method being compared.  The metric used to compare the speed of the different
-methods was the time in seconds required to calculate the tangent-stiffness
-matrix. A final basis of comparison used in this study called
-\emph{computational efficiency} is based on specific calculation time per
-tangent-stiffness matrix element.
+where $D$ is distance, $K^{AD}$ is the tangent-stiffness matrix produced by the AD based method, and $M$ is replaced with either CS, FD, or CD depending on the method being compared.  The metric used to compare the speed of the different methods was the time in seconds required to calculate the tangent-stiffness matrix. A final basis of comparison used in this study called \emph{computational efficiency} is based on specific calculation time per tangent-stiffness matrix element.
 
 \subsubsection{Computers and other software} 
 %
-Discretization for the test problems run in this study was done using the
-software package \emph{Cubit} developed at Sandia National Laboratories
-\cite{ref-Cubit}. \emph{Cubit} generates a finite element mesh that is
-internally converted to a ``particle'' discretization internally when calling
-\emph{Peridigm}. The number of computational nodes in \emph{Peridigm}
-corresponds to the number of finite elements in the discretization, not the
-number of finite element nodes.  An example journal script can be found on the
-corresponding author's website. 
+Discretization for the test problems run in this study was done using the software package \emph{Cubit} developed at Sandia National Laboratories \cite{ref-Cubit}. \emph{Cubit} generates a finite element mesh that is converted to a ``particle'' discretization internally when running \emph{Peridigm}. The number of computational nodes in \emph{Peridigm} corresponds to the number of finite elements in the discretization, not the number of finite element nodes.  An example journal script can be found in the corresponding paper repository. 
 
-The test problems were run on the \emph{Stampede} HPC cluster computer housed
-at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at
-Austin. The single core test series was run using the {\tt normal} queue
-compute nodes, while the parallel test series was run using one to four {\tt
-large memory} nodes each having one terabyte of local RAM. This large amount of
-memory was required for reasons explained in Section~\ref{JGAM}, second paragraph.  
+The test problems were run on the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at Austin. The single core test series was run using the {\tt normal} queue compute nodes, while the parallel test series was run using one to four {\tt large memory} nodes each having one terabyte of local RAM. This large amount of memory was required for reasons explained in Section~\ref{JGAM}.
 
 \subsubsection{Data reduction} 
-
-The output produced by \emph{Peridigm} including the additional accuracy and
-speed measurements was redirected from the console to text files by the
-resource manager, \emph{SLURM} (Simple Linux User Resource Manager).
-Directories and filenames were chosen so that data would be easy to sort by
-individual test run.  \emph{Python} scripts were then used to post-process and
-plot the data. These scripts averaged accuracy or speed data for a tests
-corresponding to a particular peridynamic node density over all iterations for
-that run, and then plotted this averaged data  as a function of peridynamic
-node density as it varied from test to test in the series.  Similarly, for the
-parallel tests, the data was averaged and plotted in much the same way, but as
-a function of number of compute cores used to solve the problem. Confidence
-intervals were not calculated on the measurements. The main reason is that
-network traffic from other users makes running tests on the HPC cluster a time
-varying process. These data reduction and plotting scripts can be found on the
-corresponding author's website.
+The output produced by \emph{Peridigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  \emph{Python} scripts were then used to post-process and plot the data. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found in the paper repository.
 
 \section{Results and discussion}
 \label{sec:Res}
 %
-Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) matrix elements, load step average calculation time and load step average accuracy. The accuracy measure is given by Eqn.~(\ref{eqn:accuracy}) and the choice of elastic modulii mentioned in Section~\ref{tcs}.
+Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) matrix elements, load step average calculation time and load step average accuracy. The accuracy measure is given by equation~(\ref{eqn:accuracy}) and the choice of elastic modulii mentioned in Section~\ref{tcs}.
 %
-\begin{table*}[!ht]    
+\begin{table*}[!tbp]    
   \scriptsize
   \centering
         \caption{Averaged Results, Each Test} \label{tab:results}   
@@ -659,115 +490,52 @@ Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-
 \end{table*}
 
 \subsection{Speed data} 
-
-Speed measurements were taken according to the methods
-mentioned in Section~\ref{tcs}. The averaged results of these speed
-measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.
-Average time in seconds to compute a TS matrix is plotted as a function of the
-number of nonzero TS elements.  CS was the slowest of the four methods, taking
-the longest average time per iteration,  followed by CD, FD and AD in that
-order. Calculation time has a power-law relationship with problem size, with a
-power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes well
-for the scalability of each of the methods by themselves in \emph{Peridigm}. If we
-assumed every individual operation, generally speaking, took the same amount of
-time on average such that compute time were a measure of number of operations,
-this suggests that the methods as in \emph{Peridigm} have the same complexity class
-when considering computing a TS matrix alone, that is
-computation time is $\mathcal{O}(10^{(10^{-6} \times \log_{10}n)})$. The definition of 
-complexity class used here is the informal one given in \cite[pp. 1059]{cormen2009introduction}. This would
-suggest that the methods are equally well suited to the task of computing a TS matrix, if it were further assumed
-that the TS matrices produced by each method were identical. This is not the case
-as seen in the following subsection.
 %
-\begin{figure}[tbp] \centering \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
-\caption{Serial test series speed measurements.} \label{fig:serial_speed}
+Speed measurements were taken according to the methods mentioned in Section~\ref{tcs}. The averaged results of these speed measurements for the serial tests can be seen in Fig.~\ref{fig:serial_speed}.  Average time in seconds to compute a TS matrix is plotted as a function of the number of nonzero TS elements.  CS was the slowest of the four methods, taking the longest average time per iteration, followed by CD, FD and AD in that order. Calculation time has a power-law relationship with problem size, with a power-law index of roughly $\num{1.0E-6}$ for each of the methods. This bodes well for the scalability of each of the methods by themselves in \emph{Peridigm}. If we assumed every individual operation, generally speaking, took the same amount of time on average such that compute time were a measure of number of operations, this suggests that the methods as in \emph{Peridigm} have the same complexity class when considering computing a TS matrix alone, that is computation time is $\mathcal{O}(10^{(10^{-6} \times \log_{10}n)})$. The definition of complexity class used here is the informal one given in \cite[pp. 1059]{cormen2009introduction}. This would suggest that the methods are equally well suited to the task of computing a TS matrix, if it were further assumed that the TS matrices produced by each method were identical. This is not the case as seen in the following subsection.
+%
+\begin{figure}[tbp] 
+    \centering 
+    \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
+    \caption{Serial test series speed measurements.} 
+    \label{fig:serial_speed}
 \end{figure}
 %
-For the parallel simulations, averaged speed results appear in
-Fig.~\ref{fig:multi_speed}. For this series, rather than varying the number of
-nonzero TS matrix elements, the number of compute cores used to solve the
-problem is increased, while the number of nonzero TS matrix elements remained
-constant at $\num{1.67E9}$ .  CS again was the slowest method, followed by CD,
-AD and then FD.  There is a somewhat surprise reversal of FD and AD for these
-parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking
-at average iteration time, the factor of speed improvement scales inversely with
-the number of compute cores used for the given conditions of this group of
-tests. Looking at Fig.~\ref{fig:multi_speed}, the reader can see that when core
-count doubles, compute time halves, for each method. Again, these results show
-that each of the methods as implemented in \emph{Peridigm} scale well when
-additional processors are used. 
+For the parallel simulations, averaged speed results appear in Figure~\ref{fig:multi_speed}. For this series, rather than varying the number of nonzero TS matrix elements, the number of compute cores used to solve the problem is increased, while the number of nonzero TS matrix elements remained constant at $\num{1.67E9}$ .  CS again was the slowest method, followed by CD, AD and then FD.  There is a somewhat surprise reversal of FD and AD for these parallel simulations.  Figure~\ref{fig:multi_speed} indicates that when looking at average iteration time, the factor of speed improvement scales inversely with the number of compute cores used for the given conditions of this group of tests. Figure~\ref{fig:multi_speed} clearly shows that when core count doubles, compute time halves, for each method. Again, these results show that each of the methods as implemented in \emph{Peridigm} scale well when additional processors are used. 
 %
-\begin{figure}[tbp] \centering \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
-\caption{Multicore test series speed measurements.} \label{fig:multi_speed}
+\begin{figure}[tbp] 
+    \centering 
+    \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
+    \caption{Multicore test series speed measurements.} 
+    \label{fig:multi_speed}
 \end{figure}
 %
-A speculative explanation as to why FD and AD have reversed places in the speed
-tests with respect to the serial results is that the AD data-structures carry a
-list of partial derivatives of the functional evaluations along side the
-functional evaluations themselves only to be processed at the end of the
-tangent-stiffness matrix calculation when the derivatives are requested. This
-represents additional load on the hardware memory subsystem, such that may
-exceed that of FD yet still falls under a supposed memory bandwidth threshold
-during serial operation. Cores within a multicore processor use the same shared
-bus to access memory, such that cores compete for memory access. Supposing that
-exceeding the memory bandwidth threshold penalizes additional requested
-bandwidth, it is likely that the decrease in available memory bandwidth per
-core caused by parallel operation coupled with AD's additional resource
-requirements causes the AD method to be slower than FD. 
+A speculative explanation as to why FD and AD have reversed places in the speed tests with respect to the serial results is that the AD data-structures carry a list of partial derivatives of the functional evaluations along side the functional evaluations themselves only to be processed at the end of the tangent-stiffness matrix calculation when the derivatives are requested. This represents additional load on the hardware memory subsystem, such that may exceed that of FD yet still falls under a supposed memory bandwidth threshold during serial operation. Cores within a multicore processor use the same shared bus to access memory, such that cores compete for memory access. Supposing that exceeding the memory bandwidth threshold penalizes additional requested bandwidth, it is likely that the decrease in available memory bandwidth per core caused by parallel operation coupled with AD's additional resource requirements causes the AD method to be slower than FD. 
 
 \subsection{Accuracy data}
-
-Data for accuracy measurements were taken according to the methods mentioned in
-Section~\ref{tcs}, and reduced using Eqn.~(\ref{eqn:accuracy}). The
-averaged results of these accuracy measurements for the serial tests can be
-seen in Fig.~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as
-$l^2$-norm in the figure labels for conciseness) of the element-wise difference
-between a given TS matrix and the TS matrix produced by the AD method is
-plotted as a function of the number of nonzero TS matrix elements. CS was shown
-to be the most accurate of the methods when compared to AD and was roughly
-\emph{$6$ orders of magnitude more accurate than CD} and \emph{$9$ orders of
-magnitude more accurate than FD}. This accuracy ranking order was maintained
-for each test in the series. It should be pointed out that compared to the
-$l^2$-norms of any of the TS matrices by themselves, the magnitude of the
-accuracy metric calculated with Eqn.~\ref{eqn:accuracy} for any of the methods
-is relatively small. Relative error was computed from these measurements and is reported in
-Table~\ref{tab:RelAcc}. The values for the $l^2$-norms of the TS matrices appear
-in the simulation data which is available in the paper repository. The effect
-of these accuracy differences on convergence rate of the Newton solver was studied and the
-results are reported in section~\ref{sec:PeridigmConvergenceStudy}.  
 %
-The accuracy of FD and CD could be improved by using a smaller probe distance,
-$h$; however, if $h$ is too small, then the methods can suffer from severe
-effects, including solution divergence, of the round-off error associated with
-subtracting two numbers that are very close to one another.  The value of $h$
-used in this study is the default value used in \emph{Peridigm} which is
-heuristically derived based on computational node spacing using the method explained in \cite[pp. 90]{ref-Adaggio}.  
-To summarize, a spacing of $1.E-6$ times grid spacing is used to provide acceptable accuracy but prevent roundoff error, 
-as is not a user determined setting in \emph{Peridigm}. One of the beauties
-of the CS method is that since dependence on $h$ decreases for small $h$, which
-a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$,
-has no lower limit for effective values, therefore it can be set to machine epsilon and the
-analysis performed without the issues associated with round-off error. The
-value chosen for $h$ for CS used in this study was $\num{1.E-100}$ to
-demonstrate this.
+Data for accuracy measurements were taken according to the methods mentioned in Section~\ref{tcs}, and reduced using equation~(\ref{eqn:accuracy}). The averaged results of these accuracy measurements for the serial tests can be seen in Figure~\ref{fig:serial_accuracy}. Averaged Frobenius norm (referred to as $l^2$-norm in the figure labels for conciseness) of the element-wise difference between a given TS matrix and the TS matrix produced by the AD method is plotted as a function of the number of nonzero TS matrix elements. CS was shown to be the most accurate of the methods when compared to AD and was roughly \emph{$6$ orders of magnitude more accurate than CD} and \emph{$9$ orders of magnitude more accurate than FD}. This accuracy ranking order was maintained for each test in the series. It should be pointed out that compared to the $l^2$-norms of any of the TS matrices by themselves, the magnitude of the accuracy metric calculated with equation~\ref{eqn:accuracy} for any of the methods is relatively small. Relative error was computed from these measurements and is reported in Table~\ref{tab:RelAcc}. The values for the $l^2$-norms of the TS matrices appear in the simulation data which is available in the paper repository. The effect of these accuracy differences on convergence rate of the Newton solver was studied and the results are reported in Section~\ref{sec:PeridigmConvergenceStudy}.  
 %
-\begin{figure}[tbp] \centering
-\scalebox{1.0}{\input{./figs/serial_accuracy.pgf}} \caption{Serial test series
-accuracy measurements.} \label{fig:serial_accuracy} \end{figure}
+The accuracy of FD and CD could be improved by using a smaller probe distance, $h$; however, if $h$ is too small, then the methods can suffer from severe effects, including solution divergence, of the round-off error associated with subtracting two numbers that are very close to one another.  The value of $h$ used in this study is the default value used in \emph{Peridigm} which is heuristically derived based on computational node spacing using the method explained in \cite[pp. 90]{ref-Adaggio}.  To summarize, a spacing of $1.E-6$ times grid spacing is used to provide acceptable accuracy but prevent roundoff error, as is not a user determined setting in \emph{Peridigm}. One of the beauties of the CS method is that since dependence on $h$ decreases for small $h$, which a numerical example in \cite[Table 1]{squire1998using} demonstrates, $h$, has no lower limit for effective values, therefore it can be set to machine epsilon and the analysis performed without the issues associated with round-off error. The value chosen for $h$ for CS used in this study was $\num{1.E-100}$ to demonstrate this.
 %
-The averaged results of the accuracy measurements taken for the parallel test
-series can be seen in Fig.~\ref{fig:multi_accuracy}. The ordinate axis units
-remain unchanged from Fig.~\ref{fig:serial_accuracy}, but the abscissa now
-indicates number of compute cores used to solve the test problem. Accuracy
-trends matched those for the single core tests. 
+\begin{figure}[tbp] 
+    \centering
+    \scalebox{1.0}{\input{./figs/serial_accuracy.pgf}} 
+    \caption{Serial test series accuracy measurements.} 
+    \label{fig:serial_accuracy} 
+\end{figure}
 %
-\begin{figure}[tbp] \centering
-\scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} \caption{Multicore test
-series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
+The averaged results of the accuracy measurements taken for the parallel test series can be seen in Figure~\ref{fig:multi_accuracy}. The ordinate axis units remain unchanged from Figure~\ref{fig:serial_accuracy}, but the abscissa now indicates number of compute cores used to solve the test problem. Accuracy trends matched those for the single core tests. 
 %
-\todo[]{Re: II.22} It can be seen in Figs.~\ref{fig:serial_accuracy} and \ref{fig:multi_accuracy} that there appears to be some fluctuating behavior in the accuracy of the methods. Those figures are depicting absolute error. If relative error is computed from the absolute error measurements by dividing them by the Frobenius norm of the appropriate AD produced TS matrix, it can be seen as in Table~\ref{tab:RelAcc}, that there is little variation in the accuracy of the methods between tests or between serial and parallel test groups. 
-
-\begin{table*}[!ht]    
+\begin{figure}[tbp] 
+    \centering
+    \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} 
+    \caption{Multicore test series accuracy measurements.} 
+    \label{fig:multi_accuracy} 
+\end{figure}
+%
+\todo[]{Re: II.22} It can be seen in Figures~\ref{fig:serial_accuracy} and \ref{fig:multi_accuracy} that there appears to be some fluctuating behavior in the accuracy of the methods. Those figures are depicting absolute error. If relative error is computed from the absolute error measurements by dividing them by the Frobenius norm of the appropriate AD produced TS matrix, it can be seen as in Table~\ref{tab:RelAcc}, that there is little variation in the accuracy of the methods between tests or between serial and parallel test groups. 
+%
+\begin{table*}[tbp]    
   \scriptsize
   \centering
         \caption{Relative accuracy results} \label{tab:RelAcc}   
@@ -794,9 +562,8 @@ series accuracy measurements.} \label{fig:multi_accuracy} \end{figure}
 \end{table*}
 
 \subsection{Efficiency data}
-
-Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element, was plotted as a function of the number of nonzero TS matrix elements. The single core results are shown in Fig.~\ref{fig:serial_efficiency}.  The ranking order of the methods
-matched their speed ranking in Fig.~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the number of nonzero TS elements.  
+%
+Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element, was plotted as a function of the number of nonzero TS matrix elements. The single core results are shown in Figure~\ref{fig:serial_efficiency}.  The ranking order of the methods matched their speed ranking in Figure~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the number of nonzero TS elements.  
 %
 \begin{figure}[tbp]
   \centering
@@ -805,7 +572,7 @@ matched their speed ranking in Fig.~\ref{fig:serial_speed}. This plot indicates 
   \label{fig:serial_efficiency}
 \end{figure}
 %
-The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. The parallel efficiency plot shows that AD was slower than FD because for the given test problem it had a lower efficiency. Strangely AD appears to gain in efficiency over the last few data points in the plot. The reason behind this trend was not determined.
+The parallel efficiency results are shown in Figure~\ref{fig:multi_efficiency}. The parallel efficiency plot shows that AD was slower than FD because for the given test problem it had a lower efficiency. Strangely AD appears to gain in efficiency over the last few data points in the plot. The reason behind this trend was not determined.
 %
 \begin{figure}[tbp]
   \centering
@@ -816,114 +583,52 @@ The parallel efficiency results are shown in Fig.~\ref{fig:multi_efficiency}. Th
 
 
 
-\section{\todo[][]{Re: I.5}Convergence and displacement accuracy studies} 
+\section{\todo[]{Re: I.5}Convergence and displacement accuracy studies.} 
 \label{sec:PeridigmConvergenceStudy}
 %
-While the previous sections profiled the per-iteration performance of each of
-the methods, it was necessary to conduct convergence rate studies in order to
-get a complete picture. It is necessary for an analyst to know if the
-accuracy differences measured in the per-iteration tests would amount to
-differences in convergence rates among the methods if they were allowed to solve problems
-normally. The question is posed, given that step-size $h$ is heuristically
-selected by \emph{Peridigm} for the finite difference methods and presumable
-makes a good choice, do the single-iteration Jacobian accuracy results predict
-the ranking of the methods in terms of convergence rate for a given study? For
-brevity, convergence rate was measured for each of the methods in solving just
-the largest problem of the single-core test series. That problem was solved with each of the methods
-both on a single core and all sixteen cores of a 'normal' node on \emph{Stampede}. As was seen in the per-iteration results,
-Jacobian accuracy did not vary greatly from test to test, such that any pair of tests
-from the two series could have been considered reasonably representative. As in
-the validation problem shown in ~\ref{subsec:Validation}, would each of the methods return an
-equal convergence rate so long as $h$ were optimally selected? 
+While the previous sections profiled the per-iteration performance of each of the methods, it was necessary to conduct convergence rate studies in order to get a complete picture. It is necessary for an analyst to know if the accuracy differences measured in the per-iteration tests would amount to differences in convergence rates among the methods if they were allowed to solve problems normally. The question is posed, given that step-size $h$ is heuristically selected by \emph{Peridigm} for the finite difference methods and presumable makes a good choice, do the single-iteration Jacobian accuracy results predict the ranking of the methods in terms of convergence rate for a given study? For brevity, convergence rate was measured for each of the methods in solving just the largest problem of the single-core test series. That problem was solved with each of the methods both on a single core and all sixteen cores of a 'normal' node on \emph{Stampede}. As was seen in the per-iteration results, Jacobian accuracy did not vary greatly from test to test, such that any pair of tests from the two series could have been considered reasonably representative. As in the validation problem shown in Section~\ref{subsec:Validation}, would each of the methods return an equal convergence rate so long as $h$ were optimally selected? 
 
-The results shown in Table ~\ref{tab:ConvergenceStudy2} indicate that this was the case. 
-The difference in Jacobian accuracy between the methods seen in the per-iteration tests
-was not sufficient to lead to differences in the convergence rate of the methods.
-
-\begin{table*}[!ht]   
-    \centering \caption{Average iterations/ load-step} 
+The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was the case.  The difference in Jacobian accuracy between the methods seen in the per-iteration tests was not sufficient to lead to differences in the convergence rate of the methods.
+%
+\begin{table}[htb]   
+    \centering 
+    \caption{Average iterations / load-step} 
     \label{tab:ConvergenceStudy2}   
     \begin{tabular}{c c c c c}
-    \toprule Test type & AD & CS & CD & FD\\
+        \toprule 
+        Test type & AD & CS & CD & FD\\
         \midrule 
         single-core & 63 & " & " & "\\ 
         multi-core  & 63 & " & " & "\\ 
-\bottomrule \end{tabular} \end{table*}
+        \bottomrule 
+    \end{tabular} 
+\end{table}
 
-The end displacement results shown in ~\ref{subsec:Validation} indicated that up to a certain precision the
-solutions produced by each of the methods were identical. It was examined if this was the case for the 
-solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the 
-methods were compared to the AD produced solutions, under the assumption that the AD produced solutions
-would be closest to the solution produced by using an 'exact' Jacobian. Table ~\ref{tab:PeridigmSolutionAccuracy} shows that the methods
-did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders 
-of magnitude smaller than the force density value at the node where the difference was detected.
-
-\begin{table*}[!ht]   
-    \centering \caption{Nodal force density maximum difference} 
+The end displacement results shown in Section~\ref{subsec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an 'exact' Jacobian. Table~\ref{tab:PeridigmSolutionAccuracy} shows that the methods did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders of magnitude smaller than the force density value at the node where the difference was detected.
+%
+\begin{table}[hbp]   
+    \centering 
+    \caption{Nodal force density maximum difference} 
     \label{tab:PeridigmSolutionAccuracy}   
     \begin{tabular}{c c c c}
-    \toprule  & CS & CD & FD\\
+        \toprule  & CS & CD & FD\\
         \midrule  Order of magnitude & $\num{1.E-8}$ & $\num{1.E-8}$ & $\num{1.E-5}$ \\ 
-\bottomrule \end{tabular} \end{table*}
+        \bottomrule 
+    \end{tabular} 
+\end{table}
 
-The solution accuracy results do follow the same ranking seen in the Jacobian accuracy results, however,
-again as in the validation problem the results differ only slightly. Speculatively this degree of error
-may be important to those running probabilistic simulations such that the propagation of error may be 
-a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material 
-properties or loading conditions, it may have a greater impact on simulations involving very low
-force densities such as for small displacements or very lax materials. In this case it could be recommended
-that forward difference be avoided. 
-
-
+The solution accuracy results do follow the same ranking seen in the Jacobian accuracy results; however, again as in the validation problem the results differ only slightly. Speculatively this degree of error may be important to those running probabilistic simulations such that the propagation of error may be a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material properties or loading conditions, it may have a greater impact on simulations involving very low force densities such as for small displacements or very compliant materials. In this case it could be recommended that forward difference be avoided. 
+%
 \section{\todo[]{Re: I.5}Conclusions}
 \label{sec:Conc}
 %
 \subsection{For further studies of Jacobian accuracy in Newton's method}
 \label{subsec:FurtherStudies}
-The question is raised; what is the significance of Jacobian estimation
-accuracy to the convergence of Newton's method?  The per-iteration and even
-convergence studies shown here indicate the effect of Jacobian accuracy for
-only a single datum, a very accurate Jacobian estimate, while the validation
-problem indicates the effect of using a grossly inaccurate Jacobian. The results here show that
-for very small Jacobian estimate inaccuracies, convergence rate is not
-affected, while for grossly inaccurate Jacobians Newton's method fails. 
-Additional confounding factors include that a Jacobian is only first
-order approximation of an often curved energy surface and that a non-naive implementation of Newton's
-method includes a line search phase that helps in choosing an optimal iterate given a Jacobian.
-Is it worthwhile then to investigate the effect of using moderately inaccurate Jacobians, 
-produced deliberately or otherwise, on the convergence rate of Newton's method?
+The question is raised; what is the significance of Jacobian estimation accuracy to the convergence of Newton's method?  The per-iteration and even convergence studies shown here indicate the effect of Jacobian accuracy for only a single datum, a very accurate Jacobian estimate, while the validation problem of Section~indicates the effect of using a grossly inaccurate Jacobian. The results here show that for very small Jacobian estimate inaccuracies, convergence rate is not affected, while for grossly inaccurate Jacobians Newton's method fails.  Additional confounding factors include that a Jacobian is only first order approximation of an often curved energy surface and that a non-naive implementation of Newton's method includes a line search phase that helps in choosing an optimal iterate given a Jacobian.  Is it worthwhile then to investigate the effect of using moderately inaccurate Jacobians, produced deliberately or otherwise, on the convergence rate of Newton's method?
 
-The answer may be no at least unless a more highly non-linear class of problem
-is selected for study or a controllable method of producing a moderately
-inaccurate Jacobian is found along with a reason for using it. While it is possible
-to incorrectly apply finite differencing and CS by choosing an inappropriate
-step-size, there is no reason that this should be done. The experiments show
-that step-size $h$ can be properly selected and that the methods are capable of
-producing accurate Jacobians. It should be noted that the model used to perform
-the simulation could always be substituted for a more highly non-linear one and
-perhaps this would somewhat increase the importance of Jacobian accuracy. The
-study presented here failed to pose the question of how wrong a correctly
-implemented Jacobian calculation scheme could go for plastic or otherwise
-non-linear material models, here instead non-linearity was imposed by the
-nonlocal interaction between material points essential to peridynamic models,
-like the linear model used in this study. 
+The answer may be no at least unless a more highly non-linear class of problem is selected for study or a controllable method of producing a moderately inaccurate Jacobian is found along with a reason for using it. While it is possible to incorrectly apply finite differencing and CS by choosing an inappropriate step-size, there is no reason that this should be done. The experiments show that step-size $h$ can be properly selected and that the methods are capable of producing accurate Jacobians. It should be noted that the model used to perform the simulation could always be substituted for a more highly non-linear one and perhaps this would somewhat increase the importance of Jacobian accuracy. The study presented here failed to pose the question of how wrong a correctly implemented Jacobian calculation scheme could go for plastic or otherwise non-linear material models, here instead non-linearity was imposed by the nonlocal interaction between material points essential to peridynamic models, like the linear model used in this study. 
 
-Nevertheless, Newton's method is not defined for using an inaccurate or 'wrong'
-Jacobian, so using an inaccurate Jacobian is failing to perform Newton's method
-by definition. But it is also true that it should not be expected that every
-differentiation technique performs flawlessly under all situations. The
-pragmatic strategy to study this may be to compare a prospective method's
-Jacobian accuracy to that produced by AD and develop a rule of thumb based on
-observed convergence rates from prior simulations as they relate to the percent
-difference of the prospective and AD produced Jacobians. Also it is possible to
-calculate a sensitivity of Jacobian error to step-size alongside a sensitivity
-of convergence rate to step-size, and then to relate these two quantities as a
-map of Jacobian error to convergence rate change from ideal. Additionally it is
-still possible to look at the convergence conditions for Newton's method and
-suggest a relationship between Jacobian accuracy and convergence rate in a
-theoretical manner. To this point, there are a set of convergence conditions derived in
-\cite[Chap. 2, p.41]{burkeLectures} which relate quality of Jacobian inverse approximations
-to convergence rate classification, here reproduced,
+Nevertheless, Newton's method is not defined for using an inaccurate or 'wrong' Jacobian, so using an inaccurate Jacobian is failing to perform Newton's method by definition. But it is also true that it should not be expected that every differentiation technique performs flawlessly under all situations. The pragmatic strategy to study this may be to compare a prospective method's Jacobian accuracy to that produced by AD and develop a rule of thumb based on observed convergence rates from prior simulations as they relate to the percent difference of the prospective and AD produced Jacobians. Also it is possible to calculate a sensitivity of Jacobian error to step-size alongside a sensitivity of convergence rate to step-size, and then to relate these two quantities as a map of Jacobian error to convergence rate change from ideal. Additionally it is still possible to look at the convergence conditions for Newton's method and suggest a relationship between Jacobian accuracy and convergence rate in a theoretical manner. To this point, there are a set of convergence conditions derived in \cite[Chap. 2, p.41]{burkeLectures} which relate quality of Jacobian inverse approximations to convergence rate classification, here reproduced,
 %
 \begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq K,
 \end{equation}
