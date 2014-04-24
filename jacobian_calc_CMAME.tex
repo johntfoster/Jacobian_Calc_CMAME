@@ -276,6 +276,7 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \coordinate (mf) at (2.5, -0.8);
 \coordinate (lm) at (1.0, 0.0);
 \coordinate (mm) at (1.2, 0.0);
+\coordinate (tm) at (2.5, 2.0);
 \coordinate (rht) at (5.0, 4.0);
 \coordinate (rhtt) at (5.0, 4.2);
 \coordinate (dispref) at (6.5, 3.06);
@@ -292,6 +293,7 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \node (ground) at (mf)  [rectangle, draw, style=ground] {};
 \node (spring_label) at (rhml) [] {$k_s$};
 \node (load_label) at (rhtt) [] {$P$};
+\node (bar_length_label) at (tm) [] {$L_0$};
 \node (angle_label) at ($ (mm)!.4cm!(bar_2) $) [] {$\phi$};
 \node (displacement_label) at (bbrdisref) [] {D};
 \path (bar_1) -- (bar_2) [draw, very thick];
