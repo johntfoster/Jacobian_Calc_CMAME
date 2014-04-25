@@ -129,7 +129,7 @@ Newton's method \sep Newton-Raphson \sep numerical differentiation \sep complex-
 
 %% main text
 
-\section{Introduction}
+\section{Introduction.}
 %\subsection{Motivation}
 \label{sec:intro} 
 
@@ -327,7 +327,7 @@ where $\phi$ is a constant truss angle, $AE$ is the axial rigidity of the truss,
 %
 \begin{table}[tbp]    
   \centering
-        \caption{Displacement, D, after load-step 12} \label{tab:Verification}   
+  \caption{Displacement, D, after load-step 12.} \label{tab:Verification}   
         \begin{tabular}{c c c c c}
          \toprule
          Step exponent & Actual $\si{\centi\meter}$ & AD $\si{\centi\meter}$ & CS $\si{\centi\meter}$ & FD $\si{\centi\meter}$\\ 
@@ -346,7 +346,7 @@ Table.~\ref{tab:Verification} shows that each of the methods solved the problem 
 %
 \begin{table}[tbp]    
   \centering
-        \caption{Summed iterations over all load steps} \label{tab:ConvergenceStudy}   
+  \caption{Summed iterations over all load steps.} \label{tab:ConvergenceStudy}   
         \begin{tabular}{c c c c c}
          \toprule
          Step exponent & Actual $\si{\centi\meter}$ & AD $\si{\centi\meter}$ & CS $\si{\centi\meter}$ & FD $\si{\centi\meter}$\\ 
@@ -363,9 +363,9 @@ Table.~\ref{tab:Verification} shows that each of the methods solved the problem 
 %
 Table~\ref{tab:ConvergenceStudy} indicates that when using AD or the `actual' analytically derived tangent-stiffness, a minimum number of iterations is achieved corresponding to a maximum convergence rate. CS and FD are similarly affected by a grossly large step-size, while subtractive cancellation invalidates the results for FD for very small step-sizes. Inaccuracy for large step-sizes is as predicted by the FD and CS formulas, which require a small step-size to allow the neglect of higher order terms. The results of this test show that step-size selection is not unimportant when using FD, but when properly configured any of the methods may return the same maximum convergence rate for this problem.  Overall conclusions regarding the methods that the accuracy of the tangent-stiffness should not be confused with the accuracy of the equilibrium solution, since each of the methods discussed here may be equally capable given enough iterations. Numerical measurements of accuracy besides number of iterations taken are not possible here because there is not basis for comparison, as the methods are solving the problem separately and producing different local Newton iterates. Additionally, while the inaccuracy of the tangent-stiffness may strongly affect convergence rates, this relationship was not precisely quantified here.
 
-\section{Description of analysis tools and approach} 
+\section{Description of analysis tools and approach.} 
 %
-\subsection{Peridigm and peridynamics}
+\subsection{Peridigm and peridynamics.}
 \label{subsec:PaP}
 %
 Comparisons of the different tangent-stiffness matrix calculation techniques were carried out through code-development and instrumentation of the computational peridynamics code \emph{Peridigm} \cite{peridigm}.  \emph{Peridigm} is distributed by Sandia National Laboratories as its primary open-source computational peridynamics code. It is a massively parallel simulation code for implicit and explicit multi-physics simulations primarily used for solid mechanics and material failure. \emph{Peridigm} is a C++ code utilizing agile software components from Sandia's \emph{Trilinos} project \cite{trilinos}. It's important to note that there is no specialization of the tangent-stiffness matrix calculation methods described previously to this particular code or more generally to a computational peridynamics approach and the analysis carried out in this study should provide insight into the speed and accuracy of these methods when implemented into other computational mechanics analysis tools as well.  \emph{Peridigm} was chosen primarily because the FD, CD, and AD methods for tangent-stiffness matrix calculation where already implemented in the code, leaving only the CS method for development. Also, because peridynamics is a nonlocal theory, the tangent-stiffness matrices have a much higher bandwidth (i.e. less sparsity) than traditional finite element tangent-stiffness matrix computations and the time required to construct the tangent-stiffness matrix is a majority of the total computation time in any quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm} development team has an interest in profiling the performance of the tangent-stiffness matrix computation methods.
@@ -415,7 +415,7 @@ A series of nine single compute core (i.e.\ serial) test problems were run with 
 \begin{table*}[!tbp]    
   \scriptsize
   \centering
-        \caption{Test Parameters} \label{tab:TestParams}   
+  \caption{Test Parameters.} \label{tab:TestParams}   
        \begin{tabular}{c c c c c c}
          \toprule
          Peri. nodes & Nozero TS elems. & Horizon ($\delta$) & Load rate & Number Load steps & Abs. tolerance \\ 
@@ -468,7 +468,7 @@ The test problems were run on the \emph{Stampede} HPC cluster computer housed at
 %
 The output produced by \emph{Peridigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  \emph{Python} scripts were then used to post-process and plot the data. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found in the paper repository.
 
-\section{Results and discussion}
+\section{Results and discussion.}
 \label{sec:Res}
 %
 Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) matrix elements, load step average calculation time and load step average accuracy. The accuracy measure is given by equation~(\ref{eqn:accuracy}) and the choice of elastic modulii mentioned in Section~\ref{tcs}.
@@ -476,7 +476,7 @@ Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-
 \begin{table*}[!tbp]    
   \scriptsize
   \centering
-        \caption{Averaged Results, Each Test} \label{tab:results}   
+  \caption{Averaged Results, Each Test.} \label{tab:results}   
        \begin{tabular}{c c c c c c c c c}
          \toprule
          Cores & TS Elements & \multicolumn{4}{c}{Calculation Time ($\si{\second}$)} & \multicolumn{3}{c}{Accuracy Difference ($\si{\mega\pascal}$)} \\ 
@@ -629,7 +629,7 @@ The end displacement results shown in Section~\ref{subsec:Validation} indicated 
 
 The solution accuracy results do follow the same ranking seen in the tangent-stiffness accuracy results; however, again as in the validation problem the results differ only slightly. Speculatively this degree of error may be important to those running probabilistic simulations such that the propagation of error may be a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material properties or loading conditions, it may have a greater impact on simulations involving very low force densities such as for small displacements or very compliant materials. In this case it could be recommended that forward difference be avoided. 
 %
-\section{\todo[]{Re: I.5}Conclusions}
+\section{\todo[]{Re: I.5}Conclusions.}
 \label{sec:Conc}
 %
 %Let's leave this section out and see what the reviewer says.  The paper is getting pretty long.
@@ -721,7 +721,7 @@ Based on the computational experiments, it appears that for users of \emph{Perid
 
 The CS method was shown to be highly accurate in calculating tangent-stiffness matrices by the standards of this study, and it is slower than other methods for a naive implementation. In the context of future use of CS in \emph{Peridigm}, CS holds the advantage of relying on byte-copyable\footnote{In this context,  byte-copyable means that the collection of data to transfer is made of identically sized pieces.} data types, while AD requires a complicated serialization and deserialization in order to function as byte-copyable. This is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very difficult, as this would require compiling a version of the AD library being used that were compatible with the accelerator or GPU being used.  Byte-copyability is significant for example because it is a requirement for the basic offload mode provided for Intel MIC accelerator boards which are installed in \emph{Stampede}, where the alternative mode requires more extensive effort \cite{intel_byte_copyable}. What this means is that if \emph{Peridigm} or any simulation software were to be reformulated to take advantage of accelerators or GPUs, the flexibility of complex-step owed to its simple implementation may make it more viable for that application given its high accuracy. Additional performance gains may be achieved through the use of the templated \emph{TPetra} package in \emph{Trilinos} which would allow the use of complex data types natively, and alleviate the expense of the dynamic-casts that were utilized in this study.  As a final comment, it should be noted that from a code development perspective the CS method may be the easiest of the methods to implement; it only requires one functional evaluation, there is no heuristic choice of probe distance, and there is no dependence on an external AD library.  From this perspective, the method may still be an attractive method for tangent-stiffness matrix evaluation. However, at least for the models producing the results shown here, each of the methods returned quadratic convergence, indicating each was sufficiently accurate. 'Marching orders' for the analyst would be to select the swiftest method, while it would seem accuracy above what is adequate does not enhance the convergence rate or iteration speed until either classical Newton's convergence conditions or the approximate case conditions are violated. 
 
-\section{Acknowledgements}
+\section{Acknowledgements.}
 \label{sec:ack}
 This work was funded in part by grants from the United States Air Force Office of Scientific Research grant number W911NF-11-1-0208 and National Energy Technology Laboratory grant number DE-FE0010808. The authors acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: \url{http://www.tacc.utexas.edu}.
 %% References
@@ -734,7 +734,7 @@ This work was funded in part by grants from the United States Air Force Office o
 
 %% References with bibTeX database:
 
-\section{References}
+\section{References.}
 
 \bibliographystyle{elsarticle-num}
 \bibliography{all}
@@ -742,7 +742,7 @@ This work was funded in part by grants from the United States Air Force Office o
 \appendix
 \renewcommand*{\thesection}{\Alph{section}}
 %
-\section{Complex-Step Example}
+\section{Complex-Step Example.}
 \label{sec:appendixA}
 %
 Using $f(x) = \cos(x)$, we have
@@ -774,7 +774,7 @@ As $h \to 0$ then $\cosh(h) \to 1$ thereby recovering the exact derivative
 \frac{\partial f(x)}{\partial x} =-\sin(x).
 \]
 
-\section{Automatic differentiation example}
+\section{Automatic differentiation example.}
 \label{sec:appendixB}
 
 \begin{enumerate}

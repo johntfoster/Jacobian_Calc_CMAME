@@ -1,7 +1,7 @@
 %DIF 1-26d1
 %DIF LATEXDIFF DIFFERENCE FILE
-%DIF DEL jacobian_calc_CMAME-oldtmp-57754.tex   Thu Apr 24 23:04:35 2014
-%DIF ADD jacobian_calc_CMAME.tex                Thu Apr 24 23:04:21 2014
+%DIF DEL jacobian_calc_CMAME-oldtmp-59275.tex   Thu Apr 24 23:11:28 2014
+%DIF ADD jacobian_calc_CMAME.tex                Thu Apr 24 23:11:19 2014
 %DIF < %%
 %DIF < %% Copyright 2007, 2008, 2009 Elsevier Ltd
 %DIF < %%
@@ -202,7 +202,7 @@ Newton's method \sep Newton-Raphson \sep \DIFdelbegin \DIFdel{numeric }\DIFdelen
 
 %% main text
 
-\section{Introduction}
+\section{Introduction\DIFaddbegin \DIFadd{.}\DIFaddend }
 %\subsection{Motivation}
 \label{sec:intro} 
 \DIFaddbegin 
@@ -409,8 +409,8 @@ When using \DIFdelbegin \DIFdel{automatic-differentiation }\DIFdelend \DIFaddbeg
 \DIFaddend %
 but, with the caveat that $F^{int}$ is evaluated in a way that is algorithmically consistent, and therefore should yield quadratic convergence with Newton's method.
 
-\section{\DIFdelbegin \DIFdel{Description }\DIFdelend \DIFaddbegin \todo[]{Re: I.5}\DIFadd{Simple example }\DIFaddend of \DIFdelbegin \DIFdel{analysis tools }\DIFdelend \DIFaddbegin \DIFadd{CS, AD }\DIFaddend and \DIFdelbegin \DIFdel{approach}\DIFdelend \DIFaddbegin \DIFadd{FD for solution of nonlinear problems}\DIFaddend .}
-\DIFaddbegin \label{subsec:Validation}
+\DIFaddbegin \section{\todo[]{Re: I.5}\DIFadd{Simple example of CS, AD and FD for solution of nonlinear problems.}}
+\label{subsec:Validation}
 
 \DIFadd{In order to illustrate a comparison of the numerical differentiation techniques in a simpler form than it appears in the large-scale analysis code covered in the following sections, a simple example borrowed from \mbox{%DIFAUXCMD
 \cite{rezaiee2010dynamic}
@@ -419,12 +419,8 @@ was implemented with each of the methods, CS, AD, and FD. All the source code to
 }
 
 \DIFadd{The example problem is a single degree-of-freedom nonlinear mechanical system involving a connected truss member and spring as illustrated in Fig. \ref{fig:TrussSchematic}. 
-}\DIFaddend %
-\DIFdelbegin \subsection{\emph{\DIFdel{Peridigm}} %DIFAUXCMD
-\DIFdel{and  peridynamics.}}
-%DIFAUXCMD
-\addtocounter{subsection}{-1}%DIFAUXCMD
-\DIFdelend \DIFaddbegin \begin{figure}[tbp] 
+%DIF > 
+}\begin{figure}[tbp] 
 \centering %DIF > %\includegraphics[width=0.7\textwidth]{./figs/truss.png}
 \begin{tikzpicture}
 \usetikzlibrary{shapes.geometric}
@@ -480,8 +476,8 @@ was implemented with each of the methods, CS, AD, and FD. All the source code to
 \caption{\DIFaddFL{Beam and spring simulated in example program.}} 
 \label{fig:TrussSchematic}
 \end{figure}
-\DIFaddend %
-\DIFaddbegin \DIFadd{For this system, the equilibrium reaction force associated with a displacement $D$ of the spring is shown in equation~(\ref{eqn:TrussForce}) 
+%DIF > 
+\DIFadd{For this system, the equilibrium reaction force associated with a displacement $D$ of the spring is shown in equation~(\ref{eqn:TrussForce}) 
 %DIF > 
 }\begin{equation} 
     \label{eqn:TrussForce}
@@ -502,7 +498,7 @@ was implemented with each of the methods, CS, AD, and FD. All the source code to
 %DIF > 
 }\begin{table}[tbp]    
   \centering
-        \caption{\DIFaddFL{Displacement, D, after load-step 12}} \label{tab:Verification}   
+  \caption{\DIFaddFL{Displacement, D, after load-step 12.}} \label{tab:Verification}   
         \begin{tabular}{c c c c c}
          \toprule
          \DIFaddFL{Step exponent }& \DIFaddFL{Actual $\si{\centi\meter}$ }& \DIFaddFL{AD $\si{\centi\meter}$ }& \DIFaddFL{CS $\si{\centi\meter}$ }& \DIFaddFL{FD $\si{\centi\meter}$}\\ 
@@ -521,7 +517,7 @@ was implemented with each of the methods, CS, AD, and FD. All the source code to
 %DIF > 
 }\begin{table}[tbp]    
   \centering
-        \caption{\DIFaddFL{Summed iterations over all load steps}} \label{tab:ConvergenceStudy}   
+  \caption{\DIFaddFL{Summed iterations over all load steps.}} \label{tab:ConvergenceStudy}   
         \begin{tabular}{c c c c c}
          \toprule
          \DIFaddFL{Step exponent }& \DIFaddFL{Actual $\si{\centi\meter}$ }& \DIFaddFL{AD $\si{\centi\meter}$ }& \DIFaddFL{CS $\si{\centi\meter}$ }& \DIFaddFL{FD $\si{\centi\meter}$}\\ 
@@ -539,12 +535,13 @@ was implemented with each of the methods, CS, AD, and FD. All the source code to
 \DIFadd{Table~\ref{tab:ConvergenceStudy} indicates that when using AD or the `actual' analytically derived tangent-stiffness, a minimum number of iterations is achieved corresponding to a maximum convergence rate. CS and FD are similarly affected by a grossly large step-size, while subtractive cancellation invalidates the results for FD for very small step-sizes. Inaccuracy for large step-sizes is as predicted by the FD and CS formulas, which require a small step-size to allow the neglect of higher order terms. The results of this test show that step-size selection is not unimportant when using FD, but when properly configured any of the methods may return the same maximum convergence rate for this problem.  Overall conclusions regarding the methods that the accuracy of the tangent-stiffness should not be confused with the accuracy of the equilibrium solution, since each of the methods discussed here may be equally capable given enough iterations. Numerical measurements of accuracy besides number of iterations taken are not possible here because there is not basis for comparison, as the methods are solving the problem separately and producing different local Newton iterates. Additionally, while the inaccuracy of the tangent-stiffness may strongly affect convergence rates, this relationship was not precisely quantified here.
 }
 
-\section{\DIFadd{Description of analysis tools and approach}} 
-%DIF > 
-\subsection{\DIFadd{Peridigm and peridynamics}}
-\label{subsec:PaP}
-%DIF > 
-\DIFaddend Comparisons of the different tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend calculation techniques were carried out through code-development and \DIFdelbegin \emph{\DIFdel{in situ}} %DIFAUXCMD
+\DIFaddend \section{Description of analysis tools and approach.} 
+%
+\subsection{\DIFdelbegin \emph{\DIFdel{Peridigm}} %DIFAUXCMD
+\DIFdelend \DIFaddbegin \DIFadd{Peridigm }\DIFaddend and peridynamics.}
+\DIFaddbegin \label{subsec:PaP}
+\DIFaddend %
+Comparisons of the different tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend calculation techniques were carried out through code-development and \DIFdelbegin \emph{\DIFdel{in situ}} %DIFAUXCMD
 \DIFdelend instrumentation of the computational peridynamics code \emph{Peridigm} \cite{peridigm}.  \emph{Peridigm} is distributed by Sandia National Laboratories as its primary open-source computational peridynamics code. It is a massively parallel simulation code for implicit and explicit multi-physics simulations primarily used for solid mechanics and material failure. \emph{Peridigm} is a C++ code utilizing agile software components from Sandia's \emph{Trilinos} project \cite{trilinos}. It's important to note that there is no specialization of the tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend calculation methods described previously to this particular code or more generally to a computational peridynamics approach and the analysis carried out in this study should provide insight into the speed and accuracy of these methods when implemented into other computational mechanics analysis tools as well.  \emph{Peridigm} was chosen primarily because the FD, CD, and AD methods for tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend calculation where already implemented in the code, leaving only the CS method for development. Also, because peridynamics is a nonlocal theory, the tangent-stiffness matrices have a much higher bandwidth (i.e. less sparsity) than traditional \DIFdelbegin \DIFdel{finite-element }\DIFdelend \DIFaddbegin \DIFadd{finite element }\DIFaddend tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend computations and the time required to construct the tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend is a majority of the total computation time in any quasi-static or implicit dynamics analysis; therefore, the \emph{Peridigm} development team has an interest in profiling the performance of the tangent-stiffness \DIFaddbegin \DIFadd{matrix }\DIFaddend computation methods.
 
 \DIFdelbegin \DIFdel{Briefly, peridynamics }\DIFdelend \DIFaddbegin \todo[]{Re: I.2} \DIFadd{Peridynamics }\DIFaddend \cite{silling2000ret,silling:psa,silling2010peridynamic} is a nonlocal reformulation of the partial-differential equations that provide the statement of momentum balance in classical continuum mechanics. Its primary goal is to avoid the use of spatial derivatives in the balance equations or constitutive laws such that discontinuous displacements, i.e. cracks, are mathematically consistent with the governing equations. It has demonstrated great promise in modeling problems with pervasive failure \cite{littlewood2010}, interesting phenomenon such as dynamic crack branching \cite{ha2010sod}, and is being extended to multiphyics phenomena \cite{bobaru2011peridynamic,katiyar2013} and the problem of multi-scale coupling to molecular simulations \DIFdelbegin \DIFdel{\mbox{%DIFAUXCMD
@@ -604,7 +601,7 @@ A series of nine single compute core (i.e.\DIFaddbegin \ \DIFaddend serial) test
 \DIFaddbegin \begin{table*}[!tbp]    
   \scriptsize
   \centering
-        \caption{\DIFaddFL{Test Parameters}} \label{tab:TestParams}   
+  \caption{\DIFaddFL{Test Parameters.}} \label{tab:TestParams}   
        \begin{tabular}{c c c c c c}
          \toprule
          \DIFaddFL{Peri. nodes }& \DIFaddFL{Nozero TS elems. }& \DIFaddFL{Horizon ($\delta$) }& \DIFaddFL{Load rate }& \DIFaddFL{Number Load steps }& \DIFaddFL{Abs. tolerance }\\ 
@@ -666,7 +663,7 @@ The test problems were run on the \emph{Stampede} HPC cluster computer housed at
 %DIF > 
 The output produced by \emph{\DIFdelbegin \DIFdel{Perdigm}\DIFdelend \DIFaddbegin \DIFadd{Peridigm}\DIFaddend } including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  \emph{Python} scripts were then used to post-process and plot the data. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found \DIFdelbegin \DIFdel{on the corresponding author's website}\DIFdelend \DIFaddbegin \DIFadd{in the paper repository}\DIFaddend .
 
-\section{Results and \DIFdelbegin \DIFdel{Discussion}\DIFdelend \DIFaddbegin \DIFadd{discussion}\DIFaddend }
+\section{Results and \DIFdelbegin \DIFdel{Discussion}\DIFdelend \DIFaddbegin \DIFadd{discussion.}\DIFaddend }
 \DIFaddbegin \label{sec:Res}
 \DIFaddend %
 Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-stiffness (TS) \DIFdelbegin \DIFdel{non-zero }\DIFdelend matrix elements, load step average calculation time and load step average accuracy. The \DIFdelbegin \DIFdel{units for accuracy are derived }\DIFdelend \DIFaddbegin \DIFadd{accuracy measure is given by }\DIFaddend equation~(\ref{eqn:accuracy}) and the \DIFdelbegin \DIFdel{units used to define bulk material properties, }\DIFdelend \DIFaddbegin \DIFadd{choice of elastic modulii }\DIFaddend mentioned in Section~\ref{tcs}.
@@ -676,7 +673,7 @@ Table~\ref{tab:results} shows the compute core count, number of nonzero tangent-
 \DIFdelend \DIFaddbegin \begin{table*}[!tbp]    
   \scriptsize
   \DIFaddendFL \centering
-        \caption{Averaged Results, Each Test} \label{tab:results}   
+  \caption{Averaged Results, Each Test\DIFaddbeginFL \DIFaddFL{.}\DIFaddendFL } \label{tab:results}   
        \begin{tabular}{c c c c c c c c c}
          \toprule
          Cores & TS Elements & \multicolumn{4}{c}{Calculation Time ($\si{\second}$)} & \multicolumn{3}{c}{Accuracy Difference ($\si{\mega\pascal}$)} \\ 
@@ -847,7 +844,7 @@ The parallel efficiency results are shown in \DIFdelbegin \DIFdel{Fig.}\DIFdelen
 
 \DIFadd{The solution accuracy results do follow the same ranking seen in the tangent-stiffness accuracy results; however, again as in the validation problem the results differ only slightly. Speculatively this degree of error may be important to those running probabilistic simulations such that the propagation of error may be a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material properties or loading conditions, it may have a greater impact on simulations involving very low force densities such as for small displacements or very compliant materials. In this case it could be recommended that forward difference be avoided. 
 %DIF > 
-}\section{\todo[]{Re: I.5}\DIFadd{Conclusions}}
+}\section{\todo[]{Re: I.5}\DIFadd{Conclusions.}}
 \label{sec:Conc}
 %DIF > 
 %DIF > Let's leave this section out and see what the reviewer says.  The paper is getting pretty long.
@@ -953,7 +950,7 @@ The CS method was shown to be highly accurate in calculating tangent-stiffness m
 . }\DIFaddend What this means is that if \emph{Peridigm} or any simulation software were to be reformulated to take advantage of accelerators or GPUs, the flexibility of complex-step owed to its simple implementation may make it more viable for that application given its high accuracy. Additional performance gains may be achieved through the use of the templated \emph{\DIFdelbegin \DIFdel{Tpetra}\DIFdelend \DIFaddbegin \DIFadd{TPetra}\DIFaddend } package in \emph{Trilinos} which would allow the use of complex data types natively, and alleviate the expense of the dynamic-casts that were utilized in this study.  As a final comment, it should be noted that from a code development perspective the CS method may be the easiest of the methods to implement; \DIFdelbegin \DIFdel{It }\DIFdelend \DIFaddbegin \DIFadd{it }\DIFaddend only requires one functional evaluation, there is no heuristic choice of probe distance, and there is no dependence on an external AD library.  From this perspective, the method may still be an attractive method for \DIFdelbegin \DIFdel{TS }\DIFdelend \DIFaddbegin \DIFadd{tangent-stiffness }\DIFaddend matrix evaluation. \DIFaddbegin \DIFadd{However, at least for the models producing the results shown here, each of the methods returned quadratic convergence, indicating each was sufficiently accurate. 'Marching orders' for the analyst would be to select the swiftest method, while it would seem accuracy above what is adequate does not enhance the convergence rate or iteration speed until either classical Newton's convergence conditions or the approximate case conditions are violated. 
 }\DIFaddend 
 
-\section{Acknowledgements}
+\section{Acknowledgements\DIFaddbegin \DIFadd{.}\DIFaddend }
 \label{sec:ack}
 This work was funded in part by grants from the United States Air Force Office of Scientific Research grant number W911NF-11-1-0208 and National Energy Technology Laboratory grant number DE-FE0010808. The authors acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: \DIFdelbegin \DIFdel{http://www.
 tacc.utexas.edu
@@ -968,7 +965,7 @@ tacc.utexas.edu
 
 %% References with bibTeX database:
 
-\DIFaddbegin \section{\DIFadd{References}}
+\DIFaddbegin \section{\DIFadd{References.}}
 
 \DIFaddend \bibliographystyle{elsarticle-num}
 \bibliography{all}
@@ -976,7 +973,7 @@ tacc.utexas.edu
 \appendix
 \renewcommand*{\thesection}{\Alph{section}}
 %
-\section{Complex-Step Example}
+\section{Complex-Step Example\DIFaddbegin \DIFadd{.}\DIFaddend }
 \label{sec:appendixA}
 %
 Using $f(x) = \cos(x)$, we have
@@ -1020,7 +1017,7 @@ using \DIFdelbegin \DIFdel{L}\DIFdelend \DIFaddbegin \DIFadd{l}\DIFaddend 'H\^op
 \frac{\partial f(x)}{\partial x} =-\sin(x).
 \]
 
-\section{\DIFdelbegin \DIFdel{AD Example}\DIFdelend \DIFaddbegin \DIFadd{Automatic differentiation example}\DIFaddend }
+\section{\DIFdelbegin \DIFdel{AD Example}\DIFdelend \DIFaddbegin \DIFadd{Automatic differentiation example.}\DIFaddend }
 \label{sec:appendixB}
 
 \begin{enumerate}
