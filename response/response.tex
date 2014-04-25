@@ -19,8 +19,7 @@
 \subsection*{I. Larger issues}
 %
 \begin{enumerate}
-    \item
-         Some parts of the manuscript suggest that the authors introduced a new method, i.e., the complex-step (CS) method. For example, in the introduction, they say ``A goal of this study was to develop and evaluate a new, accurate, and practical method ...'' Another example appears in page 3, where the authors say ``The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices ...'' However, the CS method has already appeared in many publications since 1998 [1]. Please revise the way you refer to the CS method along the manuscript
+    \item Some parts of the manuscript suggest that the authors introduced a new method, i.e., the complex-step (CS) method. For example, in the introduction, they say ``A goal of this study was to develop and evaluate a new, accurate, and practical method ...'' Another example appears in page 3, where the authors say ``The aim of this paper is not only to introduce the new complex-step method in the context of evaluating tangent-stiffness matrices ...'' However, the CS method has already appeared in many publications since 1998 [1]. Please revise the way you refer to the CS method along the manuscript
 
 {\color{red}
   \begin{itemize}
@@ -40,17 +39,9 @@
 {\color{red}
   \begin{itemize}
     \item 
-        We have revised the brief description of peridynamics in page 9 to be more complete:
-    \item
-        Material from silling2007 is interpreted including: the definition of vector states,
-        the derivation of conservation laws in terms of state-based peridynamics, the definition
-        of the isotropic elastic solid AKA the Linear elastic Peridynamic Solid.
-    \item
-        It is the authors' opinion that the additional material mentioned above explains the equations involved
-        in the peridynamic models for mechanics, used in relation to the peridynamics code
-        studied in the work. 
-
+        We have revised the brief description of peridynamics in page 9 to be more complete.
   \end{itemize}}
+
     \item 
         The manuscript seems to be written in a language more familiar to computer scientists. 
         I would encourage the authors to revise certain parts of the manuscript to be
@@ -58,44 +49,20 @@
 
 {\color{red}
   \begin{itemize}
-    \item 
-        We have revised certain parts of the manuscript for clarity, adding additional information for the reader's
-        convenience:
-    \item
-        In subsection 'Implementing the complex-step method in Peridigm', explanation of what is meant by datatype,
-        container class, template, scope and instantiation are included since these concepts may be unfamiliar to
-        a computational mechanics audience at least as denoted by these terms. 
-    \item 
-        In subsection 'The Comparative Study', the way message passing computations can slow runtime is explained
-        by an analogy to an experiment given as an exercise for the reader. 
-    \item 
-        In section 'Conclusions', the term byte-copiable is explained. 
-    \item 
-        It is the authors' opinion that the above revisions to the language of the manuscript allow the intended audience
-        to follow the discussion where concepts from computer science are relevant.
-  \end{itemize}}
+    \item We have revised certain parts of the manuscript for clarity, adding additional information for the reader's convenience.
+  \end{itemize}
+  }
 
-  \item
-     In Section 1.1.1, please include a more comprehensive literature review for
+  \item In Section 1.1.1, please include a more comprehensive literature review for
      the CS method, including further references (some of them are listed below).
      In particular, specify what aspects of the CS method have been investigated in
      each reference. Then, you need to clearly mention your contribution within
      the CS method, in contrast to the other references (some comments in this
      regard appear in the manuscript in page 8).
 
-{\color{red}
+  {\color{red}
   \begin{itemize}
-     \item 
-         The authors have appended a more comprehensive literature review for the CS method to section 1.1.1.
-         The aspects of CS investigated by the prior work, as well as any particularly interesting
-         developments introduced by those works, have been listed. To argue for the novelty of the instant work,
-         each prior work is compared to the instant work in terms of the use of the CS method and the similarity of the fields of research of the works.
-     \item
-         The literature review concludes with an argument for the novelty of the instant
-         work where the prior works are taken as a whole and compared to the instant work. It is the authors' opinion
-         that the instant work is novel for at least the reasons set out in the literature review material, where
-         the contribution to the CS method is in the comparison to other methods in terms of computational
-         time,  parallel implementation, and implementation within \emph{Peridigm} .
+     \item The authors have appended a more comprehensive literature review for the CS method to section 1.1.1.  The aspects of CS investigated by the prior work, as well as any particularly interesting developments introduced by those works, have been listed. The literature review concludes with an argument for the novelty of this work.  
   \end{itemize}}
 
 
@@ -110,14 +77,11 @@
 {\color{red}
   \begin{itemize}
     \item 
-        To address the reviewers comment, material from work done after the
-        initial submission of the manuscript has been included. New sections
-        include 'Working examples of CS, AD and FD for Newton's method' with
+        To address the reviewers comment, additional simulation results are now included. New sections
+        include "Simple example of CS, AD and FD for solution of nonlinear problems" with
         new subsections. To existing sections were appended new subsections
-        including 'Convergence and displacement accuracy studies', 'For further
-        studies of Jacobian accuracy in Newton's method', 'Grain of salt for
-        speed results' and 'Remarks'. Specifically, the added material addresses
-        the reviewers comments:
+        including 'Convergence and displacement accuracy studies', 'Remarks for
+        speed results' and 'Final Remarks'.
     \end{itemize}}
 
 \item 
@@ -129,12 +93,7 @@
 {\color{red}
   \begin{itemize}
     \item 
-        The added section 'Working examples of CS, AD and FD for Newton's method' includes
-        the two examples alluded to in the manuscript and requested by the reviewer. 
-        % 
-        To summarize, in this section is an example of interest: a displacement accuracy study and 
-        a convergence rate study on a non-linear beam problem, where each of the methods
-        discussed in the manuscript are used individually to solve the problem. 
+        The added section "Simple example of CS, AD and FD for solution of nonlinear problems" includes one of two examples (the second was omitted for brevity) alluded to in the manuscript and requested by the reviewer.  To summarize, in this section is an example of interest: a displacement accuracy study and a convergence rate study on a non-linear beam problem, where each of the methods discussed in the manuscript are used individually to solve the problem. 
  \end{itemize}}
 
 \item
@@ -150,34 +109,9 @@
     \item 
       The added subsection 'Convergence and displacement accuracy studies'
       includes convergence rate and displacement accuracy studies similar to
-      those shown in 'Working examples ...', but with the models and tools of
+      those shown in `Simple example ...', but with the models and tools of
       the main study. This subsection provides an example of interest. 
-  \item 
-      To summarize, these studies are done in \emph{Peridigm} using the most refined mesh
-      from the 'serial' test runs from the original manuscript. Measured was the performance of the methods in terms of speed
-      (convergence rate) and accuracy (displacement accuracy).  Iteration speed
-      was reported in the original manuscript.
-  \item
-      It was determined that the accuracy of CS over FD resulted in no appreciable
-      advantage in terms of displacement accuracy or convergence rate for the problems
-      solved in this study. 
-    \item
-      Additional comment on the significance of the accuracy of the Jacobian
-      to Newton's method is included in the subsections 'For further studies of
-      Jacobian accuracy in Newton's method', 'Grain of salt for speed results'
-      and 'Remarks'. 
-  \item 
-      To summarize, Newton's method is insensitive to the accuracy differences
-      shown by the methods, for the problems shown, when the methods are not
-      deliberately misused with inappropriate step sizes. For completeness,
-      formulas describing a relationship between Jacobian accuracy and
-      convergence rate order are included. 
-  \item
-      It is the authors' opinion that the above revisions offer the discussion of relative problem solving
-      performance of the methods that the reviewer has requested, including consideration
-      of speed and accuracy in solving real, non-linear problems.
   \end{itemize}}
-
   \end{enumerate}
 
   \subsection*{II. Smaller issues}
@@ -198,16 +132,16 @@
 \begin{itemize}
      \item
 
-      The word, 'discrimination' has been removed from the manuscript.
-      'Discrimination' was meant to mean 'measuring differences and making
-      judgements on relative usefulness'. Since this meaning is probably
-      understood from the word 'comparison' alone, the word 'discrimination'
+      The word, `discrimination' has been removed from the manuscript.
+      'Discrimination' was meant to mean ``measuring differences and making
+      judgements on relative usefulness''. Since this meaning is probably
+      understood from the word `comparison' alone, the word `discrimination'
       has been removed from the manuscript for clarity.
       
   \end{itemize}}
 	
 ` \item	
-	Pg. 2: In line 37, explain what do you mean by “in-situ instrumentation”.
+	Pg. 2: In line 37, explain what do you mean by ``in-situ instrumentation''.
 
 {\color{red}  
 \begin{itemize}
@@ -251,7 +185,7 @@ Pg. 3: You may consider including the exact web address of the paper repository.
   \end{itemize}}
 
   \item 
-Pg. 4: In Eq. (1), “$\partial f^2$” should be “$\frac{\partial^2 f}{\partial x^2}$”; similarly, for the third derivative.
+Pg. 4: In Eq. (1), ``$\partial f^2$'' should be ``$\frac{\partial^2 f}{\partial x^2}$''; similarly, for the third derivative.
 
 {\color{red}  
 \begin{itemize}
@@ -269,18 +203,18 @@ Pg. 4: You may consider writing Eq. (2) with the truncation error
   \end{itemize}}
 
 \item
-Pg. 6: In lines 9-11, please add references to the “Poisson problem” and to the
-“mathematical optimization”.
+Pg. 6: In lines 9-11, please add references to the ``Poisson problem'' and to the
+``mathematical optimization''.
 
 {\color{red}  
 \begin{itemize}
      \item
-         [TODO]
+      The correction is made in the manuscript.
          
   \end{itemize}}
 
 \item
-Pg. 7: Should Eqs. (4), (5), and (6) use “$\approx$” instead of “$=$”?
+Pg. 7: Should Eqs. (4), (5), and (6) use ``$\approx$'' instead of “$=$”?
 
 {\color{red}  
 \begin{itemize}
@@ -290,7 +224,7 @@ Pg. 7: Should Eqs. (4), (5), and (6) use “$\approx$” instead of “$=$”?
 
 \item
 Pg. 7: In line 28, note that (cid:126)u is not the current conﬁguration, but the displacement
-ﬁeld. Please revise the sentence.
+field. Please revise the sentence.
 
 {\color{red}  
 \begin{itemize}
@@ -299,18 +233,16 @@ Pg. 7: In line 28, note that (cid:126)u is not the current conﬁguration, but t
         \end{itemize}}
 
 \item
-Pg. 7: Please provide an expression for ${F^int}_i$ in the model used.
+Pg. 7: Please provide an expression for $F^{int}_i$ in the model used.
 
 {\color{red}  
 \begin{itemize}
-    \item
-        [TODO]
-        Manuscript corrected. In the section 'Peridigm and peridynamics' a constitutive model for the LPS is shown. On the page that was originally page 7, the force density corresponding to this constitutive model is expressed in descrete form.
+    \item This is explained in words in Section 3.1.1
   \end{itemize}}
 
 \item
-Pg. 9: In line 26, please add the reference [12] below to “coupling to molecular
-simulations [29].”
+Pg. 9: In line 26, please add the reference [12] below to ``coupling to molecular
+simulations [29].''
 
 {\color{red}  
 \begin{itemize}
@@ -336,12 +268,12 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
     \item
-        The manuscript has been corrected. Bandwidth was referring to connections between nodes rather than components and degrees of freedom. It is more clear to say a bandwidth of 21 for the 3D case. The formula is number of nodes in a neighborhood times degrees of freedom.
+        This statement has been removed from the manuscript, it will not hold in 3D.
   \end{itemize}}
 
     \item
-        In lines 47-49, you say “The speciﬁc parameters ... can be found ... in the
-        paper repository.” It seems a good idea to have the paper repository with ﬁles that a
+        In lines 47-49, you say ``The speciﬁc parameters ... can be found ... in the
+        paper repository.'' It seems a good idea to have the paper repository with ﬁles that a
         user can eventually use. However, the content of the paper should be independent
         of the repository. Please include a table with the parameters used. Similarly, in
         page 11 (lines 11-13).
@@ -368,8 +300,7 @@ Does this hold in higher dimensions? Please clarify.
 {\color{red}  
 \begin{itemize}
      \item
-         Manuscript is corrected. Mesh sizes from smallest to largest were 1000, 2000, 3000, 4000, 6000, 8000, 12000,
-         16000, 32000, 1000000 peridynamic nodes.
+         Manuscript is corrected. Mesh sizes from smallest to largest were 1000, 2000, 3000, 4000, 6000, 8000, 12000, 16000, 32000, 1000000 peridynamic nodes.
       \end{itemize}}
 
   \item
@@ -403,11 +334,7 @@ Does this hold in higher dimensions? Please clarify.
      \item
     Correction made in the manuscript, values used are collected and the reference to the material explaining these values was made more clear.
     %
-    The probe distances used in Peridigm are automatically determined with a
-    heuristic algorithm and are not set by the user. The algorithm for this in
-    \emph{Peridigm} is the used for another Sandia software project called
-    \emph{Adagio} \cite{ref-Adaggio}. The probe distances are 1.E-6 times the node spacing for FD and CD which is indended to prevent the onset of roundoff error.
-    1.E-100 was hard-coded for CS into the CS method implementation, while AD had no probe distance.
+    The probe distances used in Peridigm are automatically determined with a heuristic algorithm and are not set by the user. The algorithm for this in \emph{Peridigm} is the used for another Sandia software project called \emph{Adagio} \cite{ref-Adaggio}. The probe distances are 1.E-6 times the node spacing for FD and CD which is indended to prevent the onset of roundoff error.  1.E-100 was hard-coded for CS into the CS method implementation, while AD had no probe distance.
   \end{itemize}}
 
   \item
@@ -1021,5 +948,5 @@ and held as constant” by “chosen for each function as in Table 2 and held co
   \end{enumerate}
 
 \bibliographystyle{elsarticle-num}
-\bibliography{all}
+\bibliography{../all}
 \end{document}
