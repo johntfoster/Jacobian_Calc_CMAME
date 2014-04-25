@@ -114,7 +114,7 @@
 
 \begin{keyword}
 %% keywords here, in the form: keyword \sep keyword
-Newton's method \sep Newton-Raphson \sep numerical differentiation \sep complex-step \sep finite difference \sep automatic differentiation \sep Jacobian \sep tangent-stiffness
+Newton's method \sep Newton-Raphson \sep numerical differentiation \sep complex-step \sep finite difference \sep automatic differentiation \sep tangent-stiffness \sep tangent-stiffness
 %% MSC codes here, in the form: \MSC code \sep code
 %% or \MSC[2008] code \sep code (2000 is the default)
 %\MSC [2010] 65D25 
@@ -135,11 +135,9 @@ Newton's method \sep Newton-Raphson \sep numerical differentiation \sep complex-
 
 In order to maintain the quadratic convergence properties of the first-order Newton's method \cite{belytschko1999nonlinear} \cite[Ch.~13]{young2009} in quasi-static nonlinear analysis of solid structures it is crucial to obtain accurate, algorithmically consistent\todo[]{Re: II.1}\footnote{In the context of plasticity thoery, the algorithmic consistency of the tangent-stiffness matrix refers to consistency with the integration of a plasticity model under the Khun-Tucker constraints or similar where the tangent-stiffness matrix is computed using the elastoplastic modulii that are determined from the integration \cite{simo1998}.} tangent-stiffness matrices. For an extremely small class of nonlinear material models, these consistent tangent-stiffness operators can be derived analytically; however, most often in practice, they are found through numerical approximation of derivatives. 
 
-A goal of this study was to develop and evaluate a \todo[]{Re: I.1} relatively unexplored, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This  \todo[]{Re: I.1} method is based on a complex number Taylor series expansion and referred to as CTSE or the ``complex-step'' method. The practical accuracy of CTSE is determined by comparing its measured accuracy relative to the measured accuracy of popular finite differencing techniques used for computing tangent-stiffness matrices. For this comparison the,  exact to machine precision, derivatives computed with \emph{automatic differentiation} serve as the standard.
+A goal of this study was to develop and evaluate a \todo[]{Re: I.1} relatively unexplored, accurate, and practical method for calculating tangent-stiffness matrices against established methods.  This  \todo[]{Re: I.1} method is based on a complex number Taylor series expansion and referred to as the \emph{complex-step} (CS) method. The practical accuracy of CS is determined by comparing its measured accuracy relative to the measured accuracy of popular finite differencing techniques used for computing tangent-stiffness matrices. For this comparison the,  exact to machine precision, derivatives computed with \emph{automatic differentiation} serve as the standard.
 
-Comparative data regarding the accuracy and compute cycle timing for the
-complex step, forward difference, central difference, and automatic differentiation methods are included to aid developers and analysts in computational mechanics code design who are faced with implementing a general
-method for tangent-stiffness matrix calculation.  A comparison of the methods was achieved through instrumentation of a massively-parallel computational mechanics code. 
+Comparative data regarding the accuracy and compute cycle timing for the complex step, forward difference, central difference, and automatic differentiation methods are included to aid developers and analysts in computational mechanics code design who are faced with implementing a general method for tangent-stiffness matrix calculation.  A comparison of the methods was achieved through instrumentation of a massively-parallel computational mechanics code. 
 
 The scope of the application component of this study was limited to a single material model, an elastic peridynamic solid, implemented in the computational peridynamics code, \textit{Peridigm} \cite{peridigm}. Identifying a specific application provided a practical framework for implementing the  \todo[]{Re: I.1} complex-step method and solving engineering problems to generate the data needed to compare the methods. In particular, \emph{Peridigm} was chosen because it combined several helpful characteristics: the utilization of Newton's method and tangent-stiffness matrices for solving nonlinear quasi-static problems, prior inclusion of forward difference, central difference, and automatic-differentiation methods needed for comparison to the complex-step method implementation, and being an agile-components code that makes use of distributed computing data structures via Trilinos \cite{trilinos} for efficient parallelization on large clusters. Agile-components is a software development term meaning to structure a software project for continuous development to respond to evolving specifications by making much use of techniques from object-oriented programming and reusing proven pre-existing code to reduce development time and increase reliability. The modularity of \emph{Peridigm} allowed the adding of new features, such as those required by the study.
 
@@ -181,9 +179,9 @@ Thus, an estimate of the first derivative of a function can be made by only util
 %
 The order of the truncation error in the forward difference formula (equation~(\ref{eqn:forwardFirstDeriv})) indicates that for a given $h$ this method is less accurate an approximation than either central difference or complex-step which have errors of $\mathcal{O}(h^2)$.
 
-\todo[]{Re: I.4}As mentioned earlier, the CS method was originally introduced in a paper by Lyness and Moler \cite{lyness1967numerical}.  A follow-on contribution by Lyness demonstrated a ``truncated'' approximate version of the original CS method to make it suitable for use on digital computers \cite{lyness1968differentiation}.  After these original papers, little can be found in the literature regarding the method until Squire and Trapp showed through numerical experiments that CS offers superior accuracy to FD and CD \cite{squire1998using} in computing numerical derivatives. Papers by Newman et al.\ \cite{newman1998} and Anderson et al.\ \cite{anderson2001sensitivity} discuss computing sensitivities in a CFD analysis using CS and compares the results to sensitivities produced with central difference derivatives. The work is also notable for identifying automatic-differentiation as a competing method to CS and suggesting that complex-step could be used to compute Jacobians of residuals for use in Newton-Krylov schemes for solving non-linear systems. Perez-Foguet et al.\ \cite{perez2000numerical, perez2012numerical} used the CS method to compute algorithmically consistent elastoplastic moduli in non-linear solid mechanics problems.  A paper by Joaquim et al.\ \cite{martins2000automated} investigates using CS for computing aerodynamic sensitivities. Additionally, higher-order accuracy versions of CS are discussed, as is the task of implementation in most widely used general purpose programming languages. Discussed is the relative ease of implementing a CS scheme versus an automatic-differentiation based scheme for computing sensitivities in an established code.  
+\todo[]{Re: I.4}As mentioned earlier, the CS method was originally introduced in a paper by Lyness and Moler \cite{lyness1967numerical}.  A follow-on contribution by Lyness demonstrated a ``truncated'' approximate version of the original CS method to make it suitable for use on digital computers \cite{lyness1968differentiation}.  After these original papers, little can be found in the literature regarding the method until Squire and Trapp showed through numerical experiments that CS offers superior accuracy to FD and CD \cite{squire1998using} in computing numerical derivatives. Papers by Newman et al.\ \cite{newman1998} and Anderson et al.\ \cite{anderson2001sensitivity} discuss computing sensitivities in a CFD analysis using CS and compares the results to sensitivities produced with central difference derivatives. The work is also notable for identifying automatic-differentiation as a competing method to CS and suggesting that complex-step could be used to compute tangent-stiffnesss of residuals for use in Newton-Krylov schemes for solving non-linear systems. Perez-Foguet et al.\ \cite{perez2000numerical, perez2012numerical} used the CS method to compute algorithmically consistent elastoplastic moduli in non-linear solid mechanics problems.  A paper by Joaquim et al.\ \cite{martins2000automated} investigates using CS for computing aerodynamic sensitivities. Additionally, higher-order accuracy versions of CS are discussed, as is the task of implementation in most widely used general purpose programming languages. Discussed is the relative ease of implementing a CS scheme versus an automatic-differentiation based scheme for computing sensitivities in an established code.  
 
-Martins et al.\ \cite{martins2003complex} demonstrates that the CS method can be performed by using complex datatypes for the variables of functions comprising an analysis code. The accuracy of this approach, with respect to the derivatives themselves, is compared to automatic-differentiation in a serial analysis code. Lai and Crassidis \cite{lai2008extensions} discuss first- and second-order CS methods for computing derivatives and choosing optimal step sizes.  Al-Mohy and Higham \cite{al2010complex} investigate the use of CS in computing Fr\'{e}chet derivatives of matrix functions. Jin et al.\ \cite{jin2010improved} discuss using CS to compute sensitivities in a solid mechanics FEM analysis.  Voorhees et al.\ \cite{voorhees2011complex} discusses the background of the CS method and frames it as a subset of Fourier Differentiation. CS and Fourier Differentiation are then applied to computing sensitivities within a solid mechanics finite element analysis. They implemented the complex-values as additional degrees of freedom in the finite element stiffness matrices using a real-valued matrix representation of the complex-numbers where required. In a follow-on work,  Millwater et al.\  \cite{millwater2013application} extended this concept, calling it ZFEM, and implemented the method into user defined element types for use with the popular ABAQUS \cite{systemes2012abaqus} FEA software package.  Nishida et al.\ \cite{nishida2013} used the complex-step method to compute Jacobian matrices for implementation in a Levenberg-Marquardt optimization routine for design-of-experiments purposes.  Finally, Abreu et al.\ \cite{abreu2013generalization} discusses computing derivatives with a version of the CS method which features the combined use of real and imaginary valued step components, as in Fourier differentiation.  They suggests that the modified CS method can achieve extended approximation accuracy up to fourth order.  This recent literature has introduced the application of CS to single-dimension and multidimensional derivatives, sensitivity analysis, non-linear solution schemes, optimization, the extension of CS for higher accuracy, and implementation strategies for CS in new and existing codes.  The current paper presents a comparison of the complex-step method to the other methods for numerical differentiation in as close to a one-to-one implementation as possible for direct comparison purposes in a large-scale engineering analysis code. To the author's knowledge it is the first application of the complex-step method to solve peridynamics mechanics problems, and the first implementation and comparison of the method in large-scale distributed memory parallel setting. 
+Martins et al.\ \cite{martins2003complex} demonstrates that the CS method can be performed by using complex datatypes for the variables of functions comprising an analysis code. The accuracy of this approach, with respect to the derivatives themselves, is compared to automatic-differentiation in a serial analysis code. Lai and Crassidis \cite{lai2008extensions} discuss first- and second-order CS methods for computing derivatives and choosing optimal step sizes.  Al-Mohy and Higham \cite{al2010complex} investigate the use of CS in computing Fr\'{e}chet derivatives of matrix functions. Jin et al.\ \cite{jin2010improved} discuss using CS to compute sensitivities in a solid mechanics FEM analysis.  Voorhees et al.\ \cite{voorhees2011complex} discusses the background of the CS method and frames it as a subset of Fourier Differentiation. CS and Fourier Differentiation are then applied to computing sensitivities within a solid mechanics finite element analysis. They implemented the complex-values as additional degrees of freedom in the finite element stiffness matrices using a real-valued matrix representation of the complex-numbers where required. In a follow-on work,  Millwater et al.\  \cite{millwater2013application} extended this concept, calling it ZFEM, and implemented the method into user defined element types for use with the popular ABAQUS \cite{systemes2012abaqus} FEA software package.  Nishida et al.\ \cite{nishida2013} used the complex-step method to compute tangent-stiffness matrices for implementation in a Levenberg-Marquardt optimization routine for design-of-experiments purposes.  Finally, Abreu et al.\ \cite{abreu2013generalization} discusses computing derivatives with a version of the CS method which features the combined use of real and imaginary valued step components, as in Fourier differentiation.  They suggests that the modified CS method can achieve extended approximation accuracy up to fourth order.  This recent literature has introduced the application of CS to single-dimension and multidimensional derivatives, sensitivity analysis, non-linear solution schemes, optimization, the extension of CS for higher accuracy, and implementation strategies for CS in new and existing codes.  The current paper presents a comparison of the complex-step method to the other methods for numerical differentiation in as close to a one-to-one implementation as possible for direct comparison purposes in a large-scale engineering analysis code. To the author's knowledge it is the first application of the complex-step method to solve peridynamics mechanics problems, and the first implementation and comparison of the method in large-scale distributed memory parallel setting. 
 
 \subsubsection{Automatic differentiation} 
 \label{ADsubsection}
@@ -200,8 +198,7 @@ Appendix~\ref{sec:appendixB} includes an example that walks the reader through t
 \subsection{Tangent-stiffness} 
 \label{subsec:TS}
 
-In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While the terminology of solid mechanics is used here, it's important to note that
-these operators appear in other physical settings and are known by other names, e.g. a \emph{transmissibility matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
+In solid and structural computational mechanics the tangent-stiffness matrix is a linearization operator that describes the stiffness of a system in response to small displacements imposed upon the current configuration of the system.  Mathematically speaking, the tangent-stiffness represents the gradient of a high-dimensional energy surface that ``points'' in the minimum direction. While the terminology of solid mechanics is used here, it's important to note that these operators appear in other physical settings and are known by other names, e.g. a \emph{transmissibility matrix} in the context of a Poisson problem or, more generally, a \emph{Jacobian matrix} in mathematical optimization.
 
 While, for simplicity, the examples shown in the following refer only to linear problems, tangent-stiffness matrices generally arise in the context of non-linear analysis where Newton's method or quasi-Newton methods are used in the minimization of a given residual function.  In this context, the tangent-stiffness matrix can be thought of as the linearization of the system
 about a particular configuration.  It has been shown \cite{hughes1978consistent,hughes1978unconditionally} that in order to preserve the quadratic convergence properties of the Newton's methods, it is necessary that this linearization is carried out in a manner that is \emph{consistent} with the algorithmic constraint equations used when computing the internal forces that arise due to deformations.  An example of these constraint equations would be the Kuhn-Tucker conditions \cite{simo1998} that are used in integration of a flow rule for plasticity modeling.  If the continuum tangent-modulii are used in place of the \emph{consistent} or \emph{algorithmic tangent moduli} in the solution of a non-linear solid mechanics problem, convergence may still be achieved, but not in the quadratic manner that makes Newton's method attractive for this class of problems.  In the setting of non-linear solid mechanics, there is a very small class of material model algorithms in which consistent tangent-stiffness operators can be derived analytically.  Perfect plasticity and plasticity with isotropic hardening used in combination with a general nearest-point projection or \emph{radial return algorithm} are a few examples.  Therefore, when general models (and certainly more complex ones) are implemented into a general purpose computational mechanics code, the tangent-stiffness operators are typically defined via a numerical approximation.  
@@ -295,7 +292,7 @@ The example problem is a single degree-of-freedom nonlinear mechanical system in
 \node (load_label) at (rhtt) [] {$P$};
 \node (bar_length_label) at (tm) [] {$L_0$};
 \node (angle_label) at ($ (mm)!.4cm!(bar_2) $) [] {$\phi$};
-\node (displacement_label) at (bbrdisref) [] {D};
+\node (displacement_label) at (bbrdisref) [] {$D$};
 \path (bar_1) -- (bar_2) [draw, very thick];
 \path (bar_1) circle (.10) [fill=black];
 \path (bar_2) circle (.10) [fill=black];
@@ -379,7 +376,7 @@ Comparisons of the different tangent-stiffness matrix calculation techniques wer
     \rho(\mathbf{x})\mathbf{\ddot{u}(x)} = \int_{\mathcal{H_{\delta(\mathbf{x})}}} \mathbf{f(x,x'}) {\rm d}V_{\mathbf{x'}} + \mathbf{b(x)},
     \label{eqn:PDMotion}
 \end{equation} 
-
+%
 where, $\rho$ is the mass density, $\mathbf{\ddot{u}}$ is the second time derivative of displacement (i.e.\ acceleration), $\mathcal{H}_{\delta(\mathbf{x})}$ is a neighborhood containing remote material points, $\mathbf{x'}$, with characteristic length $\delta$, centered at $\mathbf{x}$. The integrand $\mathbf{f}$ contains the constitutive response of the material.  Physically, $\delta$ is a material length-scale and computationally it, along with the discretization, will set the bandwidth of the tangent-stiffness matrix. $\mathbf{b}$ is a body force density.  An explicit dependence on time $t$ has been supressed from the functional arguments, but is implied.  The reader is refered to the seminal work on peridynamics \cite{silling:psa} for detailed derivations of the momentum equation and example consitutive models.
 
 \subsubsection{\todo[]{Re: I.2}The tangent stiffness matrix in a quasi-static peridynamic simulation}
@@ -468,6 +465,7 @@ Discretization for the test problems run in this study was done using the softwa
 The test problems were run on the \emph{Stampede} HPC cluster computer housed at \emph{TACC} (Texas Advanced Computing Center) at The University of Texas at Austin. The single core test series was run using the {\tt normal} queue compute nodes, while the parallel test series was run using one to four {\tt large memory} nodes each having one terabyte of local RAM. This large amount of memory was required for reasons explained in Section~\ref{JGAM}.
 
 \subsubsection{Data reduction} 
+%
 The output produced by \emph{Peridigm} including the additional accuracy and speed measurements was redirected from the console to text files by the resource manager, \emph{SLURM} (Simple Linux User Resource Manager).  Directories and filenames were chosen so that data would be easy to sort by individual test run.  \emph{Python} scripts were then used to post-process and plot the data. These scripts averaged accuracy or speed data for a tests corresponding to a particular peridynamic node density over all iterations for that run, and then plotted this averaged data  as a function of peridynamic node density as it varied from test to test in the series.  Similarly, for the parallel tests, the data was averaged and plotted in much the same way, but as a function of number of compute cores used to solve the problem. Confidence intervals were not calculated on the measurements. The main reason is that network traffic from other users makes running tests on the HPC cluster a time varying process. These data reduction and plotting scripts can be found in the paper repository.
 
 \section{Results and discussion}
@@ -507,7 +505,7 @@ Speed measurements were taken according to the methods mentioned in Section~\ref
 %
 \begin{figure}[tbp] 
     \centering 
-    \scalebox{1.0}{\input{./figs/serial_speed.pgf}}
+    \scalebox{0.93}{\input{./figs/serial_speed.pgf}}
     \caption{Serial test series speed measurements.} 
     \label{fig:serial_speed}
 \end{figure}
@@ -516,7 +514,7 @@ For the parallel simulations, averaged speed results appear in Figure~\ref{fig:m
 %
 \begin{figure}[tbp] 
     \centering 
-    \scalebox{1.0}{\input{./figs/multi_speed.pgf}}
+    \scalebox{1.1}{\input{./figs/multi_speed.pgf}}
     \caption{Multicore test series speed measurements.} 
     \label{fig:multi_speed}
 \end{figure}
@@ -540,7 +538,7 @@ The averaged results of the accuracy measurements taken for the parallel test se
 %
 \begin{figure}[tbp] 
     \centering
-    \scalebox{1.0}{\input{./figs/multi_accuracy.pgf}} 
+    \scalebox{0.9}{\input{./figs/multi_accuracy.pgf}} 
     \caption{Multicore test series accuracy measurements.} 
     \label{fig:multi_accuracy} 
 \end{figure}
@@ -575,11 +573,11 @@ The averaged results of the accuracy measurements taken for the parallel test se
 
 \subsection{Efficiency data}
 %
-Efficiency, calculated as the average number of seconds taken per nonzero Jacobian matrix element, was plotted as a function of the number of nonzero TS matrix elements. The single core results are shown in Figure~\ref{fig:serial_efficiency}.  The ranking order of the methods matched their speed ranking in Figure~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the number of nonzero TS elements.  
+Efficiency, calculated as the average number of seconds taken per nonzero tangent-stiffness matrix element, was plotted as a function of the number of nonzero TS matrix elements. The single core results are shown in Figure~\ref{fig:serial_efficiency}.  The ranking order of the methods matched their speed ranking in Figure~\ref{fig:serial_speed}. This plot indicates that efficiency is insensitive to the number of nonzero TS elements.  
 %
 \begin{figure}[tbp]
   \centering
-  \scalebox{1.0}{\input{./figs/serial_speed_rel.pgf}}
+  \scalebox{0.9}{\input{./figs/serial_speed_rel.pgf}}
   \caption{Serial test series efficiency measurements.}
   \label{fig:serial_efficiency}
 \end{figure}
@@ -588,7 +586,7 @@ The parallel efficiency results are shown in Figure~\ref{fig:multi_efficiency}. 
 %
 \begin{figure}[tbp]
   \centering
-  \scalebox{1.0}{\input{./figs/multi_speed_rel.pgf}}
+  \scalebox{0.9}{\input{./figs/multi_speed_rel.pgf}}
   \caption{Multicore test series efficiency measurements.}
   \label{fig:multi_efficiency}
 \end{figure}
@@ -598,9 +596,9 @@ The parallel efficiency results are shown in Figure~\ref{fig:multi_efficiency}. 
 \section{\todo[]{Re: I.5}Convergence and displacement accuracy studies.} 
 \label{sec:PeridigmConvergenceStudy}
 %
-While the previous sections profiled the per-iteration performance of each of the methods, it was necessary to conduct convergence rate studies in order to get a complete picture. It is necessary for an analyst to know if the accuracy differences measured in the per-iteration tests would amount to differences in convergence rates among the methods if they were allowed to solve problems normally. The question is posed, given that step-size $h$ is heuristically selected by \emph{Peridigm} for the finite difference methods and presumable makes a good choice, do the single-iteration Jacobian accuracy results predict the ranking of the methods in terms of convergence rate for a given study? For brevity, convergence rate was measured for each of the methods in solving just the largest problem of the single-core test series. That problem was solved with each of the methods both on a single core and all sixteen cores of a 'normal' node on \emph{Stampede}. As was seen in the per-iteration results, Jacobian accuracy did not vary greatly from test to test, such that any pair of tests from the two series could have been considered reasonably representative. As in the validation problem shown in Section~\ref{subsec:Validation}, would each of the methods return an equal convergence rate so long as $h$ were optimally selected? 
+While the previous sections profiled the per-iteration performance of each of the methods, it was necessary to conduct convergence rate studies in order to get a complete picture. It is necessary for an analyst to know if the accuracy differences measured in the per-iteration tests would amount to differences in convergence rates among the methods if they were allowed to solve problems normally. The question is posed, given that step-size $h$ is heuristically selected by \emph{Peridigm} for the finite difference methods and presumable makes a good choice, do the single-iteration tangent-stiffness accuracy results predict the ranking of the methods in terms of convergence rate for a given study? For brevity, convergence rate was measured for each of the methods in solving just the largest problem of the single-core test series. That problem was solved with each of the methods both on a single core and all sixteen cores of a  node on \emph{Stampede}. As was seen in the per-iteration results, tangent-stiffness accuracy did not vary greatly from test to test, such that any pair of tests from the two series could have been considered reasonably representative. As in the validation problem shown in Section~\ref{subsec:Validation}, would each of the methods return an equal convergence rate so long as $h$ were optimally selected? 
 
-The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was the case.  The difference in Jacobian accuracy between the methods seen in the per-iteration tests was not sufficient to lead to differences in the convergence rate of the methods.
+The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was the case.  The difference in tangent-stiffness accuracy between the methods seen in the per-iteration tests was not sufficient to lead to differences in the convergence rate of the methods.
 %
 \begin{table}[htb]   
     \centering 
@@ -616,7 +614,7 @@ The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was th
     \end{tabular} 
 \end{table}
 
-The end displacement results shown in Section~\ref{subsec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an 'exact' Jacobian. Table~\ref{tab:PeridigmSolutionAccuracy} shows that the methods did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders of magnitude smaller than the force density value at the node where the difference was detected.
+The end displacement results shown in Section~\ref{subsec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an 'exact' tangent-stiffness. Table~\ref{tab:PeridigmSolutionAccuracy} shows that the methods did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders of magnitude smaller than the force density value at the node where the difference was detected.
 %
 \begin{table}[hbp]   
     \centering 
@@ -629,172 +627,103 @@ The end displacement results shown in Section~\ref{subsec:Validation} indicated 
     \end{tabular} 
 \end{table}
 
-The solution accuracy results do follow the same ranking seen in the Jacobian accuracy results; however, again as in the validation problem the results differ only slightly. Speculatively this degree of error may be important to those running probabilistic simulations such that the propagation of error may be a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material properties or loading conditions, it may have a greater impact on simulations involving very low force densities such as for small displacements or very compliant materials. In this case it could be recommended that forward difference be avoided. 
+The solution accuracy results do follow the same ranking seen in the tangent-stiffness accuracy results; however, again as in the validation problem the results differ only slightly. Speculatively this degree of error may be important to those running probabilistic simulations such that the propagation of error may be a concern. Also it is conceivable that if this error is a fixed quantity, insensitive to material properties or loading conditions, it may have a greater impact on simulations involving very low force densities such as for small displacements or very compliant materials. In this case it could be recommended that forward difference be avoided. 
 %
 \section{\todo[]{Re: I.5}Conclusions}
 \label{sec:Conc}
 %
-\subsection{For further studies of Jacobian accuracy in Newton's method}
-\label{subsec:FurtherStudies}
-The question is raised; what is the significance of Jacobian estimation accuracy to the convergence of Newton's method?  The per-iteration and even convergence studies shown here indicate the effect of Jacobian accuracy for only a single datum, a very accurate Jacobian estimate, while the validation problem of Section~indicates the effect of using a grossly inaccurate Jacobian. The results here show that for very small Jacobian estimate inaccuracies, convergence rate is not affected, while for grossly inaccurate Jacobians Newton's method fails.  Additional confounding factors include that a Jacobian is only first order approximation of an often curved energy surface and that a non-naive implementation of Newton's method includes a line search phase that helps in choosing an optimal iterate given a Jacobian.  Is it worthwhile then to investigate the effect of using moderately inaccurate Jacobians, produced deliberately or otherwise, on the convergence rate of Newton's method?
-
-The answer may be no at least unless a more highly non-linear class of problem is selected for study or a controllable method of producing a moderately inaccurate Jacobian is found along with a reason for using it. While it is possible to incorrectly apply finite differencing and CS by choosing an inappropriate step-size, there is no reason that this should be done. The experiments show that step-size $h$ can be properly selected and that the methods are capable of producing accurate Jacobians. It should be noted that the model used to perform the simulation could always be substituted for a more highly non-linear one and perhaps this would somewhat increase the importance of Jacobian accuracy. The study presented here failed to pose the question of how wrong a correctly implemented Jacobian calculation scheme could go for plastic or otherwise non-linear material models, here instead non-linearity was imposed by the nonlocal interaction between material points essential to peridynamic models, like the linear model used in this study. 
-
-Nevertheless, Newton's method is not defined for using an inaccurate or 'wrong' Jacobian, so using an inaccurate Jacobian is failing to perform Newton's method by definition. But it is also true that it should not be expected that every differentiation technique performs flawlessly under all situations. The pragmatic strategy to study this may be to compare a prospective method's Jacobian accuracy to that produced by AD and develop a rule of thumb based on observed convergence rates from prior simulations as they relate to the percent difference of the prospective and AD produced Jacobians. Also it is possible to calculate a sensitivity of Jacobian error to step-size alongside a sensitivity of convergence rate to step-size, and then to relate these two quantities as a map of Jacobian error to convergence rate change from ideal. Additionally it is still possible to look at the convergence conditions for Newton's method and suggest a relationship between Jacobian accuracy and convergence rate in a theoretical manner. To this point, there are a set of convergence conditions derived in \cite[Chap. 2, p.41]{burkeLectures} which relate quality of Jacobian inverse approximations to convergence rate classification, here reproduced,
+%Let's leave this section out and see what the reviewer says.  The paper is getting pretty long.
 %
-\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq K,
-\end{equation}
+%\subsection{For further studies of tangent-stiffness accuracy in Newton's method}
+%\label{subsec:FurtherStudies}
+%The question is raised; what is the significance of tangent-stiffness estimation accuracy to the convergence of Newton's method?  The per-iteration and even convergence studies shown here indicate the effect of tangent-stiffness accuracy for only a single datum, a very accurate tangent-stiffness estimate, while the validation problem of Section~XX indicates the effect of using a grossly inaccurate tangent-stiffness. The results here show that for very small tangent-stiffness estimate inaccuracies, convergence rate is not affected, while for grossly inaccurate tangent-stiffnesss Newton's method fails.  Additional confounding factors include that a tangent-stiffness is only first order approximation of an often curved energy surface and that a non-naive implementation of Newton's method includes a line search phase that helps in choosing an optimal iterate given a tangent-stiffness.  Is it worthwhile then to investigate the effect of using moderately inaccurate tangent-stiffnesss, produced deliberately or otherwise, on the convergence rate of Newton's method?
 
-for worse than linear convergence,
+%The answer may be no at least unless a more highly non-linear class of problem is selected for study or a controllable method of producing a moderately inaccurate tangent-stiffness is found along with a reason for using it. While it is possible to incorrectly apply finite differencing and CS by choosing an inappropriate step-size, there is no reason that this should be done. The experiments show that step-size $h$ can be properly selected and that the methods are capable of producing accurate tangent-stiffnesss. It should be noted that the model used to perform the simulation could always be substituted for a more highly non-linear one and perhaps this would somewhat increase the importance of tangent-stiffness accuracy. The study presented here failed to pose the question of how wrong a correctly implemented tangent-stiffness calculation scheme could go for plastic or otherwise non-linear material models, here instead non-linearity was imposed by the nonlocal interaction between material points essential to peridynamic models, like the linear model used in this study. 
 
-\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq \Theta_{1}^{k}K; \Theta_{1} \in (0,1),
-\end{equation}
+%Nevertheless, Newton's method is not defined for using an inaccurate or 'wrong' tangent-stiffness, so using an inaccurate tangent-stiffness is failing to perform Newton's method by definition. But it is also true that it should not be expected that every differentiation technique performs flawlessly under all situations. The pragmatic strategy to study this may be to compare a prospective method's tangent-stiffness accuracy to that produced by AD and develop a rule of thumb based on observed convergence rates from prior simulations as they relate to the percent difference of the prospective and AD produced tangent-stiffnesss. Also it is possible to calculate a sensitivity of tangent-stiffness error to step-size alongside a sensitivity of convergence rate to step-size, and then to relate these two quantities as a map of tangent-stiffness error to convergence rate change from ideal. Additionally it is still possible to look at the convergence conditions for Newton's method and suggest a relationship between tangent-stiffness accuracy and convergence rate in a theoretical manner. To this point, there are a set of convergence conditions derived in \cite[Chap. 2, p.41]{burkeLectures} which relate quality of tangent-stiffness inverse approximations to convergence rate classification, here reproduced,
+%%
+%\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq K,
+%\end{equation}
 
-for linear convergence,
+%for worse than linear convergence,
 
-\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{2} \mid \mid x_{k} - x_{k-1} \mid \mid, K}; M_{2} > 0
-\end{equation}
+%\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq \Theta_{1}^{k}K; \Theta_{1} \in (0,1),
+%\end{equation}
 
-for two step quadratic,
+%for linear convergence,
 
-\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{3} \mid \mid r(x_{k}) \mid \mid, K}; M_{3} > 0
-\end{equation}
+%\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{2} \mid \mid x_{k} - x_{k-1} \mid \mid, K}; M_{2} > 0
+%\end{equation}
 
-and lastly for quadratic convergence. Here $r \prime$ is the true system
-Jacobian and $J$ is the approximation. Essentially the conditions measure how
-well the difference of the true Jacobian inverse and approximation works as
-a contraction map within the closure of a radius of convergence about the true
-solution. This property is necessary for the solution method using the
-approximation to converge rather than to diverge, as is true of the exact Newton
-method.
+%for two step quadratic,
 
-It may be interesting to artificially perturb the Jacobian calculations with
-random error in order to better control experimentally the onset of inaccuracy
-to develop a sensitivity of convergence rate to this type of error. Perhaps an
-analyst could use this knowledge to devise an adaptive differentiation
-technique selection method which economizes on accuracy until a significant
-Jacobian error is measured during a special doubly calculated iteration.
+%\begin{equation} \mid \mid (r \prime (x_{k})^{-1} - J_{k}^{-1})y_{k} \mid \mid \leq min{M_{3} \mid \mid r(x_{k}) \mid \mid, K}; M_{3} > 0
+%\end{equation}
 
-Additionally, there are Quasi-Newton methods such as Broyden's method which
-uses an approximate inverse Jacobian and updates it with information from the 
-iterate and residual \cite{dennis1971convergence}. A method called
-Incomplete Jacobian Newton's method may the closest to the idea of deliberately
-making use of an inaccurate Jacobian in the sense that arbitrary elements of
-the full Jacobian are set to zero to reduce computational effort
-\cite{liu2008incomplete}. The Quasi-Newton methods represent a compromise of
-Newton's method for the promise of faster iterations in exchange for a lower
-convergence rate. For both of these methods, the iterate and residual are
-computed as in Newton's method. As to the question of algorithmic consistency,
-these numerical methods evaluate the same linearized constitutive law and
-governing equation as for the exact Newton's method which in the case of a
-plastic simulation are involved in iteratively determining algorithmic tangent moduli. 
-In fact, a secant equation based method is appropriate for Newton's method with algorithmic
-tangent modulii since the Jacobian ought only depend on known converged
-values such that the Newton iterate could not artificially drive the plasticity
-of the model \cite[Chap. 6]{belytschko1999nonlinear}. It should be noted that
-constraints or a line search algorithm to minimize the residual are necessary
-whereas the pure secant method does not return unique solutions in
-multi-dimensions.
+%and lastly for quadratic convergence. Here $r \prime$ is the true system
+%tangent-stiffness and $J$ is the approximation. Essentially the conditions measure how
+%well the difference of the true tangent-stiffness inverse and approximation works as
+%a contraction map within the closure of a radius of convergence about the true
+%solution. This property is necessary for the solution method using the
+%approximation to converge rather than to diverge, as is true of the exact Newton
+%method.
+
+%It may be interesting to artificially perturb the tangent-stiffness calculations with
+%random error in order to better control experimentally the onset of inaccuracy
+%to develop a sensitivity of convergence rate to this type of error. Perhaps an
+%analyst could use this knowledge to devise an adaptive differentiation
+%technique selection method which economizes on accuracy until a significant
+%tangent-stiffness error is measured during a special doubly calculated iteration.
+
+%Additionally, there are Quasi-Newton methods such as Broyden's method which
+%uses an approximate inverse tangent-stiffness and updates it with information from the 
+%iterate and residual \cite{dennis1971convergence}. A method called
+%Incomplete tangent-stiffness Newton's method may the closest to the idea of deliberately
+%making use of an inaccurate tangent-stiffness in the sense that arbitrary elements of
+%the full tangent-stiffness are set to zero to reduce computational effort
+%\cite{liu2008incomplete}. The Quasi-Newton methods represent a compromise of
+%Newton's method for the promise of faster iterations in exchange for a lower
+%convergence rate. For both of these methods, the iterate and residual are
+%computed as in Newton's method. As to the question of algorithmic consistency,
+%these numerical methods evaluate the same linearized constitutive law and
+%governing equation as for the exact Newton's method which in the case of a
+%plastic simulation are involved in iteratively determining algorithmic tangent moduli. 
+%In fact, a secant equation based method is appropriate for Newton's method with algorithmic
+%tangent modulii since the tangent-stiffness ought only depend on known converged
+%values such that the Newton iterate could not artificially drive the plasticity
+%of the model \cite[Chap. 6]{belytschko1999nonlinear}. It should be noted that
+%constraints or a line search algorithm to minimize the residual are necessary
+%whereas the pure secant method does not return unique solutions in
+%multi-dimensions.
 %
 
-\subsection{Grain of salt for speed results}
-The per-iteration speed results shown here indicate that the AD method is
-faster than CD or FD.  While this may be the case for the implementation in the
-stock version of \emph{Peridigm} this is not reflective of any limitation of
-these methods. In a side experiment, the finite difference code in
-\emph{Peridigm} was re-written to take advantage of the benefits of storing the
-results of duplicated intermediate calculations. These modifications were 
-general, low memory footprint and could be adopted in any numerical simulation
-simulation software as good practice. An informal performance test was done
-using a personal AMD Phenom-2 X4 workstation using GCC 4.7 compilers rather than a
-Intel Xeon E5 node with Intel Cluster Studio 13.0 compilers as provided by TACC. The problem
-being run was the largest single core test from the main study, instead run on four 
-compute cores. Table ~\ref{tab:PerformanceMod} shows the timing
-results for AD as reference along with an unmodified CD, and then modified CD
-and FD.
-
-\begin{table*}[!ht]   
-\centering \caption{Total time spent computing Jacobian} 
+\subsection{Remarks on speed results}
+%
+The per-iteration speed results shown here indicate that the AD method is faster than CD or FD.  While this may be the case for the implementation in the release version of \emph{Peridigm} this is not reflective of any limitation of these methods. In a side experiment, the finite difference code in \emph{Peridigm} was re-written to take advantage of the benefits of storing the results of duplicated intermediate calculations. These modifications were general, low memory footprint, and could be adopted in any numerical simulation simulation software as good practice. An informal performance test run was performed on the largest single core test from the main study, instead run on four compute cores. Table~\ref{tab:PerformanceMod} shows the timing results for AD as reference along with an unmodified CD, and then modified CD and FD.
+%
+\begin{table}[tbp]   
+\centering 
+\caption{Total time spent computing tangent-stiffness} 
 \label{tab:PerformanceMod}   
 \begin{tabular}{c c c c c}
 \toprule & AD & CD & Modded CD & Modded FD\\
 \midrule  Total seconds & $~430$ & $~570$ & $~430$ &$~320$ \\ 
-\bottomrule \end{tabular} \end{table*}
+\bottomrule 
+\end{tabular} 
+\end{table}
 
-The results indicated that in exchange for a modest programming effort, a
-performance increase of around a quarter was available for the
-finite difference methods and that FD could eclipse AD. What allowed the performance modifications to
-enhance the finite difference methods was their lack of sophistication
-compared to AD in that their explicitly laid out and
-repetitive code could be readily optimized. 
+The results indicated that in exchange for a modest programming effort, a performance increase of around a quarter was available for the finite difference methods and that FD could eclipse AD. What allowed the performance modifications to enhance the finite difference methods was their lack of sophistication compared to AD in that their explicitly laid out and repetitive code could be readily optimized. 
 
-\subsection{Remarks}
-Based on the computational experiments, it appears that for users of \emph{Peridigm}
-there is a case to be made for using AD for reasons of speed. However, certain
-parallel tests done in this study showed a small performance gain over AD with
-the FD method.  The results showed that CS produced more accurate
-tangent-stiffness matrices than CD and FD under the parameters of the tests,
-however it was determined that this difference in accuracy was not sufficient
-to alter convergence rate for a test problem. In order for Jacobian accuracy to
-have an impact on convergence rate, and therefor serve as a predictor of
-convergence rate in per-iteration results, the amount of error detected between
-a supposed perfectly accurate Jacobian and the test Jacobian needs to be
-greater than allowed by the conditions seen in \cite{burkeLectures}, 
-reproduced in subsection~\ref{subsec:FurtherStudies}. 
+\subsection{Final Remarks}
+%
+Based on the computational experiments, it appears that for users of \emph{Peridigm} there is a case to be made for using AD for reasons of speed. However, certain parallel tests done in this study showed a small performance gain over AD with the FD method.  The results showed that CS produced more accurate tangent-stiffness matrices than CD and FD under the parameters of the tests; however, it was determined that this difference in accuracy was not sufficient to alter convergence rate for a test problem.  
+%In order for tangent-stiffness accuracy to have an impact on convergence rate, and therefore serve as a predictor of convergence rate in per-iteration results, the amount of error detected between a supposed perfectly accurate tangent-stiffness and the test tangent-stiffness needs to be greater than allowed by the conditions seen in \cite{burkeLectures}, reproduced in subsection~\ref{subsec:FurtherStudies}. 
 
-It should be mentioned that another work, \cite{perez2012numerical}, compares
-the speed and accuracy of complex-step to finite difference for producing
-tangent-stiffness matrices in solid mechanics simulations using the 'MRS-Lade'
-material model, where the researchers similarly found CS to be accurate yet
-relatively computationally expensive compared to FD and CD. In that work, full
-convergence studies were also done and indicated that quadratic convergence was
-achieved with the methods \cite[p.28]{perez2012numerical}.
-
-However, at least for the models producing the results shown here, each of the
-methods returned quadratic convergence, indicating each was sufficiently
-accurate. 'Marching orders' for the analyst would be to select the swiftest
-method, while it would seem accuracy above what is adequate does not enhance
-the convergence rate or iteration speed until either classical Newton's convergence
-conditions or the approximate case conditions are violated. 
-
-The CS method was shown to be highly accurate in calculating tangent-stiffness
-matrices by the standards of this study, and it is slower than other methods
-for a naive implementation. In the context of future use of CS in
-\emph{Peridigm}, CS holds the advantage of relying on byte-copyable data types,
-while AD requires a complicated serialization and deserialization in order to
-function as byte-copyable. This is fine for copying in between MPI processes,
-but deserialization on an accelerator or GPU is very difficult, as this would
-require compiling a version of the AD library being used that were compatible
-with the accelerator or GPU being used. A working definition of byte-copyable
-is that the collection of data to transfer is made of identically sized pieces.
-Byte-copyability is significant for example because it is a requirement for the
-basic offload mode provided for Intel MIC accelerator boards which are
-installed in \emph{Stampede}, where the alternative mode requires "more
-extensive" effort \cite{intel_byte_copyable}. What this means is that if
-\emph{Peridigm} or any simulation software were to be reformulated to take
-advantage of accelerators or GPUs, the flexibility of complex-step owed to its
-simple implementation may make it more viable for that application given its
-high accuracy. Additional performance gains may be achieved through the use of
-the templated \emph{TPetra} package in \emph{Trilinos} which would allow the
-use of complex data types natively, and alleviate the expense of the
-dynamic-casts that were utilized in this study.  As a final comment, it should
-be noted that from a code development perspective the CS method may be the
-easiest of the methods to implement; it only requires one functional
-evaluation, there is no heuristic choice of probe distance, and there is no
-dependence on an external AD library.  From this perspective, the method may
-still be an attractive method for TS matrix evaluation. However,
-at least for the models producing the results shown here, each of the
-methods returned quadratic convergence, indicating each was sufficiently
-accurate. 'Marching orders' for the analyst would be to select the swiftest
-method, while it would seem accuracy above what is adequate does not
-enhance the convergence rate or iteration speed until either classical
-Newton's convergence conditions or the approximate case conditions are
-violated. 
-
+The CS method was shown to be highly accurate in calculating tangent-stiffness matrices by the standards of this study, and it is slower than other methods for a naive implementation. In the context of future use of CS in \emph{Peridigm}, CS holds the advantage of relying on byte-copyable\footnote{In this context,  byte-copyable means that the collection of data to transfer is made of identically sized pieces.} data types, while AD requires a complicated serialization and deserialization in order to function as byte-copyable. This is fine for copying in between MPI processes, but deserialization on an accelerator or GPU is very difficult, as this would require compiling a version of the AD library being used that were compatible with the accelerator or GPU being used.  Byte-copyability is significant for example because it is a requirement for the basic offload mode provided for Intel MIC accelerator boards which are installed in \emph{Stampede}, where the alternative mode requires more extensive effort \cite{intel_byte_copyable}. What this means is that if \emph{Peridigm} or any simulation software were to be reformulated to take advantage of accelerators or GPUs, the flexibility of complex-step owed to its simple implementation may make it more viable for that application given its high accuracy. Additional performance gains may be achieved through the use of the templated \emph{TPetra} package in \emph{Trilinos} which would allow the use of complex data types natively, and alleviate the expense of the dynamic-casts that were utilized in this study.  As a final comment, it should be noted that from a code development perspective the CS method may be the easiest of the methods to implement; it only requires one functional evaluation, there is no heuristic choice of probe distance, and there is no dependence on an external AD library.  From this perspective, the method may still be an attractive method for tangent-stiffness matrix evaluation. However, at least for the models producing the results shown here, each of the methods returned quadratic convergence, indicating each was sufficiently accurate. 'Marching orders' for the analyst would be to select the swiftest method, while it would seem accuracy above what is adequate does not enhance the convergence rate or iteration speed until either classical Newton's convergence conditions or the approximate case conditions are violated. 
 
 \section{Acknowledgements}
 \label{sec:ack}
-This work was funded in part by grants from the United States Air Force Office of Scientific Research grant number W911NF-11-1-0208 and National Energy Technology Laboratory grant number DE-FE0010808. The authors acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: http://www.tacc.utexas.edu
+This work was funded in part by grants from the United States Air Force Office of Scientific Research grant number W911NF-11-1-0208 and National Energy Technology Laboratory grant number DE-FE0010808. The authors acknowledge the Texas Advanced Computing Center (TACC) at The University of Texas at Austin for providing HPC resources that have contributed to the research results reported within this paper. URL: \url{http://www.tacc.utexas.edu}.
 %% References
 %%
 %% Following citation commands can be used in the body text:
