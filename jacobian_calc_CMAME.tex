@@ -321,7 +321,7 @@ and the analytical tangent-stiffness is
     S_{T}(D) = \frac 3 2 AE(\cos^{2}\phi)\left[\frac{D}{L_{0}}\cos^{2}\phi - 2sin\phi\right]\left(\frac{D}{L_{0}^{2}}\right) + k_{s} + \frac{AE\sin^{2}\phi}{L_{0}}.
 \end{equation}
 %
-where $\phi$ is a constant truss angle (a modeling decision made in \cite{rezaiee2010dynamic} that we mimic for consistency), $AE$ is the axial rigidity of the truss, $L_{0}$ is original truss member length, $k_{s}$ is the Hooke's constant for the spring attached to the truss member, and $P$ is the applied load. $\phi$ is considered constant for small displacement for initial truss angles close to zero. For a demonstration and verification of each of the methods as well as a convergence rate study, this truss and spring model was analyzed with each of the methods and compared with the analytic solution. As in the reference \cite{rezaiee2010dynamic}, equilibrium solutions for 12 incremental load steps of $\Delta P=\SI{4.448}{\newton}$ were found. Solver parameters common to all tests were a maximum limit of 100 iterations for convergence, and a convergence tolerance for the change in displacement over an iteration $\Delta D \le \SI{1e-9}{\meter}$.  Data collected included number of iterations to converge summed over all load-steps and final displacement $D$, after the final load-step. Additionally finite difference and complex-step step sizes were varied in order to measure the impact on each of the approximate tangent-stiffness calculation methods. Naturally, varying the step size does not affect AD or the analytically derived tangent-stiffness since those are not functions of the step size. The accuracy results for verifying the tangent-stiffness calculation methods are summarized in Table~\ref{tab:ConvergenceStudy}. 
+where $\phi$ is a constant truss angle (a modeling decision made in \cite{rezaiee2010dynamic} that we mimic for consistency), $AE$ is the axial rigidity of the truss, $L_{0}$ is original truss member length, $k_{s}$ is the Hooke's constant for the spring attached to the truss member, and $P$ is the applied load. For a demonstration and verification of each of the methods as well as a convergence rate study, this truss and spring model was analyzed with each of the methods and compared with the analytic solution. As in the reference \cite{rezaiee2010dynamic}, equilibrium solutions for 12 incremental load steps of $\Delta P=\SI{4.448}{\newton}$ were found. Solver parameters common to all tests were a maximum limit of 100 iterations for convergence, and a convergence tolerance for the change in displacement over an iteration $\Delta D \le \SI{1e-9}{\meter}$.  Data collected included number of iterations to converge summed over all load-steps and final displacement $D$, after the final load-step. Additionally finite difference and complex-step step sizes were varied in order to measure the impact on each of the approximate tangent-stiffness calculation methods. Naturally, varying the step size does not affect AD or the analytically derived tangent-stiffness since those are not functions of the step size. The accuracy results for verifying the tangent-stiffness calculation methods are summarized in Table~\ref{tab:ConvergenceStudy}. 
 %
 \begin{table}[tbp]    
   \centering
@@ -408,7 +408,7 @@ The methods were compared by running two sets of test problems where each method
     \label{fig:pd_discrete}
 \end{figure}
 
-A series of nine single compute core (i.e.\ serial) test problems were run with the discretization size being refined with every test in the series. The aim of increasing the refinement was to examine differences between the methods in terms of accuracy and speed. This series would comprise the single core runs.  \todo[]{Re: II.16} The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the paper repository, however the parameters are reproduced in Table~\ref{tab:TestParams}. These {\tt xml} files allow users with the appropriately modified version of \emph{Peridigm} to reproduce the results found in this paper.
+A series of nine single compute core (i.e.\ serial) test problems were run with the discretization size being refined with every test in the series. The aim of increasing the refinement was to examine differences between the methods in terms of accuracy and speed. This series would comprise the single core runs.  \todo[]{Re: II.16} The specific parameters of these tests can be found in \emph{Peridigm} input {\tt xml} files included in the paper repository, however the parameters are reproduced in Table~\ref{tab:TestParams}. All of the tests used a loading rate of $\SI{2}{\centi\meter\per\second}$ for $\num{2}$ load steps, with an absolute residual convergence tolerence of $\num{10E-8}$. These {\tt xml} files allow users with the appropriately modified version of \emph{Peridigm} to reproduce the results found in this paper.
 %
 \begin{table*}[!tbp]    
   \scriptsize
@@ -416,22 +416,22 @@ A series of nine single compute core (i.e.\ serial) test problems were run with 
   \caption{Test parameters.} \label{tab:TestParams}   
        \begin{tabular}{c c c c c c c}
          \toprule
-				 Num. cores &Peri. nodes & Nozero TS elems. & Horizon ($\delta$) & Load rate & Number Load steps & Abs. tolerance \\ 
-         &            & $\times 10^6$    & \si{\centi\meter}& \si{\centi\meter\per\second} &   &     \\
+				 Num. cores &Peri. nodes & Nozero TS elems. & Horizon ($\delta$)  \\ 
+         &            & $\times 10^6$    & \si{\centi\meter}   \\
         \midrule
-        1 & 1000 & $1.99$             & $30$   & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 2000 & $4.25$             & $24$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 3000 & $7.79$             & $21$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 4000 & $15.4$             & $19$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 6000 & $20.0$             & $16$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 8000 & $31.4$             & $15$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 12000 & $40.1$            & $13.1$ & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 16000 & $83.9$            & $12$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1 & 32000 & $165.0$           & $9.5$ & $2$ & $2$ & $\num{10E-8}$ \\
-        32 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        64 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        96 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        128 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 1000 & $1.99$             & $30$    \\
+        1 & 2000 & $4.25$             & $24$   \\
+        1 & 3000 & $7.79$             & $21$   \\
+        1 & 4000 & $15.4$             & $19$   \\
+        1 & 6000 & $20.0$             & $16$   \\
+        1 & 8000 & $31.4$             & $15$   \\
+        1 & 12000 & $40.1$            & $13.1$ \\
+        1 & 16000 & $83.9$            & $12$   \\
+        1 & 32000 & $165.0$           & $9.5$  \\
+        32 & 1000000 & $1670$          & $3$   \\
+        64 & 1000000 & $1670$          & $3$   \\
+        96 & 1000000 & $1670$          & $3$   \\
+        128 & 1000000 & $1670$          & $3$  \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -612,7 +612,7 @@ The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was th
     \end{tabular} 
 \end{table}
 
-The end displacement results shown in Section~\ref{sec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an `exact' tangent-stiffness. Table~\ref{tab:PeridigmSolutionAccuracy} shows maximum force density discrepancy, indicating that the methods did indeed produce differing solutions in terms of nodal force density. The values for Table~\ref{tab:PeridigmSolutionAccuracy} were generated using a helper program included with \emph{Trilinos} called \emph{exodiff} which is used for automatically comparing \emph{exodus} output files. While differences in force density were detected, the magnitude of the greatest of them was $9$ orders of magnitude smaller than the relevant nodal force density values being differenced. 
+The end displacement results shown in Section~\ref{sec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an `exact' tangent-stiffness. Table~\ref{tab:PeridigmSolutionAccuracy} shows maximum force density discrepancy, indicating that the methods did indeed produce differing solutions in terms of nodal force density. The values for Table~\ref{tab:PeridigmSolutionAccuracy} were generated using a helper program included with \emph{Trilinos} called {\tt exodiff} which is used for automatically comparing \emph{Exodus} database output files. While differences in force density were detected, the magnitude of the greatest of them was $9$ orders of magnitude smaller than the relevant nodal force density values being differenced. 
 %
 \begin{table}[hbp]   
     \centering 
