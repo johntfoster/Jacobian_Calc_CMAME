@@ -246,7 +246,7 @@ but, with the caveat that $F^{int}$ is evaluated in a way that is algorithmicall
 \section{\todo[]{Re: I.5}Simple example of CS, AD and FD for solution of nonlinear problems.}
 \label{sec:Validation}
 
-In order to illustrate a comparison of the numerical differentiation techniques in a simpler form than it appears in the large-scale analysis code covered in the following sections, a simple example borrowed from \cite{rezaiee2010dynamic} was implemented with each of the methods, CS, AD, and FD. All the source code to reproduce the results described here are available in the associated paper repository. This source describes the implementation and interface to the \emph{Trilinos Secado library} for automatic differentiation.
+In order to illustrate a comparison of the numerical differentiation techniques in a simpler form than it appears in the large-scale analysis code covered in the following sections, a simple example borrowed from \cite{rezaiee2010dynamic} was implemented with each of the methods, CS, AD, and FD. The reason for including FD was to provide an example of implementing a familiar differentiation technique alongside the more unusual CS and AD examples. CD is omitted for brevity in the code development for the example. All the source code to reproduce the results described here are available in the associated paper repository. This source describes the implementation and interface to the \emph{Trilinos Secado library} for automatic differentiation.
 
 The example problem is a single degree-of-freedom nonlinear mechanical system involving a connected truss member and spring as illustrated in Fig. \ref{fig:TrussSchematic}. 
 %
@@ -321,7 +321,7 @@ and the analytical tangent-stiffness is
     S_{T}(D) = \frac 3 2 AE(\cos^{2}\phi)\left[\frac{D}{L_{0}}\cos^{2}\phi - 2sin\phi\right]\left(\frac{D}{L_{0}^{2}}\right) + k_{s} + \frac{AE\sin^{2}\phi}{L_{0}}.
 \end{equation}
 %
-where $\phi$ is a constant truss angle, $AE$ is the axial rigidity of the truss, $L_{0}$ is original truss member length, $k_{s}$ is the Hooke's constant for the spring attached to the truss member, and $P$ is the applied load. For a demonstration and verification of each of the methods as well as a convergence rate study, this truss and spring model was analyzed with each of the methods and compared with the analytic solution. As in the reference \cite{rezaiee2010dynamic}, equilibrium solutions for 12 incremental load steps of $\Delta P=\SI{4.448}{\newton}$ were found. Solver parameters common to all tests were a maximum limit of 100 iterations for convergence, and a convergence tolerance for the change in displacement over an iteration $\Delta D \le \SI{1e-9}{\meter}$.  Data collected included number of iterations to converge summed over all load-steps and final displacement $D$, after the final load-step. Additionally finite difference and complex-step step sizes were varied in order to measure the impact on each of the approximate tangent-stiffness calculation methods. Naturally, varying the step size does not affect AD or the analytically derived tangent-stiffness since those are not functions of the step size. The accuracy results for verifying the tangent-stiffness calculation methods are summarized in Table~\ref{tab:ConvergenceStudy}. 
+where $\phi$ is a constant truss angle, $AE$ is the axial rigidity of the truss, $L_{0}$ is original truss member length, $k_{s}$ is the Hooke's constant for the spring attached to the truss member, and $P$ is the applied load. $\phi$ is considered constant for small displacement for initial truss angles close to zero. For a demonstration and verification of each of the methods as well as a convergence rate study, this truss and spring model was analyzed with each of the methods and compared with the analytic solution. As in the reference \cite{rezaiee2010dynamic}, equilibrium solutions for 12 incremental load steps of $\Delta P=\SI{4.448}{\newton}$ were found. Solver parameters common to all tests were a maximum limit of 100 iterations for convergence, and a convergence tolerance for the change in displacement over an iteration $\Delta D \le \SI{1e-9}{\meter}$.  Data collected included number of iterations to converge summed over all load-steps and final displacement $D$, after the final load-step. Additionally finite difference and complex-step step sizes were varied in order to measure the impact on each of the approximate tangent-stiffness calculation methods. Naturally, varying the step size does not affect AD or the analytically derived tangent-stiffness since those are not functions of the step size. The accuracy results for verifying the tangent-stiffness calculation methods are summarized in Table~\ref{tab:ConvergenceStudy}. 
 %
 \begin{table}[tbp]    
   \centering
@@ -414,24 +414,24 @@ A series of nine single compute core (i.e.\ serial) test problems were run with 
   \scriptsize
   \centering
   \caption{Test parameters.} \label{tab:TestParams}   
-       \begin{tabular}{c c c c c c}
+       \begin{tabular}{c c c c c c c}
          \toprule
-         Peri. nodes & Nozero TS elems. & Horizon ($\delta$) & Load rate & Number Load steps & Abs. tolerance \\ 
-                     & $\times 10^6$    & \si{\centi\meter}& \si{\centi\meter\per\second} &   &     \\
+				 Num. cores &Peri. nodes & Nozero TS elems. & Horizon ($\delta$) & Load rate & Number Load steps & Abs. tolerance \\ 
+         &            & $\times 10^6$    & \si{\centi\meter}& \si{\centi\meter\per\second} &   &     \\
         \midrule
-        1000 & $1.99$             & $30$   & $2$ & $2$ & $\num{10E-8}$ \\
-        2000 & $4.25$             & $24$  & $2$ & $2$ & $\num{10E-8}$ \\
-        3000 & $7.79$             & $21$  & $2$ & $2$ & $\num{10E-8}$ \\
-        4000 & $15.4$             & $19$  & $2$ & $2$ & $\num{10E-8}$ \\
-        6000 & $20.0$             & $16$  & $2$ & $2$ & $\num{10E-8}$ \\
-        8000 & $31.4$             & $15$  & $2$ & $2$ & $\num{10E-8}$ \\
-        12000 & $40.1$            & $13.1$ & $2$ & $2$ & $\num{10E-8}$ \\
-        16000 & $83.9$            & $12$  & $2$ & $2$ & $\num{10E-8}$ \\
-        32000 & $165.0$           & $9.5$ & $2$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
-        1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 1000 & $1.99$             & $30$   & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 2000 & $4.25$             & $24$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 3000 & $7.79$             & $21$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 4000 & $15.4$             & $19$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 6000 & $20.0$             & $16$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 8000 & $31.4$             & $15$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 12000 & $40.1$            & $13.1$ & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 16000 & $83.9$            & $12$  & $2$ & $2$ & $\num{10E-8}$ \\
+        1 & 32000 & $165.0$           & $9.5$ & $2$ & $2$ & $\num{10E-8}$ \\
+        32 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        64 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        96 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
+        128 & 1000000 & $1670$          & $3$  & $2$ & $2$ & $\num{10E-8}$ \\
         \bottomrule
     \end{tabular}
 \end{table*}
@@ -612,7 +612,7 @@ The results shown in Table~\ref{tab:ConvergenceStudy2} indicate that this was th
     \end{tabular} 
 \end{table}
 
-The end displacement results shown in Section~\ref{sec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an `exact' tangent-stiffness. Table~\ref{tab:PeridigmSolutionAccuracy} shows that the methods did indeed produce differing solutions in terms of nodal force density, although only in decimal places at least $9$ orders of magnitude smaller than the force density value at the node where the difference was detected.
+The end displacement results shown in Section~\ref{sec:Validation} indicated that up to a certain precision the solutions produced by each of the methods were identical. It was examined if this was the case for the solutions produced in \emph{Peridigm}. Here each of the solutions produced by each of the methods were compared to the AD produced solutions, under the assumption that the AD produced solutions would be closest to the solution produced by using an `exact' tangent-stiffness. Table~\ref{tab:PeridigmSolutionAccuracy} shows maximum force density discrepancy, indicating that the methods did indeed produce differing solutions in terms of nodal force density. The values for Table~\ref{tab:PeridigmSolutionAccuracy} were generated using a helper program included with \emph{Trilinos} called \emph{exodiff} which is used for automatically comparing \emph{exodus} output files. While differences in force density were detected, the magnitude of the greatest of them was $9$ orders of magnitude smaller than the relevant nodal force density values being differenced. 
 %
 \begin{table}[hbp]   
     \centering 
@@ -697,7 +697,7 @@ The solution accuracy results do follow the same ranking seen in the tangent-sti
 
 \subsection{Remarks on speed results}
 %
-The per-iteration speed results shown here indicate that the AD method is faster than CD or FD.  While this may be the case for the implementation in the released version of \emph{Peridigm} this is not reflective of any limitation of these methods. In a side experiment, the finite difference code in \emph{Peridigm} was re-written to take advantage of the benefits of storing the results of duplicated intermediate calculations. These modifications were general, low memory footprint, and could be adopted in any numerical simulation software as good practice. An informal performance test run was performed on the largest single core test from the main study, instead run on four compute cores. Table~\ref{tab:PerformanceMod} shows the timing results for AD as reference along with an unmodified CD, and then modified CD and FD.
+The per-iteration speed results shown here indicate that the AD method is faster than CD or FD.  While this may be the case for the implementation in the released version of \emph{Peridigm} this is not reflective of any limitation of these methods. In a side experiment, the finite difference code in \emph{Peridigm} was re-written to take advantage of the benefits of storing the results of duplicated intermediate calculations. These modifications were general, low memory footprint, and could be adopted in any numerical simulation software as good practice. An informal performance test run was performed on the largest single core test from the main study, instead run on four compute cores. Table~\ref{tab:PerformanceMod} shows the timing results for AD as reference along with an unmodified CD, and then modified CD and FD. Unmodified FD and the CS methods do not appear in the comparison since the modification was not implemented for the CS method and timing results for the unmodified methods appear, as for a different computer system, in Table~\ref{tab:results}. 
 %
 \begin{table}[tbp]   
 \centering 
@@ -877,7 +877,7 @@ $\frac{\partial}{\partial x}f(x) \mid _{x_0} = \frac{\partial{u}}{\partial{v}} \
 %\end{tabular} \\ \\
 %This explains what the equation and table above mean.
 Because the computer knew the analytical forms of the partial derivatives of each of $u,v,w$ beforehand, which of course needed to be specified using an AD data structure from a library like Trilinos::Sacado \cite{trilinos} or ADIFOR \cite{bischof1995adifor},
-all it needed to do (for `backward' AD) was:
+all it needed to do was:
 \begin{enumerate}
 \item to evaluate each of $u,v,w$ according to \ref{abcvalues}, in order from $w \rightarrow
 v \rightarrow u$, 
@@ -887,6 +887,8 @@ derivative function  evaluations, and
 \item store the individual partials.
 \end{enumerate}
 Lastly, to compute the partial derivative of the entire composition function, the computer multiplies
-the individual partials together in observance of the chain-rule.  
+the individual partials together in observance of the chain-rule. It is important to note that this example
+was simplistic in that only the case of a single independent variable was covered, making the distinction of type of AD
+less important. 
 
 \end{document}

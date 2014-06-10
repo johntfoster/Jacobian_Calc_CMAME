@@ -60,7 +60,7 @@ ad = ax1.scatter(speed_averages['AD'][0][:], speed_averages['AD'][1][:], marker=
 #ax1.set_yscale('log')
 plt.xlim(24.0, 160.0)
 plt.ylim(0.0, 350.0)
-plt.xlabel("Number of cores at 1TB RAM per 32 cores", fontsize=font_size)
+plt.xlabel("Number of cores", fontsize=font_size)
 plt.ylabel("Avg. time to compute TS (s)", fontsize=font_size)
 #plt.title("Average time to compute a Jacobian matrix vs. number of cores")
 plt.legend([cs, cd, fd, ad],['CS', 'CD', 'FD', 'AD'], scatterpoints = 1, loc='upper right',
