@@ -48,3 +48,9 @@ latexdiff-vc -c ld.cfg -r 9ee7554 --math-markup=0 jacobian_calc_CMAME.tex
 ````
 
 where `9ee7554` should be replaced with the correct `git` commit.
+
+### Second revision diff
+
+````
+latexdiff-vc -c ld.cfg -r 3dd277 --math-markup=0 jacobian_calc_CMAME.tex
+````
