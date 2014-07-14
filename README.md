@@ -3,6 +3,8 @@ Jacobian_Calc_CMAME
 
 Collaborative CMAME journal paper
 
+Made public after publication see DOI: [10.1016/j.cma.2014.06.034](http://dx.doi.org/10.1016/j.cma.2014.06.034)
+
 
 To clone:
 
